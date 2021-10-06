@@ -129,20 +129,24 @@ public class TransactionSignDemo {
     byte[] transaction4 = signTransaction2Byte(transactionBytes, privateBytes);
     System.out.println("transaction4 ::::: " + ByteArray.toHexString(transaction4));
     Transaction transactionSigned;
-    TransactionExtention transactionExtention = WalletApi.signTransactionByApi2(transaction, ecKey.getPrivKeyBytes());
-    if (transactionExtention == null) {
-      System.out.println("transactionExtention is null");
-      return;
+    if (WalletApi.getRpcVersion() == 2) {
+      TransactionExtention transactionExtention = WalletApi.signTransactionByApi2(transaction, ecKey.getPrivKeyBytes());
+      if (transactionExtention == null) {
+        System.out.println("transactionExtention is null");
+        return;
+      }
+      Return ret = transactionExtention.getResult();
+      if (!ret.getResult()) {
+        System.out.println("Code = " + ret.getCode());
+        System.out.println("Message = " + ret.getMessage().toStringUtf8());
+        return;
+      }
+      System.out.println(
+          "Receive txid = " + ByteArray.toHexString(transactionExtention.getTxid().toByteArray()));
+      transactionSigned = transactionExtention.getTransaction();
+    } else {
+      transactionSigned = WalletApi.signTransactionByApi(transaction, ecKey.getPrivKeyBytes());
     }
-    Return ret = transactionExtention.getResult();
-    if (!ret.getResult()) {
-      System.out.println("Code = " + ret.getCode());
-      System.out.println("Message = " + ret.getMessage().toStringUtf8());
-      return;
-    }
-    System.out.println(
-        "Receive txid = " + ByteArray.toHexString(transactionExtention.getTxid().toByteArray()));
-    transactionSigned = transactionExtention.getTransaction();
     byte[] transaction5 = transactionSigned.toByteArray();
     System.out.println("transaction5 ::::: " + ByteArray.toHexString(transaction5));
     if (!Arrays.equals(transaction4, transaction5)){

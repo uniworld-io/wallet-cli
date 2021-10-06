@@ -46,7 +46,7 @@ public class AbiUtil {
         return new CoderBool();
       case "bytes":
         return new CoderDynamicBytes();
-      case "uncToken":
+      case "trcToken":
         return new CoderNumber();
     }
 

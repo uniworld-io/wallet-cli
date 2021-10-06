@@ -574,7 +574,7 @@ public class WalletApi {
     Transaction transaction = rpcCli.createTransaction(contract);
     return processTransaction(transaction);
   }
-
+  
   public boolean mineToken(byte[] owner, String tokenName, long amount) throws CipherException, IOException, CancelException {
     if (owner == null) {
       owner = getAddress();

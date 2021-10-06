@@ -78,7 +78,6 @@ public class Client {
       "GetBlockById",
       "GetBlockByLatestNum",
       "GetBlockByLimitNext",
-      "GetBrokerage",
       "GetChainParameters",
       "GetContract contractAddress",
       "GetDelegatedResource",
