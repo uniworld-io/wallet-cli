@@ -10,7 +10,7 @@ public class EasyTransferByPrivateDemo {
 
   public static void main(String[] args) {
     String privateKey = "D95611A9AF2A2A45359106222ED1AFED48853D9A44DEFF8DC7913F5CBA727366";
-    String toAddress = "UWDbHCHSFWUSD3xBURib1ZpCqZBoW6Q3oq";
+    String toAddress = "TKMZBoWbXbYedcBnQugYT7DaFnSgi9qg78";
     EasyTransferResponse response = WalletApi
         .easyTransferByPrivate(ByteArray.fromHexString(privateKey),
             WalletApi.decodeFromBase58Check(toAddress), 1000000L);

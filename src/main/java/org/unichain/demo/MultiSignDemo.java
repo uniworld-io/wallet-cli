@@ -11,11 +11,11 @@ import org.unichain.walletserver.WalletApi;
 public class MultiSignDemo {
 
   public static void main(String[] args) throws CancelException {
-    String to = "446B882E7931330E8F2CB542D2F636C82AA20BB796";
-    String owner = "UShwkNXDac6TzgSK34YPBSjHnxAoH3hzRe";
-    String private0 = "311885B8E869214382CFC2D2FCA34168609BD85A8C45D4591F5271C824DC9BFC";
-    String private1 = "8874FED4A3ADE2F36C3E5BE753B74EE19A1BCF7943DA893F0E9A04DC8F8D09C8";
-    String private2 = "1DFA2C99E4F144178A01FDE33F4FFF0D5300B8E6858F61F0E3E38132CA570C40";
+    String to = "TL5mpGbtr5L2Gi7CtotBQzjN8pK7SmbyFz";
+    String owner = "TJCnKsPa7y5okkXvQAidZBzqx3QyQ6sxMW";
+    String private0 = "D95611A9AF2A2A45359106222ED1AFED48853D9A44DEFF8DC7913F5CBA727366";
+    String private1 = "cba92a516ea09f620a16ff7ee95ce0df1d56550a8babe9964981a7144c8a784a";
+    String private2 = "8E812436A0E3323166E1F0E8BA79E19E217B2C4A53C970D4CCA0CFB1078979DF";
     long amount = 10_000_000_000L;
     Transaction transaction = TransactionSignDemo
         .createTransaction(WalletApi.decodeFromBase58Check(owner),

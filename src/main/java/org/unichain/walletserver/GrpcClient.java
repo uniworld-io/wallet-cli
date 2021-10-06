@@ -4,6 +4,8 @@ import com.google.protobuf.ByteString;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import lombok.extern.slf4j.Slf4j;
+import lombok.var;
+import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang.StringUtils;
 import org.unichain.api.GrpcAPI;
 import org.unichain.api.GrpcAPI.*;
@@ -13,8 +15,6 @@ import org.unichain.api.WalletGrpc;
 import org.unichain.api.WalletSolidityGrpc;
 import org.unichain.common.utils.ByteArray;
 import org.unichain.protos.Contract;
-import org.unichain.protos.Contract.IncrementalMerkleVoucherInfo;
-import org.unichain.protos.Contract.OutputPointInfo;
 import org.unichain.protos.Protocol.*;
 
 import java.util.Objects;
@@ -62,8 +62,58 @@ public class GrpcClient {
     }
   }
 
+  public Contract.TokenPage queryTokenPool(String tokenName, int pageIndex, int pageSize) {
+    var request = TokenPoolQuery.newBuilder();
+    if(tokenName != null)
+      request.setTokenName(tokenName);
+    if(pageIndex != -1)
+      request.setPageIndex(pageIndex);
+    if(pageSize != -1)
+      request.setPageSize(pageSize);
+
+    if (blockingStubSolidity != null) {
+      return blockingStubSolidity.getTokenPool(request.build());
+    } else {
+      return blockingStubFull.getTokenPool(request.build());
+    }
+  }
+
+  public FuturePack queryFutureTransfer(byte[] address, int pageSize, int pageIndex) {
+    var builder = FutureQuery.newBuilder()
+            .setOwnerAddress(ByteString.copyFrom(address));
+
+    if(pageSize != -1)
+      builder.setPageSize(pageSize);
+    if(pageIndex != -1)
+      builder.setPageIndex(pageIndex);
+
+    if (blockingStubSolidity != null) {
+      return blockingStubSolidity.getFutureTransfer(builder.build());
+    } else {
+      return blockingStubFull.getFutureTransfer(builder.build());
+    }
+  }
+
+  public FutureTokenPack queryToken(byte[] address, String name, int pageSize, int pageIndex) {
+    var builder = FutureTokenQuery.newBuilder()
+            .setOwnerAddress(ByteString.copyFrom(address))
+            .setTokenName(name);
+
+    if(pageSize != -1)
+      builder.setPageSize(pageSize);
+    if(pageIndex != -1)
+      builder.setPageIndex(pageIndex);
+
+    if (blockingStubSolidity != null) {
+      return blockingStubSolidity.getFutureToken(builder.build());
+    } else {
+      return blockingStubFull.getFutureToken(builder.build());
+    }
+  }
+
   public Account queryAccount(byte[] address) {
     ByteString addressBS = ByteString.copyFrom(address);
+    System.out.println("GetAccount with hashed address --> " + ByteArray.toHexString(addressBS.toByteArray()) + ", plain text --> " + WalletApi.encode58Check(addressBS.toByteArray()));
     Account request = Account.newBuilder().setAddress(addressBS).build();
     if (blockingStubSolidity != null) {
       return blockingStubSolidity.getAccount(request);
@@ -160,6 +210,34 @@ public class GrpcClient {
     return blockingStubFull.easyTransferAssetByPrivate(builder.build());
   }
 
+  public Transaction createTransaction(Contract.CreateTokenContract contract) {
+    return blockingStubFull.createToken(contract);
+  }
+
+  public Transaction createTransaction(Contract.ContributeTokenPoolFeeContract contract) {
+    return blockingStubFull.contributeTokenFee(contract);
+  }
+
+  public Transaction createTransaction(Contract.UpdateTokenParamsContract contract) {
+    return blockingStubFull.updateTokenParams(contract);
+  }
+
+  public Transaction createTransaction(Contract.MineTokenContract contract) {
+    return blockingStubFull.mineToken(contract);
+  }
+
+  public Transaction createTransaction(Contract.BurnTokenContract contract) {
+    return blockingStubFull.burnToken(contract);
+  }
+
+  public Transaction createTransaction(Contract.TransferTokenContract contract) {
+    return blockingStubFull.transferToken(contract);
+  }
+
+  public Transaction createTransaction(Contract.WithdrawFutureTokenContract contract) {
+    return blockingStubFull.withdrawTokenFuture(contract);
+  }
+
   public Transaction createTransaction(Contract.AccountUpdateContract contract) {
     return blockingStubFull.updateAccount(contract);
   }
@@ -183,6 +261,15 @@ public class GrpcClient {
   public Transaction createTransaction(Contract.TransferContract contract) {
     return blockingStubFull.createTransaction(contract);
   }
+
+  public Transaction createTransaction(Contract.FutureTransferContract contract) {
+    return blockingStubFull.createFutureTransferTransaction(contract);
+  }
+
+  public Transaction createTransaction(Contract.FutureWithdrawContract contract) {
+    return blockingStubFull.withdrawFutureTransaction(contract);
+  }
+
 
   public TransactionExtention createTransaction2(Contract.TransferContract contract) {
     return blockingStubFull.createTransaction2(contract);
@@ -405,8 +492,7 @@ public class GrpcClient {
   public boolean broadcastTransaction(Transaction signaturedTransaction) {
     int i = 10;
     GrpcAPI.Return response = blockingStubFull.broadcastTransaction(signaturedTransaction);
-    while (response.getResult() == false && response.getCode() == response_code.SERVER_BUSY
-        && i > 0) {
+    while (response.getResult() == false && response.getCode() == response_code.SERVER_BUSY && i > 0) {
       i--;
       response = blockingStubFull.broadcastTransaction(signaturedTransaction);
       System.out.println("repeat times = " + (11 - i));
@@ -775,100 +861,6 @@ public class GrpcClient {
   public TransactionExtention accountPermissionUpdate(
       Contract.AccountPermissionUpdateContract request) {
     return blockingStubFull.accountPermissionUpdate(request);
-  }
-
-
-  public TransactionExtention createShieldedTransaction(PrivateParameters privateParameters) {
-    return blockingStubFull.createShieldedTransaction(privateParameters);
-  }
-
-  public IncrementalMerkleVoucherInfo GetMerkleTreeVoucherInfo(OutputPointInfo info) {
-    if (blockingStubSolidity != null) {
-      return blockingStubSolidity.getMerkleTreeVoucherInfo(info);
-    } else {
-      return blockingStubFull.getMerkleTreeVoucherInfo(info);
-    }
-  }
-
-  public DecryptNotes scanNoteByIvk(IvkDecryptParameters ivkDecryptParameters) {
-    if (blockingStubSolidity != null) {
-      return blockingStubSolidity.scanNoteByIvk(ivkDecryptParameters);
-    } else {
-      return blockingStubFull.scanNoteByIvk(ivkDecryptParameters);
-    }
-  }
-
-  public DecryptNotes scanNoteByOvk(OvkDecryptParameters ovkDecryptParameters) {
-    if (blockingStubSolidity != null) {
-      return blockingStubSolidity.scanNoteByOvk(ovkDecryptParameters);
-    } else {
-      return blockingStubFull.scanNoteByOvk(ovkDecryptParameters);
-    }
-  }
-
-  public BytesMessage getSpendingKey() {
-    return blockingStubFull.getSpendingKey(EmptyMessage.newBuilder().build());
-  }
-
-  public ExpandedSpendingKeyMessage getExpandedSpendingKey(BytesMessage spendingKey) {
-    return blockingStubFull.getExpandedSpendingKey(spendingKey);
-  }
-
-  public BytesMessage getAkFromAsk(BytesMessage ask) {
-    return blockingStubFull.getAkFromAsk(ask);
-  }
-
-  public BytesMessage getNkFromNsk(BytesMessage nsk) {
-    return blockingStubFull.getNkFromNsk(nsk);
-  }
-
-  public IncomingViewingKeyMessage getIncomingViewingKey(ViewingKeyMessage viewingKeyMessage) {
-    return blockingStubFull.getIncomingViewingKey(viewingKeyMessage);
-  }
-
-  public DiversifierMessage getDiversifier() {
-    return blockingStubFull.getDiversifier(EmptyMessage.newBuilder().build());
-  }
-
-  public BytesMessage getRcm() {
-    return blockingStubFull.getRcm(EmptyMessage.newBuilder().build());
-  }
-
-  public SpendResult isNoteSpend(NoteParameters noteParameters) {
-    if (blockingStubSolidity != null) {
-      return blockingStubSolidity.isSpend(noteParameters);
-    } else {
-      return blockingStubFull.isSpend(noteParameters);
-    }
-  }
-
-  public TransactionExtention createShieldedTransactionWithoutSpendAuthSig(
-      PrivateParametersWithoutAsk privateParameters) {
-    return blockingStubFull.createShieldedTransactionWithoutSpendAuthSig(privateParameters);
-  }
-
-  public BytesMessage getShieldedTransactionHash(Transaction transaction) {
-    return blockingStubFull.getShieldTransactionHash(transaction);
-  }
-
-  public BytesMessage createSpendAuthSig(SpendAuthSigParameters parameters) {
-    return blockingStubFull.createSpendAuthSig(parameters);
-  }
-
-  public BytesMessage createShieldedNullifier(NfParameters parameters) {
-    return blockingStubFull.createShieldNullifier(parameters);
-  }
-
-  public PaymentAddressMessage getZenPaymentAddress(IncomingViewingKeyDiversifierMessage msg) {
-    return blockingStubFull.getZenPaymentAddress(msg);
-  }
-
-  public DecryptNotesMarked scanAndMarkNoteByIvk(IvkDecryptAndMarkParameters parameters) {
-    if (blockingStubSolidity != null) {
-      return blockingStubSolidity.scanAndMarkNoteByIvk(parameters);
-    } else {
-      return blockingStubFull.scanAndMarkNoteByIvk(parameters);
-    }
   }
 
   public TransactionExtention updateBrokerage(Contract.UpdateBrokerageContract request) {

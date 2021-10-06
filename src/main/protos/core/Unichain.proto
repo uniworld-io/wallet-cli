@@ -66,6 +66,77 @@ message ChainParameters {
   }
 }
 
+message FutureTokenPack {
+  string token_name = 1;
+  bytes  owner_address = 2;
+  int64  total_deal = 3;
+  int64 lower_bound_time = 4;
+  int64 upper_bound_time = 5;
+  int64 total_value = 6;
+  repeated FutureTokenV2 deals = 7;
+}
+
+message TokenPoolQuery {
+  string token_name = 1;
+  int32  page_size = 2;
+  int32 page_index = 3;
+}
+
+message FutureTokenQuery {
+  string token_name = 1;
+  bytes  owner_address = 2;
+  int32  page_size = 3;
+  int32 page_index = 4;
+}
+
+message FutureTokenSummaryV2 {
+  string token_name = 1;
+  int64  total_deal = 3;
+  int64 lower_bound_time = 4;
+  int64 upper_bound_time = 5;
+  int64 total_value = 6;
+  bytes lower_tick = 7;
+  bytes upper_tick = 8;
+}
+
+message FutureTokenV2 {
+  int64 future_balance = 1;
+  int64 expire_time = 2;
+  bytes prev_tick = 3;
+  bytes next_tick = 4;
+}
+
+message FutureQuery {
+  bytes  owner_address = 1;
+  int32  page_size = 2;
+  int32 page_index = 3;
+}
+
+message Future {
+  int64 future_balance = 1;
+  int64 expire_time = 2;
+  bytes prev_tick = 3;
+  bytes next_tick = 4;
+}
+
+message FutureSummary {
+  int64 total_deal = 1;
+  int64 lower_time = 2;
+  int64 upper_time = 3;
+  int64 total_balance = 4;
+  bytes lower_tick = 5;
+  bytes upper_tick = 6;
+}
+
+message FuturePack {
+  bytes  owner_address = 1;
+  int64  total_deal = 2;
+  int64 lower_time = 3;
+  int64 upper_time = 4;
+  int64 total_balance = 5;
+  repeated Future deals = 6;
+}
+
 /* Account */
 message Account {
   /* frozen balance */
@@ -73,6 +144,7 @@ message Account {
     int64 frozen_balance = 1; // the frozen unx balance
     int64 expire_time = 2; // the expire time
   }
+
   // account nick name
   bytes account_name = 1;
   AccountType type = 2;
@@ -87,6 +159,12 @@ message Account {
 
   // the other asset owned by this account，key is assetId
   map<string, int64> assetV2 = 56;
+
+  //token map, including all type
+  map<string, int64> token = 60;
+
+  //token future
+  map<string, FutureTokenSummaryV2> token_future = 61;
 
   // the frozen balance for bandwidth
   repeated Frozen frozen = 7;
@@ -148,6 +226,9 @@ message Account {
   Permission owner_permission = 31;
   Permission witness_permission = 32;
   repeated Permission active_permission = 33;
+
+  //future transfer balance
+  FutureSummary future_supply = 34;
 }
 
 
@@ -274,7 +355,17 @@ message Transaction {
       AccountPermissionUpdateContract = 46;
       ClearABIContract = 48;
       UpdateBrokerageContract = 49;
+      FutureTransferContract = 50;
       ShieldedTransferContract = 51;
+      FutureWithdrawContract = 52;
+      CreateTokenContract = 53;
+      ContributeTokenPoolFeeContract = 54;
+      UpdateTokenParamsContract = 55;
+      UpdateTokenUrlContract = 56;
+      MineTokenContract = 57;
+      BurnTokenContract = 58;
+      TransferTokenContract = 59;
+      WithdrawFutureTokenContract = 60;
     }
     ContractType type = 1;
     google.protobuf.Any parameter = 2;
@@ -438,7 +529,7 @@ message BlockInventory {
 
 message Inventory {
   enum InventoryType {
-    UNX = 0;
+    UNW = 0;
     BLOCK = 1;
   }
   InventoryType type = 1;
@@ -448,7 +539,7 @@ message Inventory {
 message Items {
   enum ItemType {
     ERR = 0;
-    UNX = 1;
+    UNW = 1;
     BLOCK = 2;
     BLOCKHEADER = 3;
   }

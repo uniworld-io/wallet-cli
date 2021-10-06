@@ -1,10 +1,10 @@
 /*
- * unichain-core is free software: you can redistribute it and/or modify
+ * Unichain-core is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * unichain-core is distributed in the hope that it will be useful,
+ * Unichain-core is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -22,6 +22,13 @@ option java_outer_classname = "Contract"; //Specify the class name of the genera
 option go_package = "github.com/uniworld-io/grpc-gateway/core";
 
 import "core/Unichain.proto";
+
+message TokenPage {
+  int64  page_size = 1;
+  int64 page_index = 2;
+  int64 total = 3;
+  repeated CreateTokenContract tokens = 4;
+}
 
 message AccountCreateContract {
   bytes owner_address = 1;
@@ -47,10 +54,11 @@ message TransferContract {
   int64 amount = 3;
 }
 
-
-message ShieldAddress {
-  bytes private_address = 1;
-  bytes public_address = 2;
+message FutureTransferContract {
+  bytes owner_address = 1;
+  bytes to_address = 2;
+  int64 amount = 3;
+  int64 expire_time = 4;
 }
 
 message TransferAssetContract {
@@ -103,6 +111,69 @@ message WitnessCreateContract {
 message WitnessUpdateContract {
   bytes owner_address = 1;
   bytes update_url = 12;
+}
+
+message CreateTokenContract {
+  bytes owner_address = 1;
+  string name = 2;
+  string abbr = 3;
+  int64 max_supply = 4;
+  int64 total_supply = 5;
+  int64 start_time = 6;
+  int64 end_time = 7;
+  string description = 8;
+  string url = 9;
+  int64 fee = 10;
+  int64 extra_fee_rate = 11;
+  int64 fee_pool = 12;
+  int64 burned = 13;
+  int64 latest_operation_time = 14;
+  int64 lot =15;
+  int64 fee_pool_origin = 16;
+}
+
+message ContributeTokenPoolFeeContract {
+  bytes owner_address = 1;
+  string token_name = 2;
+  int64 amount = 3;
+}
+
+message UpdateTokenParamsContract {
+  bytes owner_address = 1;
+  string token_name = 2;
+  int64 amount = 3;
+  int64 extra_fee_rate = 4;
+  int64 lot = 5;
+  string url = 6;
+  string description = 7;
+  int64 total_supply = 8;
+  int64 fee_pool = 9;
+}
+
+message MineTokenContract {
+  bytes owner_address = 1;
+  string token_name = 2;
+  int64 amount = 3;
+}
+
+
+message BurnTokenContract {
+  bytes owner_address = 1;
+  string token_name = 2;
+  int64 amount = 3;
+}
+
+message TransferTokenContract {
+  bytes owner_address = 1;
+  bytes to_address = 2;
+  string token_name = 3;
+  int64 amount = 4;
+  int64 available_time = 5;
+}
+
+message WithdrawFutureTokenContract {
+  bytes owner_address = 1;
+  string token_name = 2;
 }
 
 message AssetIssueContract {
@@ -166,6 +237,10 @@ message UnfreezeAssetContract {
 }
 
 message WithdrawBalanceContract {
+  bytes owner_address = 1;
+}
+
+message FutureWithdrawContract {
   bytes owner_address = 1;
 }
 
@@ -265,78 +340,3 @@ message UpdateBrokerageContract {
   bytes owner_address = 1;
   int32 brokerage = 2; // 1 mean 1%
 }
-
-// for shielded transaction
-
-message AuthenticationPath {
-  repeated bool value = 1;
-}
-
-message MerklePath {
-  repeated AuthenticationPath authentication_paths = 1;
-  repeated bool index = 2;
-  bytes rt = 3;
-}
-
-message OutputPoint {
-  bytes hash = 1;
-  int32 index = 2;
-}
-
-message OutputPointInfo {
-  repeated OutputPoint out_points = 1;
-  int32 block_num = 2;
-}
-
-message PedersenHash {
-  bytes content = 1;
-}
-
-message IncrementalMerkleTree {
-  PedersenHash left = 1;
-  PedersenHash right = 2;
-  repeated PedersenHash parents = 3;
-}
-
-message IncrementalMerkleVoucher {
-  IncrementalMerkleTree tree = 1;
-  repeated PedersenHash filled = 2;
-  IncrementalMerkleTree cursor = 3;
-  int64 cursor_depth = 4;
-  bytes rt = 5;
-  OutputPoint output_point = 10;
-}
-
-message IncrementalMerkleVoucherInfo {
-  repeated IncrementalMerkleVoucher vouchers = 1;
-  repeated bytes paths = 2;
-}
-
-message SpendDescription {
-  bytes value_commitment = 1;
-  bytes anchor = 2; // merkle root
-  bytes nullifier = 3; // used for check double spend
-  bytes rk = 4; // used for check spend authority signature
-  bytes zkproof = 5;
-  bytes spend_authority_signature = 6;
-}
-
-message ReceiveDescription {
-  bytes value_commitment = 1;
-  bytes note_commitment = 2;
-  bytes epk = 3; // for Encryption
-  bytes c_enc = 4; // Encryption for incoming, decrypt it with ivk
-  bytes c_out = 5; // Encryption for audit, decrypt it with ovk
-  bytes zkproof = 6;
-}
-
-message ShieldedTransferContract {
-  bytes transparent_from_address = 1; // transparent address
-  int64 from_amount = 2;
-  repeated SpendDescription spend_description = 3;
-  repeated ReceiveDescription receive_description = 4;
-  bytes binding_signature = 5;
-  bytes transparent_to_address = 6; // transparent address
-  int64 to_amount = 7; // the amount to transparent to_address
-}
-// end shielded transaction

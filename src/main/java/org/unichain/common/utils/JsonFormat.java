@@ -74,8 +74,7 @@ public class JsonFormat {
    * (This representation is the new version of the classic "ProtocolPrinter" output from the
    * original Protocol Buffer system)
    */
-  public static void print(Message message, Appendable output, boolean selfType)
-      throws IOException {
+  public static void print(Message message, Appendable output, boolean selfType) throws IOException {
     JsonGenerator generator = new JsonGenerator(output);
     generator.print("{");
     print(message, generator, selfType);
@@ -93,10 +92,8 @@ public class JsonFormat {
     generator.print("}");
   }
 
-  protected static void print(Message message, JsonGenerator generator, boolean selfType)
-      throws IOException {
-    for (Iterator<Map.Entry<FieldDescriptor, Object>> iter = message.getAllFields().entrySet()
-        .iterator(); iter.hasNext(); ) {
+  protected static void print(Message message, JsonGenerator generator, boolean selfType) throws IOException {
+    for (Iterator<Map.Entry<FieldDescriptor, Object>> iter = message.getAllFields().entrySet().iterator(); iter.hasNext(); ) {
       Map.Entry<FieldDescriptor, Object> field = iter.next();
       printField(field.getKey(), field.getValue(), generator, selfType);
       if (iter.hasNext()) {
@@ -173,10 +170,7 @@ public class JsonFormat {
     return text.toString();
   }
 
-  public static void printField(FieldDescriptor field, Object value, JsonGenerator generator,
-      boolean selfType)
-      throws IOException {
-
+  public static void printField(FieldDescriptor field, Object value, JsonGenerator generator, boolean selfType) throws IOException {
     printSingleField(field, value, generator, selfType);
   }
 

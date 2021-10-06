@@ -92,24 +92,24 @@ public class TransactionSignDemo {
   }
 
   private static void base58checkToHexString() {
-    String base58check = "UWDbHCHSFWUSD3xBURib1ZpCqZBoW6Q3oq";
+    String base58check = "TGehVcNhud84JDCGrNHKVz9jEAVKUpbuiv";
     String hexString = ByteArray.toHexString(WalletApi.decodeFromBase58Check(base58check));
     System.out.println(hexString);
   }
 
   private static void hexStringTobase58check() {
-    String hexString = "449C0FD904B2BA53D24DAE59D199BEFAEF1C3A31B4";
+    String hexString = "414948c2e8a756d9437037dcd8c7e0c73d560ca38d";
     String base58check = WalletApi.encode58Check(ByteArray.fromHexString(hexString));
     System.out.println(base58check);
   }
 
   public static void main(String[] args) throws InvalidProtocolBufferException, CancelException {
-    String privateStr = "1DFA2C99E4F144178A01FDE33F4FFF0D5300B8E6858F61F0E3E38132CA570C40";
+    String privateStr = "D95611A9AF2A2A45359106222ED1AFED48853D9A44DEFF8DC7913F5CBA727366";
     byte[] privateBytes = ByteArray.fromHexString(privateStr);
     ECKey ecKey = ECKey.fromPrivate(privateBytes);
     byte[] from = ecKey.getAddress();
-    byte[] to = WalletApi.decodeFromBase58Check("UcDCMRsvh8Gg8rcbxdJMHHroxVw513Pq4Z");
-    long amount = 100_000_000L; //100 UNX, api only receive unx in ginza, and 1 unx = 1000000 ginza
+    byte[] to = WalletApi.decodeFromBase58Check("TGehVcNhud84JDCGrNHKVz9jEAVKUpbuiv");
+    long amount = 100_000_000L; //100 UNW, api only receive unx in drop, and 1 unw = 1000000 ginza
     Transaction transaction = createTransaction(from, to, amount);
     byte[] transactionBytes = transaction.toByteArray();
 
