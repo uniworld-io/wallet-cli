@@ -692,9 +692,9 @@ public class Client {
 
     boolean result = walletApiWrapper.sendCoin(ownerAddress, toAddress, amount);
     if (result) {
-      System.out.println("Send " + amount + " drop to " + base58ToAddress + " successful !!");
+      System.out.println("Send " + amount + " Ginza to " + base58ToAddress + " successful !!");
     } else {
-      System.out.println("Send " + amount + " drop to " + base58ToAddress + " failed !!");
+      System.out.println("Send " + amount + " Ginza to " + base58ToAddress + " failed !!");
     }
   }
 
@@ -727,9 +727,9 @@ public class Client {
 
     boolean result = walletApiWrapper.sendFuture(null, toAddress, amount, expireDate.getTime());
     if (result) {
-      System.out.println("SendFuture " + amount + " with expireDate " + expireDate + " drop to " + base58ToAddress + " successful !!");
+      System.out.println("SendFuture " + amount + " with expireDate " + expireDate + " Ginza to " + base58ToAddress + " successful !!");
     } else {
-      System.out.println("SendFuture " + amount + " with expireDate " + expireDate + " drop to " + base58ToAddress + " failed !!");
+      System.out.println("SendFuture " + amount + " with expireDate " + expireDate + " Ginza to " + base58ToAddress + " failed !!");
     }
   }
 

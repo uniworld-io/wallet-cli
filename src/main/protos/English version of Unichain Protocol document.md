@@ -234,7 +234,7 @@
      `owner_address`: the address for contract owner – e.g. “_0xu82h…7237_”.  
      `to_address`: the receiver address – e.g. “_0xu82h…7237_”.  
      `asset_name`: the name of target asset.  
-     `amount`: the amount of drops.
+     `amount`: the amount of Ginza.
      
          message ParticipateAssetIssueContract {
            bytes owner_address = 1;

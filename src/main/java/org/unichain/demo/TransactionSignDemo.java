@@ -109,7 +109,7 @@ public class TransactionSignDemo {
     ECKey ecKey = ECKey.fromPrivate(privateBytes);
     byte[] from = ecKey.getAddress();
     byte[] to = WalletApi.decodeFromBase58Check("TGehVcNhud84JDCGrNHKVz9jEAVKUpbuiv");
-    long amount = 100_000_000L; //100 UNW, api only receive unx in drop, and 1 unw = 1000000 ginza
+    long amount = 100_000_000L; //100 UNW, api only receive unw in ginza, and 1 unw = 1000000 ginza
     Transaction transaction = createTransaction(from, to, amount);
     byte[] transactionBytes = transaction.toByteArray();
 
