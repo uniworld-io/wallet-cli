@@ -381,6 +381,473 @@ wallet> ListAssetIssue
 }
 ```
 
+Transfer Future Coin (Send 100 UNW to UazSBZCDUCABgAkhZv8WDpqgUMV4LPLBCh)
+```
+wallet> SendFuture UazSBZCDUCABgAkhZv8WDpqgUMV4LPLBCh 100 "2022-01-01"
+{
+	"raw_data":{
+		"contract":[
+			{
+				"parameter":{
+					"value":{
+						"amount":100,
+						"expire_time":1640995200000,
+						"owner_address":"44e4257594e51b856d87428771a1a9ccdcab8bf5cb",
+						"to_address":"448eaddbe3be51a379d225258151b5b54b28177693"
+					},
+					"type_url":"type.googleapis.com/protocol.FutureTransferContract"
+				},
+				"type":"FutureTransferContract"
+			}
+		],
+		"ref_block_bytes":"c382",
+		"ref_block_hash":"20eac2ebc0b29459",
+		"expiration":1634036721000,
+		"timestamp":1634036662473
+	},
+	"raw_data_hex":"0a02c382220820eac2ebc0b2945940e8cab6a1c72f5a720832126e0a33747970652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e4675747572655472616e73666572436f6e747261637412370a1544e4257594e51b856d87428771a1a9ccdcab8bf5cb1215448eaddbe3be51a379d225258151b5b54b2817769318642080b8be97e12f70c981b3a1c72f"
+}
+Please confirm and input your permission id, if input y or Y means default 0, other non-numeric characters will cancell transaction.
+Y
+SendFuture 100 with expireDate Sat Jan 01 00:00:00 UTC 2022 drop to UazSBZCDUCABgAkhZv8WDpqgUMV4LPLBCh successful !!
+
+```
+
+Withdraw expired future deals of UazSBZCDUCABgAkhZv8WDpqgUMV4LPLBCh
+```
+wallet> WithdrawFuture UazSBZCDUCABgAkhZv8WDpqgUMV4LPLBCh
+
+```
+
+List future deals of UazSBZCDUCABgAkhZv8WDpqgUMV4LPLBCh
+```
+wallet> GetFutureTransfer UazSBZCDUCABgAkhZv8WDpqgUMV4LPLBCh 10 0
+{
+	"owner_address": "448eaddbe3be51a379d225258151b5b54b28177693",
+	"total_deal": 3,
+	"lower_time": 1635724800000,
+	"upper_time": 1640995200000,
+	"total_balance": 2000100,
+	"deals": [
+		{
+			"future_balance": 1000000,
+			"expire_time": 1635724800000,
+			"next_tick": "44efbfbdefbfbdefbfbdefbfbd51efbfbd79efbfbd2525efbfbd51efbfbdefbfbd4b281776efbfbd5f31373631393535323030303030"
+		},
+		{
+			"future_balance": 1000000,
+			"expire_time": 1761955200000,
+			"prev_tick": "44efbfbdefbfbdefbfbdefbfbd51efbfbd79efbfbd2525efbfbd51efbfbdefbfbd4b281776efbfbd5f31363335373234383030303030",
+			"next_tick": "44efbfbdefbfbdefbfbdefbfbd51efbfbd79efbfbd2525efbfbd51efbfbdefbfbd4b281776efbfbd5f31363430393935323030303030"
+		},
+		{
+			"future_balance": 100,
+			"expire_time": 1640995200000,
+			"prev_tick": "44efbfbdefbfbdefbfbdefbfbd51efbfbd79efbfbd2525efbfbd51efbfbdefbfbd4b281776efbfbd5f31373631393535323030303030"
+		}
+	]
+}
+
+```
+
+Create new token v2 by owner account UinLtqgPm9waBdUSVAAzRR6pfBzfQNC4c2
+```
+wallet> CreateToken [OwnerAddress] name abbr max_supply total_supply start_time(- if default) end_time(- if default) description url fee extra_fee_rate fee_pool lot
+CreateToken PKL pkl 1000000000 500000000 - "2050-01-01" "PKL token for PowerSolr Inc" "pklpower.com" 100 1 1000000 1000
+{
+	"raw_data":{
+		"contract":[
+			{
+				"parameter":{
+					"value":{
+						"lot":1000,
+						"fee_pool":1000000,
+						"total_supply":500000000,
+						"fee":100,
+						"name":"PKL",
+						"max_supply":1000000000,
+						"end_time":2524608000000,
+						"description":"PKL token for PowerSolr Inc",
+						"extra_fee_rate":1,
+						"owner_address":"44e4257594e51b856d87428771a1a9ccdcab8bf5cb",
+						"abbr":"pkl",
+						"url":"pklpower.com"
+					},
+					"type_url":"type.googleapis.com/protocol.CreateTokenContract"
+				},
+				"type":"CreateTokenContract"
+			}
+		],
+		"ref_block_bytes":"c429",
+		"ref_block_hash":"8ceefc48d20b2372",
+		"expiration":1634037234000,
+		"timestamp":1634037175796
+	},
+	"raw_data_hex":"0a02c42922088ceefc48d20b237240d0f2d5a1c72f5aa3010835129e010a30747970652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e437265617465546f6b656e436f6e7472616374126a0a1544e4257594e51b856d87428771a1a9ccdcab8bf5cb1203504b4c1a03706b6c208094ebdc032880cab5ee013880e0f3f2bc49421b504b4c20746f6b656e20666f7220506f776572536f6c7220496e634a0c706b6c706f7765722e636f6d5064580160c0843d78e80770f4abd2a1c72f"
+}
+Please confirm and input your permission id, if input y or Y means default 0, other non-numeric characters will cancell transaction.
+y
+CreateToken with token name: PKL, abbr: pkl, max supply: 1000000000, total supply:500000000 successful !!
+```
+
+List all token v2
+```
+wallet>  ListTokenPool --help
+listTokenPool needs 1 parameter like the following: 
+listTokenPool [tokenName] pageIndex(-1 if not set) pageSize(-1 if not set)
+
+wallet> ListTokenPool X1 0 1
+{
+	"page_size": 1,
+	"total": 2,
+	"tokens": [
+		{
+			"owner_address": "44e4257594e51b856d87428771a1a9ccdcab8bf5cb",
+			"name": "X1",
+			"abbr": "x1",
+			"max_supply": 1000000000,
+			"total_supply": 500000000,
+			"start_time": 1634035983000,
+			"end_time": 2264755983000,
+			"description": "test",
+			"url": "test.com",
+			"fee": 10,
+			"extra_fee_rate": 1,
+			"fee_pool": 991580,
+			"latest_operation_time": 1634036127000,
+			"lot": 1000,
+			"fee_pool_origin": 1000000
+		}
+	]
+}
+```
+
+Transfer token v2 PKL to UazSBZCDUCABgAkhZv8WDpqgUMV4LPLBCh
+```
+wallet> TransferToken --help
+transferToken needs 5 parameters like following: 
+transferToken [OwnerAddress] to_address token_name amount available_time(- for default now or 2021-01-01 or 2021-01-01 01:00:01)
+
+wallet> TransferToken UazSBZCDUCABgAkhZv8WDpqgUMV4LPLBCh PKL 1000000 "2022-01-01"
+{
+	"raw_data":{
+		"contract":[
+			{
+				"parameter":{
+					"value":{
+						"available_time":1640995200000,
+						"amount":1000000,
+						"token_name":"PKL",
+						"owner_address":"44e4257594e51b856d87428771a1a9ccdcab8bf5cb",
+						"to_address":"448eaddbe3be51a379d225258151b5b54b28177693"
+					},
+					"type_url":"type.googleapis.com/protocol.TransferTokenContract"
+				},
+				"type":"TransferTokenContract"
+			}
+		],
+		"ref_block_bytes":"c48e",
+		"ref_block_hash":"53ce2637d9892582",
+		"expiration":1634037543000,
+		"timestamp":1634037484570
+	},
+	"raw_data_hex":"0a02c48e220853ce2637d989258240d8e0e8a1c72f5a78083b12740a32747970652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e5472616e73666572546f6b656e436f6e7472616374123e0a1544e4257594e51b856d87428771a1a9ccdcab8bf5cb1215448eaddbe3be51a379d225258151b5b54b281776931a03504b4c20c0843d2880b8be97e12f709a98e5a1c72f"
+}
+Please confirm and input your permission id, if input y or Y means default 0, other non-numeric characters will cancell transaction.
+y
+transferToken of UinLtqgPm9waBdUSVAAzRR6pfBzfQNC4c2 successful !!
+
+```
+
+Contribute fee to token pool PKL
+```
+wallet> ContributeTokenPoolFee --help
+contributeTokenPoolFee needs 2 parameters like following: 
+ContributeTokenPoolFee [ownerAddress] token_name amount
+
+wallet> ContributeTokenPoolFee PKL 100000
+{
+	"raw_data":{
+		"contract":[
+			{
+				"parameter":{
+					"value":{
+						"amount":100000,
+						"token_name":"PKL",
+						"owner_address":"44e4257594e51b856d87428771a1a9ccdcab8bf5cb"
+					},
+					"type_url":"type.googleapis.com/protocol.ContributeTokenPoolFeeContract"
+				},
+				"type":"ContributeTokenPoolFeeContract"
+			}
+		],
+		"ref_block_bytes":"c4b7",
+		"ref_block_hash":"ebd5f5514c792350",
+		"expiration":1634037672000,
+		"timestamp":1634037612362
+	},
+	"raw_data_hex":"0a02c4b72208ebd5f5514c79235040c0d0f0a1c72f5a630836125f0a3b747970652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e436f6e74726962757465546f6b656e506f6f6c466565436f6e747261637412200a1544e4257594e51b856d87428771a1a9ccdcab8bf5cb1203504b4c18a08d0670cafeeca1c72f"
+}
+Please confirm and input your permission id, if input y or Y means default 0, other non-numeric characters will cancell transaction.
+y
+contributeTokenPoolFee of UinLtqgPm9waBdUSVAAzRR6pfBzfQNC4c2 successful !!
+
+```
+
+Mine more token PKL to increase circulation
+```
+wallet> MineToken --help
+mineToken needs 2 parameters like following: 
+mineToken [ownerAddress] token_name amount
+
+wallet> MineToken PKL 1000000
+{
+	"raw_data":{
+		"contract":[
+			{
+				"parameter":{
+					"value":{
+						"amount":1000000,
+						"token_name":"PKL",
+						"owner_address":"44e4257594e51b856d87428771a1a9ccdcab8bf5cb"
+					},
+					"type_url":"type.googleapis.com/protocol.MineTokenContract"
+				},
+				"type":"MineTokenContract"
+			}
+		],
+		"ref_block_bytes":"c4ee",
+		"ref_block_hash":"8f433a82aafb2a99",
+		"expiration":1634037837000,
+		"timestamp":1634037777797
+	},
+	"raw_data_hex":"0a02c4ee22088f433a82aafb2a9940c8d9faa1c72f5a56083912520a2e747970652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e4d696e65546f6b656e436f6e747261637412200a1544e4257594e51b856d87428771a1a9ccdcab8bf5cb1203504b4c18c0843d70858bf7a1c72f"
+}
+Please confirm and input your permission id, if input y or Y means default 0, other non-numeric characters will cancell transaction.
+y
+mineToken of UinLtqgPm9waBdUSVAAzRR6pfBzfQNC4c2 successful !!
+```
+
+Burn token PKL to reduce circulation
+```
+wallet> BurnToken --help
+burnToken needs 2 parameters like following: 
+burnToken [ownerAddress] token_name amount
+
+wallet> BurnToken PKL 1000000
+{
+	"raw_data":{
+		"contract":[
+			{
+				"parameter":{
+					"value":{
+						"amount":1000000,
+						"token_name":"PKL",
+						"owner_address":"44e4257594e51b856d87428771a1a9ccdcab8bf5cb"
+					},
+					"type_url":"type.googleapis.com/protocol.BurnTokenContract"
+				},
+				"type":"BurnTokenContract"
+			}
+		],
+		"ref_block_bytes":"c517",
+		"ref_block_hash":"844ba03162f887c4",
+		"expiration":1634037960000,
+		"timestamp":1634037904885
+	},
+	"raw_data_hex":"0a02c5172208844ba03162f887c440c09a82a2c72f5a56083a12520a2e747970652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e4275726e546f6b656e436f6e747261637412200a1544e4257594e51b856d87428771a1a9ccdcab8bf5cb1203504b4c18c0843d70f5ebfea1c72f"
+}
+Please confirm and input your permission id, if input y or Y means default 0, other non-numeric characters will cancell transaction.
+y
+burnToken of UinLtqgPm9waBdUSVAAzRR6pfBzfQNC4c2 successful !!
+```
+
+Update params of token PKL
+```
+wallet> UpdateTokenParams --help
+updateTokenParams needs 8 parameters like following: 
+updateTokenParams [ownerAddress] token_name total_supply[-1 if not set] fee_pool[-1 if not set] fee[-1 if not set] extra_fee_rate[-1 if not set] lot[-1 if not set]  url[- if not set] description[- if not set]
+
+wallet> UpdateTokenParams  PKL 600000000 2000000 20 2 200 "newpower.com" "new power token params"
+{
+	"raw_data":{
+		"contract":[
+			{
+				"parameter":{
+					"value":{
+						"lot":200,
+						"amount":20,
+						"fee_pool":2000000,
+						"total_supply":600000000,
+						"token_name":"PKL",
+						"extra_fee_rate":2,
+						"description":"new power token params",
+						"owner_address":"44e4257594e51b856d87428771a1a9ccdcab8bf5cb",
+						"url":"newpower.com"
+					},
+					"type_url":"type.googleapis.com/protocol.UpdateTokenParamsContract"
+				},
+				"type":"UpdateTokenParamsContract"
+			}
+		],
+		"ref_block_bytes":"c55a",
+		"ref_block_hash":"09205e14292cd659",
+		"expiration":1634038167000,
+		"timestamp":1634038108541
+	},
+	"raw_data_hex":"0a02c55a220809205e14292cd65940d8eb8ea2c72f5a92010837128d010a36747970652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e557064617465546f6b656e506172616d73436f6e747261637412530a1544e4257594e51b856d87428771a1a9ccdcab8bf5cb1203504b4c1814200228c801320c6e6577706f7765722e636f6d3a166e657720706f77657220746f6b656e20706172616d7340808c8d9e024880897a70fda28ba2c72f"
+}
+Please confirm and input your permission id, if input y or Y means default 0, other non-numeric characters will cancell transaction.
+y
+updateTokenParams of UinLtqgPm9waBdUSVAAzRR6pfBzfQNC4c2 successful !!
+```
+
+Get future transfer deals of token v2
+```
+wallet> GetTokenFuture --help
+getFutureToken needs 4 parameters like following: 
+getFutureToken Address token_name page_size[-1 if default] page_index[-1 if default]
+wallet> GetFutureTransfer UazSBZCDUCABgAkhZv8WDpqgUMV4LPLBCh 2 0
+{
+	"owner_address": "448eaddbe3be51a379d225258151b5b54b28177693",
+	"total_deal": 3,
+	"lower_time": 1635724800000,
+	"upper_time": 1640995200000,
+	"total_balance": 2000100,
+	"deals": [
+		{
+			"future_balance": 1000000,
+			"expire_time": 1635724800000,
+			"next_tick": "44efbfbdefbfbdefbfbdefbfbd51efbfbd79efbfbd2525efbfbd51efbfbdefbfbd4b281776efbfbd5f31373631393535323030303030"
+		},
+		{
+			"future_balance": 1000000,
+			"expire_time": 1761955200000,
+			"prev_tick": "44efbfbdefbfbdefbfbdefbfbd51efbfbd79efbfbd2525efbfbd51efbfbdefbfbd4b281776efbfbd5f31363335373234383030303030",
+			"next_tick": "44efbfbdefbfbdefbfbdefbfbd51efbfbd79efbfbd2525efbfbd51efbfbdefbfbd4b281776efbfbd5f31363430393935323030303030"
+		}
+	]
+}
+
+```
+
+Get future transfer deals of token v2
+```
+wallet> GetTokenFuture --help
+getFutureToken needs 4 parameters like following: 
+getFutureToken Address token_name page_size[-1 if default] page_index[-1 if default]
+wallet> GetFutureTransfer UazSBZCDUCABgAkhZv8WDpqgUMV4LPLBCh 2 0
+{
+	"owner_address": "448eaddbe3be51a379d225258151b5b54b28177693",
+	"total_deal": 3,
+	"lower_time": 1635724800000,
+	"upper_time": 1640995200000,
+	"total_balance": 2000100,
+	"deals": [
+		{
+			"future_balance": 1000000,
+			"expire_time": 1635724800000,
+			"next_tick": "44efbfbdefbfbdefbfbdefbfbd51efbfbd79efbfbd2525efbfbd51efbfbdefbfbd4b281776efbfbd5f31373631393535323030303030"
+		},
+		{
+			"future_balance": 1000000,
+			"expire_time": 1761955200000,
+			"prev_tick": "44efbfbdefbfbdefbfbdefbfbd51efbfbd79efbfbd2525efbfbd51efbfbdefbfbd4b281776efbfbd5f31363335373234383030303030",
+			"next_tick": "44efbfbdefbfbdefbfbdefbfbd51efbfbd79efbfbd2525efbfbd51efbfbdefbfbd4b281776efbfbd5f31363430393935323030303030"
+		}
+	]
+}
+
+```
+
+Withdraw expired  token v2 future transfer deals
+```
+wallet> withdrawTokenFuture --help
+withdrawTokenFuture needs 1 parameters like following:
+withdrawTokenFuture [OwnerAddress] token_name
+
+wallet> WithdrawFutureToken UazSBZCDUCABgAkhZv8WDpqgUMV4LPLBCh PKL
+```
+
+Create hardfork Proposal with block version 2
+```
+wallet> CreateProposal --help
+Use createProposal command with below syntax: 
+createProposal [OwnerAddress] id0 value0 ... idN valueN
+wallet> CreateProposal 34 2
+```
+
+List proposals
+```
+wallet> ListProposals
+{
+"proposals": [
+{
+"proposal_id": 2,
+"proposer_address": "UYBEVyN2wxLDZGMQBFrVn2gGL7MSRtirPk",
+"parameters": [
+{
+"key": 3,
+"value": 10
+}
+],
+"expiration_time": 1633405200000,
+"create_time": 1633404462000,
+"approvals": [
+"US1xxmn45vcHMWyRoT969NBtLsPuLmVkMc",
+"UdJg9ZEV2BN8XLD5GzEXPmYMoKf5BYLyU9",
+"Uh2R7ahQoE5YJDZiM3wc57JRoQmS4xD9Xk",
+"UazSBZCDUCABgAkhZv8WDpqgUMV4LPLBCh",
+"US4TBD3gyMXQNGMJz7zopLkQv2FDhmAjXq",
+"USzHCLkaE1HxbZY9o7AKqTCLCsTuBa3yPB"
+],
+"state": "APPROVED"
+},
+{
+"proposal_id": 1,
+"proposer_address": "US1xxmn45vcHMWyRoT969NBtLsPuLmVkMc",
+"parameters": [
+{
+"key": 34,
+"value": 2
+}
+],
+"expiration_time": 1632498600000,
+"create_time": 1632497874000,
+"approvals": [
+"US1xxmn45vcHMWyRoT969NBtLsPuLmVkMc",
+"UYBEVyN2wxLDZGMQBFrVn2gGL7MSRtirPk",
+"Uk28n4A28nfXhgYWnRr6mXDbTbAeCkEtJ7",
+"Ujhe4Wb6DXAVVLt9ziT4mf9HC63izpJscv",
+"USzHCLkaE1HxbZY9o7AKqTCLCsTuBa3yPB",
+"Uh2R7ahQoE5YJDZiM3wc57JRoQmS4xD9Xk",
+"UazSBZCDUCABgAkhZv8WDpqgUMV4LPLBCh"
+],
+"state": "APPROVED"
+}
+]
+}
+
+```
+
+Approve hardfork Proposal with id 1
+```
+wallet> ApproveProposal --help
+Use approveProposal command with below syntax:
+approveProposal 1 true
+
+```
+
+Create Proposal to set MAX_FUTURE_TRANSFER_TIME_RANGE_UNW to 5 years
+```
+wallet> CreateProposal 35 157680000000
+```
+
+Create Proposal to set MAX_FUTURE_TRANSFER_TIME_RANGE_TOKEN to 5 years
+```
+wallet> CreateProposal 36 157680000000
+```
+
 Logout
 
 ```
@@ -393,77 +860,117 @@ Type *help* for others commands
 ```
 wallet> help
 
-AddTransactionSign    
-ApproveProposal    
-AssetIssue    
-BackupShieldedAddress    
-BackupWallet    
-BackupWallet2Base64    
-BroadcastTransaction    
-ChangePassword    
-ClearContractABI    
-Create2    
-CreateAccount    
-CreateProposal    
-CreateWitness    
-DeleteProposal    
-DeployContract contractName ABI byteCode constructor params isHex fee_limit consume_user_resource_percent origin_energy_limit value token_value token_id <library:address,library:address,...> <lib_compiler_version(e.g:v5)>        
-FreezeBalance    
-GenerateAddress    
-GetAccount    
-GetAccountNet    
-GetAccountResource    
-GetAddress    
-GetAssetIssueByAccount    
-GetAssetIssueById    
-GetAssetIssueByName    
-GetAssetIssueListByName    
-GetBalance    
-GetBlock    
-GetBlockById    
-GetBlockByLatestNum    
-GetBlockByLimitNext    
-GetChainParameters    
-GetContract contractAddress    
-GetDelegatedResource    
-GetDelegatedResourceAccountIndex    
-GetDiversifier                
-GetProposal    
-GetTotalTransaction    
-GetTransactionApprovedList    
-GetTransactionById    
-GetTransactionCountByBlockNum    
-GetTransactionInfoById    
-GetTransactionsFromThis    
-GetTransactionsToThis    
-GetTransactionSignWeight        
-ImportWallet    
-ImportWalletByBase64    
-ListAssetIssue    
-ListAssetIssuePaginated        
-ListNodes    
-ListProposals    
-ListProposalsPaginated    
-ListWitnesses    
-Login    
-Logout    
-ParticipateAssetIssue    
-RegisterWallet      
-SendCoin        
-SetAccountId    
-TransferAsset    
-TriggerContract contractAddress method args isHex fee_limit value    
-TriggerConstantContract contractAddress method args isHex    
-UnfreezeAsset    
-UnfreezeBalance    
-UpdateAccount    
-UpdateAsset    
-UpdateEnergyLimit contract_address energy_limit    
-UpdateSetting contract_address consume_user_resource_percent    
-UpdateWitness    
-UpdateAccountPermission    
-VoteWitness    
-WithdrawBalance    
+AddTransactionSign
+ApproveProposal
+AssetIssue
+BackupShieldedAddress
+BackupWallet
+BackupWallet2Base64
+BroadcastTransaction
+ChangePassword
+ClearContractABI
+Create2
+CreateAccount
+CreateProposal
+CreateWitness
+DeleteProposal
+DeployContract contractName ABI byteCode constructor params isHex fee_limit consume_user_resource_percent origin_energy_limit value token_value token_id <library:address,library:address,...> <lib_compiler_version(e.g:v5)>
+ExchangeCreate
+ExchangeInject
+ExchangeTransaction
+ExchangeWithdraw
+FreezeBalance
+GenerateAddress
+GenerateShieldedAddress
+GetAccount
+GetAccountNet
+GetAccountResource
+GetAddress
+GetAssetIssueByAccount
+GetAssetIssueById
+GetAssetIssueByName
+GetAssetIssueListByName
+GetAkFromAsk
+GetBalance
+GetBlock
+GetBlockById
+GetBlockByLatestNum
+GetBlockByLimitNext
+GetChainParameters
+GetContract contractAddress
+GetDelegatedResource
+GetDelegatedResourceAccountIndex
+GetDiversifier
+GetExchange
+GetExpandedSpendingKey
+GetIncomingViewingKey
+GetNkFromNsk
+GetNextMaintenanceTime
+GetShieldedNullifier
+GetSpendingKey
+GetProposal
+GetTotalTransaction
+GetTransactionApprovedList
+GetTransactionById
+GetTransactionCountByBlockNum
+GetTransactionInfoById
+GetTransactionsFromThis
+GetTransactionsToThis
+GetTransactionSignWeight
+ImportShieldedAddress
+ImportWallet
+ImportWalletByBase64
+ListAssetIssue
+ListAssetIssuePaginated
+ListExchanges
+ListExchangesPaginated
+ListNodes
+ListShieldedAddress
+ListShieldedNote
+ListProposals
+ListProposalsPaginated
+ListWitnesses
+Login
+Logout
+LoadShieldedWallet
+ParticipateAssetIssue
+RegisterWallet
+ResetShieldedNote
+ScanAndMarkNotebyAddress
+ScanNotebyIvk
+ScanNotebyOvk
+SendCoin
+SendFuture
+WithdrawFuture
+GetFutureTransfer
+CreateToken
+ContributeTokenPoolFee
+UpdateTokenParams
+MineToken
+BurnToken
+TransferToken
+WithdrawFutureToken
+ListTokenPool
+GetTokenFuture
+SendShieldedCoin
+SendShieldedCoinWithoutAsk
+SetAccountId
+TransferAsset
+TriggerContract contractAddress method args isHex fee_limit value
+TriggerConstantContract contractAddress method args isHex
+UnfreezeAsset
+UnfreezeBalance
+UpdateAccount
+UpdateAsset
+UpdateEnergyLimit contract_address energy_limit
+UpdateSetting contract_address consume_user_resource_percent
+UpdateWitness
+UpdateAccountPermission
+VoteWitness
+WithdrawBalance
+UpdateBrokerage
+GetReward
+GetBrokerage   
 Exit or Quit    
 ```
 
@@ -473,5 +980,12 @@ SendCoin needs 2 parameters like following:
 SendCoin [OwnerAddress] ToAddress Amount
 
 ```        
+
+```
+wallet> SendCoin help
+SendCoin needs 2 parameters like following: 
+SendCoin [OwnerAddress] ToAddress Amount
+
+```    
 
 *Note that the unit in UniChain network is Ginza. 1 UNW = 10^6 Ginza*
