@@ -547,11 +547,11 @@ public class WalletApi {
   }
 
   public boolean createToken(byte[] owner, String tokenName, String abbr, long maxSupply, long totalSupply, long startTime,
-                             long endTime,  String description,  String url, long fee, long extraFeeRate, long feePool, long lot) throws CipherException, IOException, CancelException {
+                             long endTime,  String description,  String url, long fee, long extraFeeRate, long feePool, long lot, long exchUnwNum, long exchTokenNum) throws CipherException, IOException, CancelException {
     if (owner == null) {
       owner = getAddress();
     }
-    Contract.CreateTokenContract contract = createCreateTokenContract(owner, tokenName, abbr, maxSupply, totalSupply, startTime, endTime, description, url, fee, extraFeeRate, feePool, lot);
+    Contract.CreateTokenContract contract = createCreateTokenContract(owner, tokenName, abbr, maxSupply, totalSupply, startTime, endTime, description, url, fee, extraFeeRate, feePool, lot, exchUnwNum, exchTokenNum);
     Transaction transaction = rpcCli.createTransaction(contract);
     return processTransaction(transaction);
   }
@@ -565,12 +565,12 @@ public class WalletApi {
     return processTransaction(transaction);
   }
 
-  public boolean updateTokenParams(byte[] owner, String tokenName, long totalSupply, long feePool, long fee, long extraFeeRate, long lot, String url, String description) throws CipherException, IOException, CancelException {
+  public boolean updateTokenParams(byte[] owner, String tokenName, long totalSupply, long feePool, long fee, long extraFeeRate, long lot, String url, String description, long exchUnwNum, long exchTokenNum) throws CipherException, IOException, CancelException {
     if(owner == null) {
       owner = getAddress();
     }
 
-    Contract.UpdateTokenParamsContract contract = createUpdateTokenParams(owner, tokenName, totalSupply, feePool, fee, extraFeeRate, lot, url, description);
+    Contract.UpdateTokenParamsContract contract = createUpdateTokenParams(owner, tokenName, totalSupply, feePool, fee, extraFeeRate, lot, url, description, exchUnwNum, exchTokenNum);
     Transaction transaction = rpcCli.createTransaction(contract);
     return processTransaction(transaction);
   }
@@ -602,6 +602,26 @@ public class WalletApi {
     Transaction transaction = rpcCli.createTransaction(contract);
     return processTransaction(transaction);
   }
+
+  public boolean transferTokenOwner( byte[] owner, byte[] toAddress, String tokenName) throws CipherException, IOException, CancelException {
+    if (owner == null) {
+      owner = getAddress();
+    }
+    Contract.TransferTokenOwnerContract contract = createTransferTokenOwner(owner, toAddress, tokenName);
+    Transaction transaction = rpcCli.createTransaction(contract);
+    return processTransaction(transaction);
+  }
+
+  public boolean exchangeToken( byte[] owner, String tokenName, long unw) throws CipherException, IOException, CancelException {
+    if (owner == null) {
+      owner = getAddress();
+    }
+    Contract.TokenExchangeContract contract = createExchangeToken(owner, tokenName, unw);
+    Transaction transaction = rpcCli.createTransaction(contract);
+    return processTransaction(transaction);
+  }
+
+
 
   public boolean withdrawTokenFuture(byte[] owner, String tokenName) throws CipherException, IOException, CancelException {
     if (owner == null) {
@@ -844,7 +864,7 @@ public class WalletApi {
   }
 
   public static Contract.CreateTokenContract createCreateTokenContract(byte[] owner, String tokenName, String abbr, long maxSupply, long totalSupply,
-                                                                       long startTime, long endTime,  String description,  String url, long fee, long extraFeeRate, long feePool, long lot) {
+                                                                       long startTime, long endTime,  String description,  String url, long fee, long extraFeeRate, long feePool, long lot, long exchUnwNum, long exchTokenNum) {
     Contract.CreateTokenContract.Builder builder = Contract.CreateTokenContract.newBuilder();
     ByteString bsOwner = ByteString.copyFrom(owner);
     builder.setOwnerAddress(bsOwner)
@@ -857,7 +877,9 @@ public class WalletApi {
             .setFee(fee)
             .setExtraFeeRate(extraFeeRate)
             .setFeePool(feePool)
-            .setLot(lot);
+            .setLot(lot)
+            .setExchUnxNum(exchUnwNum)
+            .setExchNum(exchTokenNum);
     if(startTime != -1L)
       builder.setStartTime(startTime);
     if(endTime != -1L)
@@ -874,7 +896,7 @@ public class WalletApi {
             .build();
   }
 
-  public static Contract.UpdateTokenParamsContract createUpdateTokenParams(byte[] owner, String tokenName, long totalSupply, long feePool, long fee, long extraFeeRate, long lot, String url, String description) {
+  public static Contract.UpdateTokenParamsContract createUpdateTokenParams(byte[] owner, String tokenName, long totalSupply, long feePool, long fee, long extraFeeRate, long lot, String url, String description, long exchUnwNum, long exchTokenNum) {
     var builder =  Contract.UpdateTokenParamsContract.newBuilder()
             .setOwnerAddress(ByteString.copyFrom(owner))
             .setTokenName(tokenName);
@@ -892,6 +914,10 @@ public class WalletApi {
       builder.setUrl(url);
     if(!"-".equals(description))
       builder.setDescription(description);
+    if(exchUnwNum != -1)
+      builder.setExchUnxNum(exchUnwNum);
+    if(exchTokenNum != -1)
+      builder.setExchNum(exchTokenNum);
 
     return builder.build();
   }
@@ -911,6 +937,22 @@ public class WalletApi {
             .setTokenName(tokenName)
             .setAmount(amount)
             .setAvailableTime(availableTime)
+            .build();
+  }
+
+  public static Contract.TransferTokenOwnerContract createTransferTokenOwner(byte[] owner, byte[] toAddress, String tokenName) {
+    Contract.TransferTokenOwnerContract.Builder builder = Contract.TransferTokenOwnerContract.newBuilder();
+    return builder.setOwnerAddress(ByteString.copyFrom(owner))
+            .setToAddress(ByteString.copyFrom(toAddress))
+            .setTokenName(tokenName)
+            .build();
+  }
+
+  public static Contract.TokenExchangeContract createExchangeToken(byte[] owner, String tokenName, long unw) {
+    Contract.TokenExchangeContract.Builder builder = Contract.TokenExchangeContract.newBuilder();
+    return builder.setOwnerAddress(ByteString.copyFrom(owner))
+            .setTokenName(tokenName)
+            .setAmount(unw)
             .build();
   }
 
