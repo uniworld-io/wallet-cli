@@ -302,7 +302,30 @@
             int64 fee_pool = 12;  
             int64 lot =15;  
             }
-  
+
+
+    An `TokenExchangeContract` contains 3 parameters:
+    `owner_address`: the address that is the owner of token – e.g. “_0xu92h…7236_”.
+    `token_name`: token name – e.g. “_pwr_”.
+    `amount`: unw amount with ginza factor to exchange – e.g. “_1000000_”.
+
+            message TokenExchangeContract {
+            bytes owner_address = 1;  
+            string token_name = 2;  
+            int64 amount =3;  
+            }
+
+    An `TransferTokenOwnerContract` contains 3 parameters:
+    `owner_address`: the address that is the owner of token – e.g. “_0xu92h…7236_”.
+    `to_address`: the address that is assigned as the new owner of token – e.g. “_0xu89h…7236_”.
+    `token_name`: token name – e.g. “_pwr_”.
+
+       message TransferTokenOwnerContract {
+            bytes owner_address = 1;  
+            bytes to_address = 2;  
+            string token_name = 3;  
+        }
+
     An `ContributeTokenPoolFeeContract` contains 3 parameters:
       `owner_address`: the address to contribute pool fee – e.g. “_0xu92h…7236_”.
       `token_name`: token name to contribute fee to – e.g. “_PWR_”.
@@ -770,6 +793,12 @@ Input, transaction and head block all require signature.
 
         rpc CreateToken (CreateTokenContract) returns (Transaction){
         
+        }
+        rpc TransferTokenOwner (TransferTokenOwnerContract) returns (Transaction){
+
+        }
+        rpc ExchangeToken (TokenExchangeContract) returns (Transaction){
+
         }
         rpc ContributeTokenFee (ContributeTokenPoolFeeContract) returns (Transaction){
 

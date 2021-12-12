@@ -115,6 +115,8 @@ public class Client {
       "WithdrawFuture",
        "GetFutureTransfer",
       "CreateToken",
+      "TransferTokenOwner",
+      "ExchangeToken",
       "ContributeTokenPoolFee",
       "UpdateTokenParams",
       "MineToken",
@@ -218,6 +220,8 @@ public class Client {
       "WithdrawFuture",
       "GetFutureTransfer",
       "CreateToken",
+      "TransferTokenOwner",
+      "ExchangeToken",
       "ContributeTokenPoolFee",
       "UpdateTokenParams",
       "MineToken",
@@ -784,15 +788,15 @@ public class Client {
   }
 
   private void createToken(String[] parameters) throws IOException, CipherException, CancelException {
-    if (parameters == null || (parameters.length != 12 && parameters.length != 13)) {
-      System.out.println("CreateToken needs 11 parameters like following: ");
-      System.out.println("CreateToken [OwnerAddress] name abbr max_supply total_supply start_time(- if default) end_time(- if default) description url fee extra_fee_rate fee_pool lot");
+    if (parameters == null || (parameters.length != 14 && parameters.length != 15)) {
+      System.out.println("CreateToken needs 14 parameters like following: ");
+      System.out.println("CreateToken [OwnerAddress] name abbr max_supply total_supply start_time(- if default) end_time(- if default) description url fee extra_fee_rate fee_pool lot exch_unw_num exch_token_num");
       return;
     }
 
     int index = 0;
     byte[] ownerAddress = null;
-    if (parameters.length == 13) {
+    if (parameters.length == 15) {
       ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
       if (ownerAddress == null) {
         System.out.println("Invalid OwnerAddress.");
@@ -844,8 +848,10 @@ public class Client {
     long extra_fee_rate = new Long(parameters[index++]);
     long poolFee = new Long(parameters[index++]);
     long lot = new Long(parameters[index++]);
+    long exchUnwNum = new Long(parameters[index++]);
+    long exchTokenNum = new Long(parameters[index++]);
 
-    boolean result = walletApiWrapper.createToken(ownerAddress, tokenName, abbr, maxSupply, totalSupply, startTime, endTime, description, url, fee, extra_fee_rate, poolFee , lot);
+    boolean result = walletApiWrapper.createToken(ownerAddress, tokenName, abbr, maxSupply, totalSupply, startTime, endTime, description, url, fee, extra_fee_rate, poolFee , lot, exchUnwNum, exchTokenNum);
     if (result) {
       System.out.println("CreateToken with token name: " + tokenName + ", abbr: " + abbr + ", max supply: " + maxSupply + ", total supply:" + totalSupply + " successful !!");
     } else {
@@ -883,15 +889,15 @@ public class Client {
   }
 
   private void updateTokenParams(String[] parameters) throws IOException, CipherException, CancelException {
-    if (parameters == null || (parameters.length != 8 && parameters.length != 9)) {
-      System.out.println("updateTokenParams needs 8 parameters like following: ");
-      System.out.println("updateTokenParams [ownerAddress] token_name total_supply[-1 if not set] fee_pool[-1 if not set] fee[-1 if not set] extra_fee_rate[-1 if not set] lot[-1 if not set]  url[- if not set] description[- if not set]");
+    if (parameters == null || (parameters.length != 10 && parameters.length != 11)) {
+      System.out.println("updateTokenParams needs 10 parameters like following: ");
+      System.out.println("updateTokenParams [ownerAddress] token_name total_supply[-1 if not set] fee_pool[-1 if not set] fee[-1 if not set] extra_fee_rate[-1 if not set] lot[-1 if not set]  url[- if not set] description[- if not set] exch_unw_num[-1 if not set] exch_token_num[-1 if not set]");
       return;
     }
 
     int index = 0;
     byte[] ownerAddress = null;
-    if (parameters.length == 9) {
+    if (parameters.length == 11) {
       ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
       if (ownerAddress == null) {
         System.out.println("Invalid OwnerAddress.");
@@ -907,8 +913,10 @@ public class Client {
     long lot = new Long(parameters[index++]);
     String url = parameters[index++].trim();
     String description = parameters[index++].trim();
+    long exchUnwNum = new Long(parameters[index++]);
+    long exchTokenNum = new Long(parameters[index++]);
 
-    boolean result = walletApiWrapper.updateTokenParams(ownerAddress, tokenName, total_supply, fee_pool, fee, extraFeeRate, lot, url , description);
+    boolean result = walletApiWrapper.updateTokenParams(ownerAddress, tokenName, total_supply, fee_pool, fee, extraFeeRate, lot, url , description, exchUnwNum, exchTokenNum);
     String walletOwnerAddress = walletApiWrapper.getAddress();
     if (result) {
       System.out.println("updateTokenParams of " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " successful !!");
@@ -1017,6 +1025,64 @@ public class Client {
       System.out.println("transferToken of " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " successful !!");
     } else {
       System.out.println("transferToken " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " failed !!");
+    }
+  }
+
+  private void exchangeToken(String[] parameters) throws IOException, CipherException, CancelException {
+    if (parameters == null || (parameters.length != 2 && parameters.length != 3)) {
+      System.out.println("exchangeToken needs 2 parameters like following: ");
+      System.out.println("exchangeToken [OwnerAddress] token_name unw");
+      return;
+    }
+
+    int index = 0;
+    byte[] ownerAddress = null;
+    if (parameters.length == 3) {
+      ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+      if (ownerAddress == null) {
+        System.out.println("Invalid OwnerAddress.");
+        return;
+      }
+    }
+
+    String tokenName = parameters[index++];
+    long unw = new Long(parameters[index++]);
+
+    boolean result = walletApiWrapper.exchangeToken(ownerAddress, tokenName, unw);
+    String walletOwnerAddress = walletApiWrapper.getAddress();
+    if (result) {
+      System.out.println("exchangeToken of " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " successful !!");
+    } else {
+      System.out.println("exchangeToken of " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " failed !!");
+    }
+  }
+
+  private void transferTokenOwner(String[] parameters) throws IOException, CipherException, CancelException {
+    if (parameters == null || (parameters.length != 2 && parameters.length != 3)) {
+      System.out.println("transferTokenOwner needs 3 parameters like following: ");
+      System.out.println("transferTokenOwner [OwnerAddress] to_address token_name");
+      return;
+    }
+
+    int index = 0;
+    byte[] ownerAddress = null;
+    if (parameters.length == 3) {
+      ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+      if (ownerAddress == null) {
+        System.out.println("Invalid OwnerAddress.");
+        return;
+      }
+    }
+
+    byte[] toAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+    String tokenName = parameters[index++];
+
+    boolean result = walletApiWrapper.transferTokenOwner(ownerAddress, toAddress, tokenName);
+    String walletOwnerAddress = walletApiWrapper.getAddress();
+    if (result) {
+      System.out.println("transferTokenOwner of " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " successful !!");
+    } else {
+      System.out.println("transferTokenOwner of " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " failed !!");
     }
   }
 
@@ -2884,6 +2950,16 @@ public class Client {
               break;
             }
 
+            case "transfertokenowner": {
+              transferTokenOwner(parameters);
+              break;
+            }
+
+            case "exchangetoken": {
+              exchangeToken(parameters);
+              break;
+            }
+
             case "contributetokenpoolfee": {
               contributeTokenPoolFee(parameters);
               break;
@@ -2924,227 +3000,281 @@ public class Client {
               break;
             }
 
-
             case "transferasset": {
               transferAsset(parameters);
               break;
             }
+
             case "participateassetissue": {
               participateAssetIssue(parameters);
               break;
             }
+
             case "assetissue": {
               assetIssue(parameters);
               break;
             }
+
             case "createaccount": {
               createAccount(parameters);
               break;
             }
+
             case "createwitness": {
               createWitness(parameters);
               break;
             }
+
             case "updatewitness": {
               updateWitness(parameters);
               break;
             }
+
             case "votewitness": {
               voteWitness(parameters);
               break;
             }
+
             case "freezebalance": {
               freezeBalance(parameters);
               break;
             }
+
             case "unfreezebalance": {
               unfreezeBalance(parameters);
               break;
             }
+
             case "withdrawbalance": {
               withdrawBalance(parameters);
               break;
             }
+
             case "unfreezeasset": {
               unfreezeAsset(parameters);
               break;
             }
+
             case "createproposal": {
               createProposal(parameters);
               break;
             }
+
             case "approveproposal": {
               approveProposal(parameters);
               break;
             }
+
             case "deleteproposal": {
               deleteProposal(parameters);
               break;
             }
+
             case "listproposals": {
               listProposals();
               break;
             }
+
             case "listproposalspaginated": {
               getProposalsListPaginated(parameters);
               break;
             }
+
             case "getproposal": {
               getProposal(parameters);
               break;
             }
+
             case "getdelegatedresource": {
               getDelegatedResource(parameters);
               break;
             }
+
             case "getdelegatedresourceaccountindex": {
               getDelegatedResourceAccountIndex(parameters);
               break;
             }
+
             case "exchangecreate": {
               exchangeCreate(parameters);
               break;
             }
+
             case "exchangeinject": {
               exchangeInject(parameters);
               break;
             }
+
             case "exchangewithdraw": {
               exchangeWithdraw(parameters);
               break;
             }
+
             case "exchangetransaction": {
               exchangeTransaction(parameters);
               break;
             }
+
             case "listexchanges": {
               listExchanges();
               break;
             }
+
             case "listexchangespaginated": {
               getExchangesListPaginated(parameters);
               break;
             }
+
             case "getexchange": {
               getExchange(parameters);
               break;
             }
+
             case "getchainparameters": {
               getChainParameters();
               break;
             }
+
             case "listwitnesses": {
               listWitnesses();
               break;
             }
+
             case "listassetissue": {
               getAssetIssueList();
               break;
             }
+
             case "listassetissuepaginated": {
               getAssetIssueList(parameters);
               break;
             }
+
             case "listnodes": {
               listNodes();
               break;
             }
+
             case "getblock": {
               getBlock(parameters);
               break;
             }
+
             case "gettransactioncountbyblocknum": {
               getTransactionCountByBlockNum(parameters);
               break;
             }
+
             case "gettotaltransaction": {
               getTotalTransaction();
               break;
             }
+
             case "getnextmaintenancetime": {
               getNextMaintenanceTime();
               break;
             }
+
             case "gettransactionsfromthis": {
               getTransactionsFromThis(parameters);
               break;
             }
+
             case "gettransactionstothis": {
               getTransactionsToThis(parameters);
               break;
             }
+
             case "gettransactionbyid": {
               getTransactionById(parameters);
               break;
             }
+
             case "gettransactioninfobyid": {
               getTransactionInfoById(parameters);
               break;
             }
+
             case "getblockbyid": {
               getBlockById(parameters);
               break;
             }
+
             case "getblockbylimitnext": {
               getBlockByLimitNext(parameters);
               break;
             }
+
             case "getblockbylatestnum": {
               getBlockByLatestNum(parameters);
               break;
             }
+
             case "updatesetting": {
               updateSetting(parameters);
               break;
             }
+
             case "updateenergylimit": {
               updateEnergyLimit(parameters);
               break;
             }
+
             case "deploycontract": {
               deployContract(parameters);
               break;
             }
+
             case "triggercontract": {
               triggerContract(parameters, false);
               break;
             }
+
             case "triggerconstantcontract": {
               triggerContract(parameters, true);
               break;
             }
+
             case "getcontract": {
               getContract(parameters);
               break;
             }
+
             case "generateaddress": {
               generateAddress();
               break;
             }
+
             case "updateaccountpermission": {
               updateAccountPermission(parameters);
               break;
             }
+
             case "gettransactionsignweight": {
               getTransactionSignWeight(parameters);
               break;
             }
+
             case "gettransactionapprovedlist": {
               getTransactionApprovedList(parameters);
               break;
             }
+
             case "addtransactionsign": {
               addTransactionSign(parameters);
               break;
             }
+
             case "broadcasttransaction": {
               broadcastTransaction(parameters);
               break;
             }
+
             case "create2": {
               create2(parameters);
               break;
             }
+
             case "exit":
             case "quit": {
               System.out.println("Exit !!!");

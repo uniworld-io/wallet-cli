@@ -428,6 +428,14 @@ public class Utils {
             CreateTokenContract createTokenContract = contract.getParameter().unpack(CreateTokenContract.class);
             contractJson = JSONObject.parseObject(JsonFormat.printToString(createTokenContract, selfType));
             break;
+          case TransferTokenOwnerContract:
+            TransferTokenOwnerContract transferTokenOwnerContract = contract.getParameter().unpack(TransferTokenOwnerContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(transferTokenOwnerContract, selfType));
+            break;
+          case ExchangeTokenContract:
+            TokenExchangeContract tokenExchangeContract = contract.getParameter().unpack(TokenExchangeContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(tokenExchangeContract, selfType));
+            break;
           case ContributeTokenPoolFeeContract:
             ContributeTokenPoolFeeContract contributeTokenPoolFeeContract = contract.getParameter().unpack(ContributeTokenPoolFeeContract.class);
             contractJson = JSONObject.parseObject(JsonFormat.printToString(contributeTokenPoolFeeContract, selfType));

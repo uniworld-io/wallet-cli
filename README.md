@@ -30,7 +30,7 @@ cd wallet-cli
 How wallet-cli connects to unichain-core :
 --------------------------------------
 Wallet-cli connect to unichain-core by grpc protocol.          
-unichain-core nodes can be deployed locally or remotely.          
+Unichain-core nodes can be deployed locally or remotely.          
 We can set the connected unichain-core node IP in config.conf of wallet-cli.
 The default grpc port is 8864
 
@@ -490,6 +490,89 @@ y
 CreateToken with token name: PKL, abbr: pkl, max supply: 1000000000, total supply:500000000 successful !!
 ```
 
+Transfer token owner account to UinLtqgPm9waBdUSVAAzRR6pfBzfQNC4c2
+```
+@todo update later
+wallet> transferTokenOwner [OwnerAddress] to_address  token_name
+transferTokenOwner UinLtqgPm9waBdUSVAAzRR6pfBzfQNC4c2 ACB
+{
+	"raw_data":{
+		"contract":[
+			{
+				"parameter":{
+					"value":{
+						"lot":1000,
+						"fee_pool":1000000,
+						"total_supply":500000000,
+						"fee":100,
+						"name":"PKL",
+						"max_supply":1000000000,
+						"end_time":2524608000000,
+						"description":"PKL token for PowerSolr Inc",
+						"extra_fee_rate":1,
+						"owner_address":"44e4257594e51b856d87428771a1a9ccdcab8bf5cb",
+						"abbr":"pkl",
+						"url":"pklpower.com"
+					},
+					"type_url":"type.googleapis.com/protocol.CreateTokenContract"
+				},
+				"type":"CreateTokenContract"
+			}
+		],
+		"ref_block_bytes":"c429",
+		"ref_block_hash":"8ceefc48d20b2372",
+		"expiration":1634037234000,
+		"timestamp":1634037175796
+	},
+	"raw_data_hex":"0a02c42922088ceefc48d20b237240d0f2d5a1c72f5aa3010835129e010a30747970652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e437265617465546f6b656e436f6e7472616374126a0a1544e4257594e51b856d87428771a1a9ccdcab8bf5cb1203504b4c1a03706b6c208094ebdc032880cab5ee013880e0f3f2bc49421b504b4c20746f6b656e20666f7220506f776572536f6c7220496e634a0c706b6c706f7765722e636f6d5064580160c0843d78e80770f4abd2a1c72f"
+}
+Please confirm and input your permission id, if input y or Y means default 0, other non-numeric characters will cancell transaction.
+y
+transferTokenOwner with token name: PKL, abbr: pkl, max supply: 1000000000, total supply:500000000 successful !!
+```
+
+
+Exchange UNW to token
+```
+@todo update later
+wallet> exchangeToken [OwnerAddress] token_name  unw
+exchangeToken ACB 1000000000
+{
+	"raw_data":{
+		"contract":[
+			{
+				"parameter":{
+					"value":{
+						"lot":1000,
+						"fee_pool":1000000,
+						"total_supply":500000000,
+						"fee":100,
+						"name":"PKL",
+						"max_supply":1000000000,
+						"end_time":2524608000000,
+						"description":"PKL token for PowerSolr Inc",
+						"extra_fee_rate":1,
+						"owner_address":"44e4257594e51b856d87428771a1a9ccdcab8bf5cb",
+						"abbr":"pkl",
+						"url":"pklpower.com"
+					},
+					"type_url":"type.googleapis.com/protocol.CreateTokenContract"
+				},
+				"type":"CreateTokenContract"
+			}
+		],
+		"ref_block_bytes":"c429",
+		"ref_block_hash":"8ceefc48d20b2372",
+		"expiration":1634037234000,
+		"timestamp":1634037175796
+	},
+	"raw_data_hex":"0a02c42922088ceefc48d20b237240d0f2d5a1c72f5aa3010835129e010a30747970652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e437265617465546f6b656e436f6e7472616374126a0a1544e4257594e51b856d87428771a1a9ccdcab8bf5cb1203504b4c1a03706b6c208094ebdc032880cab5ee013880e0f3f2bc49421b504b4c20746f6b656e20666f7220506f776572536f6c7220496e634a0c706b6c706f7765722e636f6d5064580160c0843d78e80770f4abd2a1c72f"
+}
+Please confirm and input your permission id, if input y or Y means default 0, other non-numeric characters will cancell transaction.
+y
+exchangeToken with token name: PKL, abbr: pkl, max supply: 1000000000, total supply:500000000 successful !!
+```
+
 List all token v2
 ```
 wallet>  ListTokenPool --help
@@ -944,6 +1027,8 @@ SendFuture
 WithdrawFuture
 GetFutureTransfer
 CreateToken
+TransferTokenOwner
+ExchangeToken
 ContributeTokenPoolFee
 UpdateTokenParams
 MineToken

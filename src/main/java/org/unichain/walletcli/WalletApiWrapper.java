@@ -157,13 +157,13 @@ public class WalletApiWrapper {
     return wallet.sendFuture(ownerAddress, toAddress, amount, expireTime);
   }
 
-  public boolean createToken(byte[] ownerAddress, String tokenName, String abbr, long maxSupply, long totalSupply, long startTime, long endTime,  String description,  String url, long fee, long extra_fee_rate, long feePool, long lot) throws CipherException, IOException, CancelException {
+  public boolean createToken(byte[] ownerAddress, String tokenName, String abbr, long maxSupply, long totalSupply, long startTime, long endTime,  String description,  String url, long fee, long extra_fee_rate, long feePool, long lot, long exchUnwNum, long exchTokenNum) throws CipherException, IOException, CancelException {
     if (wallet == null || !wallet.isLoginState()) {
       System.out.println("Warning: CreateToken failed,  Please login first !!");
       return false;
     }
 
-    return wallet.createToken(ownerAddress, tokenName, abbr, maxSupply, totalSupply, startTime, endTime, description, url, fee, extra_fee_rate, feePool, lot);
+    return wallet.createToken(ownerAddress, tokenName, abbr, maxSupply, totalSupply, startTime, endTime, description, url, fee, extra_fee_rate, feePool, lot, exchUnwNum, exchTokenNum);
   }
 
   public boolean contributeTokenFeePool(byte[] ownerAddress, String tokenName, long amount) throws CipherException, IOException, CancelException {
@@ -175,13 +175,13 @@ public class WalletApiWrapper {
     return wallet.contributeTokenPoolFee(ownerAddress, tokenName, amount);
   }
 
-  public boolean updateTokenParams(byte[] ownerAddress, String tokenName, long totalSupply, long feePool, long fee, long extraFeeRate, long lot, String url, String description) throws CipherException, IOException, CancelException {
+  public boolean updateTokenParams(byte[] ownerAddress, String tokenName, long totalSupply, long feePool, long fee, long extraFeeRate, long lot, String url, String description, long exchUnwNum, long exchTokenNum) throws CipherException, IOException, CancelException {
     if (wallet == null || !wallet.isLoginState()) {
       System.out.println("Warning: updateTokenParams failed,  Please login first !!");
       return false;
     }
 
-    return wallet.updateTokenParams(ownerAddress, tokenName, totalSupply, feePool, fee, extraFeeRate, lot, url, description);
+    return wallet.updateTokenParams(ownerAddress, tokenName, totalSupply, feePool, fee, extraFeeRate, lot, url, description, exchUnwNum, exchTokenNum);
   }
 
   public boolean mineToken(byte[] ownerAddress, String tokenName, long amount) throws CipherException, IOException, CancelException {
@@ -211,6 +211,25 @@ public class WalletApiWrapper {
 
     return wallet.transferToken(ownerAddress, toAddress, tokenName, amount, availableTime);
   }
+
+  public boolean transferTokenOwner(byte[] ownerAddress, byte[] toAddress, String tokenName) throws CipherException, IOException, CancelException {
+    if (wallet == null || !wallet.isLoginState()) {
+      System.out.println("Warning: transferTokenOwner failed,  Please login first !!");
+      return false;
+    }
+
+    return wallet.transferTokenOwner(ownerAddress, toAddress, tokenName);
+  }
+
+  public boolean exchangeToken(byte[] ownerAddress, String tokenName, long unw) throws CipherException, IOException, CancelException {
+    if (wallet == null || !wallet.isLoginState()) {
+      System.out.println("Warning: exchangeToken failed,  Please login first !!");
+      return false;
+    }
+
+    return wallet.exchangeToken(ownerAddress, tokenName, unw);
+  }
+
 
   public boolean withdrawTokenFuture(byte[] ownerAddress, String tokenName) throws CipherException, IOException, CancelException {
     if (wallet == null || !wallet.isLoginState()) {
