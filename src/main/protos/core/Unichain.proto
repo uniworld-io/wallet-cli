@@ -219,8 +219,8 @@ message Account {
     int64 storage_limit = 6;
     int64 storage_usage = 7;
     int64 latest_exchange_storage_time = 8;
-
   }
+
   AccountResource account_resource = 26;
   bytes codeHash = 30;
   Permission owner_permission = 31;

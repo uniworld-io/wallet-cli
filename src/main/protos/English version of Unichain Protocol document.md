@@ -214,14 +214,14 @@
      `start_time`: the starting date of this contract – e.g._20170312_.  
      `end_time`: the expiring date of this contract – e.g. _20170512_.  
      `vote_score`: the vote score of this contract received – e.g. _12343_.  
-     `description`: the description of this contract – e.g.”_unwdada_”.  
+     `description`: the description of this contract – e.g.”_unichaindada_”.  
      `url`: the url of this contract – e.g. “_https://www.noonetrust.com_”.
 
          message AssetIssueContract {   
            bytes owner_address = 1;   
            bytes name = 2;   
            int64 total_supply = 4;   
-           int32 unw_num = 6;   
+           int32 unx_num = 6;   
            int32 num = 8;   
            int64 start_time = 9;   
            int64 end_time = 10;  
@@ -702,6 +702,8 @@ Input, transaction and head block all require signature.
    Get all token in chain.
    __`CreateToken`__:  
    Create token v2.
+   __`TransferTokenOwner`__:  
+   Transfer owner of token v2 to new account.
    __`ContributeTokenFee`__:  
    Contribute fee to token pool.
    __`UpdateTokenParams`__:  
