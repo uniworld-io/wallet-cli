@@ -304,12 +304,12 @@
             }
 
 
-    An `TokenExchangeContract` contains 3 parameters:
+    An `ExchangeTokenContract` contains 3 parameters:
     `owner_address`: the address that is the owner of token – e.g. “_0xu92h…7236_”.
     `token_name`: token name – e.g. “_pwr_”.
     `amount`: unw amount with ginza factor to exchange – e.g. “_1000000_”.
 
-            message TokenExchangeContract {
+            message ExchangeTokenContract {
             bytes owner_address = 1;  
             string token_name = 2;  
             int64 amount =3;  
@@ -799,7 +799,7 @@ Input, transaction and head block all require signature.
         rpc TransferTokenOwner (TransferTokenOwnerContract) returns (Transaction){
 
         }
-        rpc ExchangeToken (TokenExchangeContract) returns (Transaction){
+        rpc ExchangeToken (ExchangeTokenContract) returns (Transaction){
 
         }
         rpc ContributeTokenFee (ContributeTokenPoolFeeContract) returns (Transaction){

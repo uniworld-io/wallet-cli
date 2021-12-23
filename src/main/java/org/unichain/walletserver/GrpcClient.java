@@ -210,7 +210,7 @@ public class GrpcClient {
     return blockingStubFull.easyTransferAssetByPrivate(builder.build());
   }
 
-  public Transaction createTransaction(Contract.TokenExchangeContract contract) {
+  public Transaction createTransaction(Contract.ExchangeTokenContract contract) {
     return blockingStubFull.exchangeToken(contract);
   }
 
