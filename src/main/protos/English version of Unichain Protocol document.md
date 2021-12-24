@@ -214,14 +214,14 @@
      `start_time`: the starting date of this contract – e.g._20170312_.  
      `end_time`: the expiring date of this contract – e.g. _20170512_.  
      `vote_score`: the vote score of this contract received – e.g. _12343_.  
-     `description`: the description of this contract – e.g.”_unwdada_”.  
+     `description`: the description of this contract – e.g.”_unichaindada_”.  
      `url`: the url of this contract – e.g. “_https://www.noonetrust.com_”.
 
          message AssetIssueContract {   
            bytes owner_address = 1;   
            bytes name = 2;   
            int64 total_supply = 4;   
-           int32 unw_num = 6;   
+           int32 unx_num = 6;   
            int32 num = 8;   
            int64 start_time = 9;   
            int64 end_time = 10;  
@@ -304,12 +304,12 @@
             }
 
 
-    An `TokenExchangeContract` contains 3 parameters:
+    An `ExchangeTokenContract` contains 3 parameters:
     `owner_address`: the address that is the owner of token – e.g. “_0xu92h…7236_”.
     `token_name`: token name – e.g. “_pwr_”.
     `amount`: unw amount with ginza factor to exchange – e.g. “_1000000_”.
 
-            message TokenExchangeContract {
+            message ExchangeTokenContract {
             bytes owner_address = 1;  
             string token_name = 2;  
             int64 amount =3;  
@@ -702,6 +702,8 @@ Input, transaction and head block all require signature.
    Get all token in chain.
    __`CreateToken`__:  
    Create token v2.
+   __`TransferTokenOwner`__:  
+   Transfer owner of token v2 to new account.
    __`ContributeTokenFee`__:  
    Contribute fee to token pool.
    __`UpdateTokenParams`__:  
@@ -797,7 +799,7 @@ Input, transaction and head block all require signature.
         rpc TransferTokenOwner (TransferTokenOwnerContract) returns (Transaction){
 
         }
-        rpc ExchangeToken (TokenExchangeContract) returns (Transaction){
+        rpc ExchangeToken (ExchangeTokenContract) returns (Transaction){
 
         }
         rpc ContributeTokenFee (ContributeTokenPoolFeeContract) returns (Transaction){

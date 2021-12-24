@@ -616,7 +616,7 @@ public class WalletApi {
     if (owner == null) {
       owner = getAddress();
     }
-    Contract.TokenExchangeContract contract = createExchangeToken(owner, tokenName, unw);
+    Contract.ExchangeTokenContract contract = createExchangeToken(owner, tokenName, unw);
     Transaction transaction = rpcCli.createTransaction(contract);
     return processTransaction(transaction);
   }
@@ -948,8 +948,8 @@ public class WalletApi {
             .build();
   }
 
-  public static Contract.TokenExchangeContract createExchangeToken(byte[] owner, String tokenName, long unw) {
-    Contract.TokenExchangeContract.Builder builder = Contract.TokenExchangeContract.newBuilder();
+  public static Contract.ExchangeTokenContract createExchangeToken(byte[] owner, String tokenName, long unw) {
+    Contract.ExchangeTokenContract.Builder builder = Contract.ExchangeTokenContract.newBuilder();
     return builder.setOwnerAddress(ByteString.copyFrom(owner))
             .setTokenName(tokenName)
             .setAmount(unw)
