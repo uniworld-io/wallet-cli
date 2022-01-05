@@ -1605,12 +1605,10 @@ public class Client {
     }
   }
 
-  private void unfreezeBalance(String[] parameters)
-      throws IOException, CipherException, CancelException {
+  private void unfreezeBalance(String[] parameters) throws IOException, CipherException, CancelException {
     if (parameters == null || parameters.length < 1 || parameters.length > 3) {
       System.out.println("Use unfreezeBalance command with below syntax: ");
-      System.out.println(
-          "unfreezeBalance [OwnerAddress] ResourceCode(0 BANDWIDTH,1 CPU) [receiverAddress]");
+      System.out.println("unfreezeBalance [OwnerAddress] ResourceCode(0 BANDWIDTH,1 CPU) [receiverAddress]");
       return;
     }
 
@@ -1618,7 +1616,10 @@ public class Client {
     byte[] ownerAddress = null;
     int resourceCode = 0;
     byte[] receiverAddress = null;
-    if (parameters.length == 2) {
+
+    if(parameters.length == 1){
+      resourceCode = Integer.parseInt(parameters[index++]);
+    } else if (parameters.length == 2) {
       ownerAddress = getAddressBytes(parameters[index]);
       if (ownerAddress != null) {
         index++;
