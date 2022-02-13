@@ -547,11 +547,12 @@ public class WalletApi {
   }
 
   public boolean createToken(byte[] owner, String tokenName, String abbr, long maxSupply, long totalSupply, long startTime,
-                             long endTime,  String description,  String url, long fee, long extraFeeRate, long feePool, long lot, long exchUnwNum, long exchTokenNum) throws CipherException, IOException, CancelException {
+                             long endTime,  String description,  String url, long fee, long extraFeeRate, long feePool,
+                             long lot, long exchUnwNum, long exchTokenNum, long createAccFee) throws CipherException, IOException, CancelException {
     if (owner == null) {
       owner = getAddress();
     }
-    Contract.CreateTokenContract contract = createCreateTokenContract(owner, tokenName, abbr, maxSupply, totalSupply, startTime, endTime, description, url, fee, extraFeeRate, feePool, lot, exchUnwNum, exchTokenNum);
+    Contract.CreateTokenContract contract = createCreateTokenContract(owner, tokenName, abbr, maxSupply, totalSupply, startTime, endTime, description, url, fee, extraFeeRate, feePool, lot, exchUnwNum, exchTokenNum, createAccFee);
     Transaction transaction = rpcCli.createTransaction(contract);
     return processTransaction(transaction);
   }
@@ -565,12 +566,12 @@ public class WalletApi {
     return processTransaction(transaction);
   }
 
-  public boolean updateTokenParams(byte[] owner, String tokenName, long totalSupply, long feePool, long fee, long extraFeeRate, long lot, String url, String description, long exchUnwNum, long exchTokenNum) throws CipherException, IOException, CancelException {
+  public boolean updateTokenParams(byte[] owner, String tokenName, long totalSupply, long feePool, long fee, long extraFeeRate, long lot, String url, String description, long exchUnwNum, long exchTokenNum, long createAccFee) throws CipherException, IOException, CancelException {
     if(owner == null) {
       owner = getAddress();
     }
 
-    Contract.UpdateTokenParamsContract contract = createUpdateTokenParams(owner, tokenName, totalSupply, feePool, fee, extraFeeRate, lot, url, description, exchUnwNum, exchTokenNum);
+    Contract.UpdateTokenParamsContract contract = createUpdateTokenParams(owner, tokenName, totalSupply, feePool, fee, extraFeeRate, lot, url, description, exchUnwNum, exchTokenNum, createAccFee);
     Transaction transaction = rpcCli.createTransaction(contract);
     return processTransaction(transaction);
   }
@@ -851,23 +852,18 @@ public class WalletApi {
     }
   }
 
-  public static Contract.TransferContract createTransferContract(byte[] to, byte[] owner,
-      long amount) {
-    Contract.TransferContract.Builder builder = Contract.TransferContract.newBuilder();
-    ByteString bsTo = ByteString.copyFrom(to);
-    ByteString bsOwner = ByteString.copyFrom(owner);
-    builder.setToAddress(bsTo);
-    builder.setOwnerAddress(bsOwner);
-    builder.setAmount(amount);
-
-    return builder.build();
+  public static Contract.TransferContract createTransferContract(byte[] to, byte[] owner, long amount) {
+    return Contract.TransferContract.newBuilder()
+                .setToAddress(ByteString.copyFrom(to))
+                .setOwnerAddress(ByteString.copyFrom(owner))
+                .setAmount(amount)
+                .build();
   }
 
   public static Contract.CreateTokenContract createCreateTokenContract(byte[] owner, String tokenName, String abbr, long maxSupply, long totalSupply,
-                                                                       long startTime, long endTime,  String description,  String url, long fee, long extraFeeRate, long feePool, long lot, long exchUnwNum, long exchTokenNum) {
-    Contract.CreateTokenContract.Builder builder = Contract.CreateTokenContract.newBuilder();
-    ByteString bsOwner = ByteString.copyFrom(owner);
-    builder.setOwnerAddress(bsOwner)
+                                                                       long startTime, long endTime,  String description,  String url, long fee, long extraFeeRate, long feePool, long lot, long exchUnwNum, long exchTokenNum, long createAccFee) {
+    Contract.CreateTokenContract.Builder builder = Contract.CreateTokenContract.newBuilder()
+            .setOwnerAddress(ByteString.copyFrom(owner))
             .setName(tokenName)
             .setAbbr(abbr)
             .setMaxSupply(maxSupply)
@@ -879,7 +875,8 @@ public class WalletApi {
             .setFeePool(feePool)
             .setLot(lot)
             .setExchUnxNum(exchUnwNum)
-            .setExchNum(exchTokenNum);
+            .setExchNum(exchTokenNum)
+            .setCreateAccFee(createAccFee);
     if(startTime != -1L)
       builder.setStartTime(startTime);
     if(endTime != -1L)
@@ -896,7 +893,7 @@ public class WalletApi {
             .build();
   }
 
-  public static Contract.UpdateTokenParamsContract createUpdateTokenParams(byte[] owner, String tokenName, long totalSupply, long feePool, long fee, long extraFeeRate, long lot, String url, String description, long exchUnwNum, long exchTokenNum) {
+  public static Contract.UpdateTokenParamsContract createUpdateTokenParams(byte[] owner, String tokenName, long totalSupply, long feePool, long fee, long extraFeeRate, long lot, String url, String description, long exchUnwNum, long exchTokenNum, long createAccFee) {
     var builder =  Contract.UpdateTokenParamsContract.newBuilder()
             .setOwnerAddress(ByteString.copyFrom(owner))
             .setTokenName(tokenName);
@@ -918,21 +915,23 @@ public class WalletApi {
       builder.setExchUnxNum(exchUnwNum);
     if(exchTokenNum != -1)
       builder.setExchNum(exchTokenNum);
+    if(createAccFee != -1)
+      builder.setCreateAccFee(createAccFee);
 
     return builder.build();
   }
 
   public static Contract.MineTokenContract createMineToken(byte[] owner, String tokenName, long amount) {
-    Contract.MineTokenContract.Builder builder = Contract.MineTokenContract.newBuilder();
-    return builder.setOwnerAddress(ByteString.copyFrom(owner))
+    return Contract.MineTokenContract.newBuilder()
+            .setOwnerAddress(ByteString.copyFrom(owner))
             .setTokenName(tokenName)
             .setAmount(amount)
             .build();
   }
 
   public static Contract.TransferTokenContract createTransferToken(byte[] owner, byte[] toAddress, String tokenName, long amount, long availableTime) {
-    Contract.TransferTokenContract.Builder builder = Contract.TransferTokenContract.newBuilder();
-    return builder.setOwnerAddress(ByteString.copyFrom(owner))
+    return Contract.TransferTokenContract.newBuilder()
+            .setOwnerAddress(ByteString.copyFrom(owner))
             .setToAddress(ByteString.copyFrom(toAddress))
             .setTokenName(tokenName)
             .setAmount(amount)
@@ -941,16 +940,16 @@ public class WalletApi {
   }
 
   public static Contract.TransferTokenOwnerContract createTransferTokenOwner(byte[] owner, byte[] toAddress, String tokenName) {
-    Contract.TransferTokenOwnerContract.Builder builder = Contract.TransferTokenOwnerContract.newBuilder();
-    return builder.setOwnerAddress(ByteString.copyFrom(owner))
+    return Contract.TransferTokenOwnerContract.newBuilder()
+            .setOwnerAddress(ByteString.copyFrom(owner))
             .setToAddress(ByteString.copyFrom(toAddress))
             .setTokenName(tokenName)
             .build();
   }
 
   public static Contract.ExchangeTokenContract createExchangeToken(byte[] owner, String tokenName, long unw) {
-    Contract.ExchangeTokenContract.Builder builder = Contract.ExchangeTokenContract.newBuilder();
-    return builder.setOwnerAddress(ByteString.copyFrom(owner))
+    return Contract.ExchangeTokenContract.newBuilder()
+            .setOwnerAddress(ByteString.copyFrom(owner))
             .setTokenName(tokenName)
             .setAmount(unw)
             .build();
@@ -958,90 +957,69 @@ public class WalletApi {
 
 
   public static Contract.BurnTokenContract createBurnToken(byte[] owner, String tokenName, long amount) {
-    Contract.BurnTokenContract.Builder builder = Contract.BurnTokenContract.newBuilder();
-    return builder.setOwnerAddress(ByteString.copyFrom(owner))
+    return Contract.BurnTokenContract.newBuilder()
+            .setOwnerAddress(ByteString.copyFrom(owner))
             .setTokenName(tokenName)
             .setAmount(amount)
             .build();
   }
 
   public static Contract.FutureTransferContract createFutureTransferContract(byte[] to, byte[] owner, long amount, long expireTime) {
-    Contract.FutureTransferContract.Builder builder = Contract.FutureTransferContract.newBuilder();
-    ByteString bsTo = ByteString.copyFrom(to);
-    ByteString bsOwner = ByteString.copyFrom(owner);
-    builder.setToAddress(bsTo);
-    builder.setOwnerAddress(bsOwner);
-    builder.setAmount(amount);
-    builder.setExpireTime(expireTime);
+    var builder = Contract.FutureTransferContract.newBuilder()
+            .setOwnerAddress(ByteString.copyFrom(owner))
+            .setAmount(amount)
+            .setExpireTime(expireTime);
+
+    if(Objects.nonNull(to))
+      builder.setToAddress(ByteString.copyFrom(to));
+
     return builder.build();
   }
 
   public static Contract.FutureWithdrawContract createFutureWithdrawContract(byte[] owner) {
-    Contract.FutureWithdrawContract.Builder builder = Contract.FutureWithdrawContract.newBuilder();
-    ByteString bsOwner = ByteString.copyFrom(owner);
-    builder.setOwnerAddress(bsOwner);
-    return builder.build();
+    return Contract.FutureWithdrawContract.newBuilder()
+                .setOwnerAddress(ByteString.copyFrom(owner))
+                .build();
   }
 
   public static Contract.WithdrawFutureTokenContract createWithdrawTokenFutureContract(byte[] owner, String tokenName) {
-    Contract.WithdrawFutureTokenContract.Builder builder = Contract.WithdrawFutureTokenContract.newBuilder();
-    return builder.setOwnerAddress(ByteString.copyFrom(owner))
+    return Contract.WithdrawFutureTokenContract.newBuilder()
+            .setOwnerAddress(ByteString.copyFrom(owner))
             .setTokenName(tokenName)
             .build();
   }
 
 
-  public static Contract.TransferAssetContract createTransferAssetContract(byte[] to,
-      byte[] assertName, byte[] owner,
-      long amount) {
-    Contract.TransferAssetContract.Builder builder = Contract.TransferAssetContract.newBuilder();
-    ByteString bsTo = ByteString.copyFrom(to);
-    ByteString bsName = ByteString.copyFrom(assertName);
-    ByteString bsOwner = ByteString.copyFrom(owner);
-    builder.setToAddress(bsTo);
-    builder.setAssetName(bsName);
-    builder.setOwnerAddress(bsOwner);
-    builder.setAmount(amount);
-
-    return builder.build();
+  public static Contract.TransferAssetContract createTransferAssetContract(byte[] to, byte[] assertName, byte[] owner, long amount) {
+    return Contract.TransferAssetContract.newBuilder()
+                .setToAddress(ByteString.copyFrom(to))
+                .setAssetName(ByteString.copyFrom(assertName))
+                .setOwnerAddress(ByteString.copyFrom(owner))
+                .setAmount(amount)
+                .build();
   }
 
-  public static Contract.ParticipateAssetIssueContract participateAssetIssueContract(byte[] to,
-      byte[] assertName, byte[] owner,
-      long amount) {
-    Contract.ParticipateAssetIssueContract.Builder builder = Contract.ParticipateAssetIssueContract
-        .newBuilder();
-    ByteString bsTo = ByteString.copyFrom(to);
-    ByteString bsName = ByteString.copyFrom(assertName);
-    ByteString bsOwner = ByteString.copyFrom(owner);
-    builder.setToAddress(bsTo);
-    builder.setAssetName(bsName);
-    builder.setOwnerAddress(bsOwner);
-    builder.setAmount(amount);
-
-    return builder.build();
+  public static Contract.ParticipateAssetIssueContract participateAssetIssueContract(byte[] to, byte[] assertName, byte[] owner, long amount) {
+    return Contract.ParticipateAssetIssueContract.newBuilder()
+                  .setToAddress(ByteString.copyFrom(to))
+                  .setAssetName(ByteString.copyFrom(assertName))
+                  .setOwnerAddress(ByteString.copyFrom(owner))
+                  .setAmount(amount)
+                  .build();
   }
 
-  public static Contract.AccountUpdateContract createAccountUpdateContract(byte[] accountName,
-      byte[] address) {
-    Contract.AccountUpdateContract.Builder builder = Contract.AccountUpdateContract.newBuilder();
-    ByteString basAddreess = ByteString.copyFrom(address);
-    ByteString bsAccountName = ByteString.copyFrom(accountName);
-    builder.setAccountName(bsAccountName);
-    builder.setOwnerAddress(basAddreess);
-
-    return builder.build();
+  public static Contract.AccountUpdateContract createAccountUpdateContract(byte[] accountName, byte[] address) {
+    return Contract.AccountUpdateContract.newBuilder()
+                .setAccountName(ByteString.copyFrom(accountName))
+                .setOwnerAddress(ByteString.copyFrom(address))
+                .build();
   }
 
-  public static Contract.SetAccountIdContract createSetAccountIdContract(byte[] accountId,
-      byte[] address) {
-    Contract.SetAccountIdContract.Builder builder = Contract.SetAccountIdContract.newBuilder();
-    ByteString bsAddress = ByteString.copyFrom(address);
-    ByteString bsAccountId = ByteString.copyFrom(accountId);
-    builder.setAccountId(bsAccountId);
-    builder.setOwnerAddress(bsAddress);
-
-    return builder.build();
+  public static Contract.SetAccountIdContract createSetAccountIdContract(byte[] accountId, byte[] address) {
+    return Contract.SetAccountIdContract.newBuilder()
+                .setAccountId(ByteString.copyFrom(accountId))
+                .setOwnerAddress(ByteString.copyFrom(address))
+                .build();
   }
 
 
@@ -1052,54 +1030,43 @@ public class WalletApi {
       long newLimit,
       long newPublicLimit
   ) {
-    Contract.UpdateAssetContract.Builder builder =
-        Contract.UpdateAssetContract.newBuilder();
-    ByteString basAddreess = ByteString.copyFrom(address);
-    builder.setDescription(ByteString.copyFrom(description));
-    builder.setUrl(ByteString.copyFrom(url));
-    builder.setNewLimit(newLimit);
-    builder.setNewPublicLimit(newPublicLimit);
-    builder.setOwnerAddress(basAddreess);
-
-    return builder.build();
+    return Contract.UpdateAssetContract.newBuilder()
+                .setDescription(ByteString.copyFrom(description))
+                .setUrl(ByteString.copyFrom(url))
+                .setNewLimit(newLimit)
+                .setNewPublicLimit(newPublicLimit)
+                .setOwnerAddress(ByteString.copyFrom(address))
+                .build();
   }
 
-  public static Contract.AccountCreateContract createAccountCreateContract(byte[] owner,
-      byte[] address) {
-    Contract.AccountCreateContract.Builder builder = Contract.AccountCreateContract.newBuilder();
-    builder.setOwnerAddress(ByteString.copyFrom(owner));
-    builder.setAccountAddress(ByteString.copyFrom(address));
-
-    return builder.build();
+  public static Contract.AccountCreateContract createAccountCreateContract(byte[] owner, byte[] address) {
+    return Contract.AccountCreateContract.newBuilder()
+                .setOwnerAddress(ByteString.copyFrom(owner))
+                .setAccountAddress(ByteString.copyFrom(address))
+                .build();
   }
 
-  public static Contract.WitnessCreateContract createWitnessCreateContract(byte[] owner,
-      byte[] url) {
-    Contract.WitnessCreateContract.Builder builder = Contract.WitnessCreateContract.newBuilder();
-    builder.setOwnerAddress(ByteString.copyFrom(owner));
-    builder.setUrl(ByteString.copyFrom(url));
-
-    return builder.build();
+  public static Contract.WitnessCreateContract createWitnessCreateContract(byte[] owner, byte[] url) {
+    return Contract.WitnessCreateContract.newBuilder()
+                .setOwnerAddress(ByteString.copyFrom(owner))
+                .setUrl(ByteString.copyFrom(url))
+                .build();
   }
 
-  public static Contract.WitnessUpdateContract createWitnessUpdateContract(byte[] owner,
-      byte[] url) {
-    Contract.WitnessUpdateContract.Builder builder = Contract.WitnessUpdateContract.newBuilder();
-    builder.setOwnerAddress(ByteString.copyFrom(owner));
-    builder.setUpdateUrl(ByteString.copyFrom(url));
-
-    return builder.build();
+  public static Contract.WitnessUpdateContract createWitnessUpdateContract(byte[] owner, byte[] url) {
+    return Contract.WitnessUpdateContract.newBuilder()
+                .setOwnerAddress(ByteString.copyFrom(owner))
+                .setUpdateUrl(ByteString.copyFrom(url))
+                .build();
   }
 
-  public static Contract.VoteWitnessContract createVoteWitnessContract(byte[] owner,
-      HashMap<String, String> witness) {
-    Contract.VoteWitnessContract.Builder builder = Contract.VoteWitnessContract.newBuilder();
+  public static Contract.VoteWitnessContract createVoteWitnessContract(byte[] owner, HashMap<String, String> witness) {
+    var builder = Contract.VoteWitnessContract.newBuilder();
     builder.setOwnerAddress(ByteString.copyFrom(owner));
     for (String addressBase58 : witness.keySet()) {
       String value = witness.get(addressBase58);
       long count = Long.parseLong(value);
-      Contract.VoteWitnessContract.Vote.Builder voteBuilder = Contract.VoteWitnessContract.Vote
-          .newBuilder();
+      Contract.VoteWitnessContract.Vote.Builder voteBuilder = Contract.VoteWitnessContract.Vote.newBuilder();
       byte[] address = WalletApi.decodeFromBase58Check(addressBase58);
       if (address == null) {
         continue;

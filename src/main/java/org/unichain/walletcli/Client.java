@@ -703,19 +703,25 @@ public class Client {
   }
 
   private void sendFuture(String[] parameters) throws IOException, CipherException, CancelException {
-    if (parameters == null || parameters.length != 3) {
-      System.out.println("SendFuture needs 3 parameters like following: ");
-      System.out.println("SendFuture  ToAddress Amount ExpireTime");
+    if (parameters == null || (parameters.length != 2 && parameters.length != 3 )) {
+      System.out.println("SendFuture needs 2 parameters like following: ");
+      System.out.println("SendFuture  [ToAddress] Amount ExpireTime");
       return;
     }
 
     int index = 0;
 
-    String base58ToAddress = parameters[index++];
-    byte[] toAddress = WalletApi.decodeFromBase58Check(base58ToAddress);
-    if (toAddress == null) {
-      System.out.println("Invalid toAddress.");
-      return;
+    byte[] toAddress = null;
+    boolean selfLock = true;
+    String base58ToAddress = null;
+    if (parameters.length == 3) {
+      base58ToAddress = parameters[index++];
+      toAddress = WalletApi.decodeFromBase58Check(base58ToAddress);
+      if (toAddress == null) {
+        System.out.println("Invalid toAddress.");
+        return;
+      }
+      selfLock = false;
     }
 
     String amountStr = parameters[index++];
@@ -731,9 +737,9 @@ public class Client {
 
     boolean result = walletApiWrapper.sendFuture(null, toAddress, amount, expireDate.getTime());
     if (result) {
-      System.out.println("SendFuture " + amount + " with expireDate " + expireDate + " Ginza to " + base58ToAddress + " successful !!");
+      System.out.println("SendFuture " + amount + " with expireDate " + expireDate + " Ginza to " + (selfLock ? "itself" : base58ToAddress) + " successful !!");
     } else {
-      System.out.println("SendFuture " + amount + " with expireDate " + expireDate + " Ginza to " + base58ToAddress + " failed !!");
+      System.out.println("SendFuture " + amount + " with expireDate " + expireDate + " Ginza to " + (selfLock ? "itself" : base58ToAddress) + " failed !!");
     }
   }
 
@@ -788,15 +794,15 @@ public class Client {
   }
 
   private void createToken(String[] parameters) throws IOException, CipherException, CancelException {
-    if (parameters == null || (parameters.length != 14 && parameters.length != 15)) {
-      System.out.println("CreateToken needs 14 parameters like following: ");
-      System.out.println("CreateToken [OwnerAddress] name abbr max_supply total_supply start_time(- if default) end_time(- if default) description url fee extra_fee_rate fee_pool lot exch_unw_num exch_token_num");
+    if (parameters == null || (parameters.length != 15 && parameters.length != 16)) {
+      System.out.println("CreateToken needs 15 parameters like following: ");
+      System.out.println("CreateToken [OwnerAddress] name abbr max_supply total_supply start_time(- if default) end_time(- if default) description url fee extra_fee_rate fee_pool lot exch_unw_num exch_token_num create_acc_fee");
       return;
     }
 
     int index = 0;
     byte[] ownerAddress = null;
-    if (parameters.length == 15) {
+    if (parameters.length == 16) {
       ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
       if (ownerAddress == null) {
         System.out.println("Invalid OwnerAddress.");
@@ -850,8 +856,9 @@ public class Client {
     long lot = new Long(parameters[index++]);
     long exchUnwNum = new Long(parameters[index++]);
     long exchTokenNum = new Long(parameters[index++]);
+    long createAccFee = new Long(parameters[index++]);
 
-    boolean result = walletApiWrapper.createToken(ownerAddress, tokenName, abbr, maxSupply, totalSupply, startTime, endTime, description, url, fee, extra_fee_rate, poolFee , lot, exchUnwNum, exchTokenNum);
+    boolean result = walletApiWrapper.createToken(ownerAddress, tokenName, abbr, maxSupply, totalSupply, startTime, endTime, description, url, fee, extra_fee_rate, poolFee , lot, exchUnwNum, exchTokenNum, createAccFee);
     if (result) {
       System.out.println("CreateToken with token name: " + tokenName + ", abbr: " + abbr + ", max supply: " + maxSupply + ", total supply:" + totalSupply + " successful !!");
     } else {
@@ -889,15 +896,15 @@ public class Client {
   }
 
   private void updateTokenParams(String[] parameters) throws IOException, CipherException, CancelException {
-    if (parameters == null || (parameters.length != 10 && parameters.length != 11)) {
-      System.out.println("updateTokenParams needs 10 parameters like following: ");
-      System.out.println("updateTokenParams [ownerAddress] token_name total_supply[-1 if not set] fee_pool[-1 if not set] fee[-1 if not set] extra_fee_rate[-1 if not set] lot[-1 if not set]  url[- if not set] description[- if not set] exch_unw_num[-1 if not set] exch_token_num[-1 if not set]");
+    if (parameters == null || (parameters.length != 11 && parameters.length != 12)) {
+      System.out.println("updateTokenParams needs 11 parameters like following: ");
+      System.out.println("updateTokenParams [ownerAddress] token_name total_supply[-1 if not set] fee_pool[-1 if not set] fee[-1 if not set] extra_fee_rate[-1 if not set] lot[-1 if not set]  url[- if not set] description[- if not set] exch_unw_num[-1 if not set] exch_token_num[-1 if not set] create_acc_fee[-1 if not set]");
       return;
     }
 
     int index = 0;
     byte[] ownerAddress = null;
-    if (parameters.length == 11) {
+    if (parameters.length == 12) {
       ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
       if (ownerAddress == null) {
         System.out.println("Invalid OwnerAddress.");
@@ -915,8 +922,9 @@ public class Client {
     String description = parameters[index++].trim();
     long exchUnwNum = new Long(parameters[index++]);
     long exchTokenNum = new Long(parameters[index++]);
+    long createAccFee = new Long(parameters[index++]);
 
-    boolean result = walletApiWrapper.updateTokenParams(ownerAddress, tokenName, total_supply, fee_pool, fee, extraFeeRate, lot, url , description, exchUnwNum, exchTokenNum);
+    boolean result = walletApiWrapper.updateTokenParams(ownerAddress, tokenName, total_supply, fee_pool, fee, extraFeeRate, lot, url , description, exchUnwNum, exchTokenNum, createAccFee);
     String walletOwnerAddress = walletApiWrapper.getAddress();
     if (result) {
       System.out.println("updateTokenParams of " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " successful !!");
