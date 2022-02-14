@@ -113,7 +113,7 @@ public class GrpcClient {
 
   public Account queryAccount(byte[] address) {
     ByteString addressBS = ByteString.copyFrom(address);
-    System.out.println("GetAccount with hashed address --> " + ByteArray.toHexString(addressBS.toByteArray()) + ", plain text --> " + WalletApi.encode58Check(addressBS.toByteArray()));
+    System.out.println("GetAccount [" + ByteArray.toHexString(addressBS.toByteArray()) + " --> " + WalletApi.encode58Check(addressBS.toByteArray()));
     Account request = Account.newBuilder().setAddress(addressBS).build();
     if (blockingStubSolidity != null) {
       return blockingStubSolidity.getAccount(request);
