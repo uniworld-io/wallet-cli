@@ -210,6 +210,42 @@ public class GrpcClient {
     return blockingStubFull.easyTransferAssetByPrivate(builder.build());
   }
 
+  public Transaction createTransaction(Contract.CreateNftTemplateContract contract) {
+    return blockingStubFull.createNftTemplate(contract);
+  }
+
+  public Transaction createTransaction(Contract.MintNftTokenContract contract) {
+    return blockingStubFull.mintNftToken(contract);
+  }
+
+  public Transaction createTransaction(Contract.RemoveNftMinterContract contract) {
+    return blockingStubFull.removeNftMinter(contract);
+  }
+
+  public Transaction createTransaction(Contract.AddNftMinterContract contract) {
+    return blockingStubFull.addNftMinter(contract);
+  }
+
+  public Transaction createTransaction(Contract.RenounceNftMinterContract contract) {
+    return blockingStubFull.renounceNftMinter(contract);
+  }
+
+  public Transaction createTransaction(Contract.BurnNftTokenContract contract) {
+    return blockingStubFull.burnNftToken(contract);
+  }
+
+  public Transaction createTransaction(Contract.ApproveNftTokenContract contract) {
+    return blockingStubFull.approveNftToken(contract);
+  }
+
+  public Transaction createTransaction(Contract.ApproveForAllNftTokenContract contract) {
+    return blockingStubFull.approveForAllNftToken(contract);
+  }
+
+  public Transaction createTransaction(Contract.TransferNftTokenContract contract) {
+    return blockingStubFull.transferNftToken(contract);
+  }
+
   public Transaction createTransaction(Contract.ExchangeTokenContract contract) {
     return blockingStubFull.exchangeToken(contract);
   }
