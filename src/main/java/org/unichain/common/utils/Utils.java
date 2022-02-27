@@ -492,6 +492,10 @@ public class Utils {
             ApproveForAllNftTokenContract approveForAllNftTokenContract = contract.getParameter().unpack(ApproveForAllNftTokenContract.class);
             contractJson = JSONObject.parseObject(JsonFormat.printToString(approveForAllNftTokenContract, selfType));
             break;
+          case TransferNftTokenContract:
+            TransferNftTokenContract transferNftTokenContract = contract.getParameter().unpack(TransferNftTokenContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(transferNftTokenContract, selfType));
+            break;
           default:
         }
         JSONObject parameter = new JSONObject();

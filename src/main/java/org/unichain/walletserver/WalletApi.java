@@ -311,6 +311,32 @@ public class WalletApi {
     return rpcCli.queryTokenPool(tokenName, pageIndex, pageSize);//call rpc
   }
 
+  public static NftTemplateQueryResult listNftTemplate(byte[] ownerAddress, int pageIndex, int pageSize) {
+    return rpcCli.listNftTemplate(ownerAddress, pageIndex, pageSize);//call rpc
+  }
+
+  public static NftTokenQueryResult listNftToken(byte[] ownerAddress, String symbol, int pageIndex, int pageSize) {
+    return rpcCli.listNftToken(ownerAddress, symbol, pageIndex, pageSize);//call rpc
+  }
+
+
+  public static NftTemplate getNftTemplate(String symbol) {
+    return rpcCli.getNftTemplate(symbol);//call rpc
+  }
+
+
+  public static NftToken getNftToken(String symbol, long tokenId) {
+    return rpcCli.getNftToken(symbol, tokenId);//call rpc
+  }
+
+  public static NftBalanceOf getNftBalanceOf(byte[] ownerAddress) {
+    return rpcCli.getNftBalanceOf(ownerAddress);//call rpc
+  }
+
+  public static IsApprovedForAll getNftApprovedForAll(byte[] ownerAddress, byte[] operator) {
+    return rpcCli.getNftApprovedForAll(ownerAddress, operator);//call rpc
+  }
+
   public static FutureTokenPack queryToken(byte[] address, String name, int pageSize, int pageIndex) {
     return rpcCli.queryToken(address, name, pageSize, pageIndex);//call rpc
   }
