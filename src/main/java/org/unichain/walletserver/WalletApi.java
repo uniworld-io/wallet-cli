@@ -325,7 +325,7 @@ public class WalletApi {
   }
 
 
-  public static NftToken getNftToken(String symbol, long tokenId) {
+  public static NftTokenGetResult getNftToken(String symbol, long tokenId) {
     return rpcCli.getNftToken(symbol, tokenId);//call rpc
   }
 

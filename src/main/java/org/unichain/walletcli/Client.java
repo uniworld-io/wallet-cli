@@ -3799,7 +3799,7 @@ public class Client {
     String symbol = parameters[index++];
     long tokenId = Long.parseLong(parameters[index++]);
 
-    NftToken result = WalletApi.getNftToken(symbol, tokenId);
+    NftTokenGetResult result = WalletApi.getNftToken(symbol, tokenId);
     if (result == null) {
       System.out.println("getNftToken failed !!");
     } else {
