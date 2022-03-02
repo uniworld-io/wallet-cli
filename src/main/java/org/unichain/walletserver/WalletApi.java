@@ -630,11 +630,11 @@ public class WalletApi {
     return processTransaction(transaction);
   }
 
-  public boolean burnNftToken(byte[] ownerAddress, String nftTemplate, long tokenId) throws CipherException, IOException, CancelException{
+  public boolean burnNftToken(byte[] ownerAddress, String symbol, long tokenId) throws CipherException, IOException, CancelException{
     if (ownerAddress == null) {
       ownerAddress = getAddress();
     }
-    Contract.BurnNftTokenContract contract = createBurnNftMinterContract(ownerAddress, nftTemplate, tokenId);
+    Contract.BurnNftTokenContract contract = createBurnNftMinterContract(ownerAddress, symbol, tokenId);
     Transaction transaction = rpcCli.createTransaction(contract);
     return processTransaction(transaction);
   }
@@ -1044,10 +1044,10 @@ public class WalletApi {
             .build();
   }
 
-  private BurnNftTokenContract createBurnNftMinterContract(byte[] ownerAddress, String template, long tokenId) {
+  private BurnNftTokenContract createBurnNftMinterContract(byte[] ownerAddress, String symbol, long tokenId) {
     return  Contract.BurnNftTokenContract.newBuilder()
             .setOwner(ByteString.copyFrom(ownerAddress))
-            .setNftTemplate(template)
+            .setNftTemplate(symbol)
             .setTokenId(tokenId)
             .build();
   }

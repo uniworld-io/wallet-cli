@@ -202,13 +202,13 @@ public class WalletApiWrapper {
     return wallet.renounceNftMinter(ownerAddress, nftTemplate);
   }
 
-  public boolean burnNftToken(byte[] ownerAddress, String nftTemplate, long tokenId) throws CipherException, IOException, CancelException {
+  public boolean burnNftToken(byte[] ownerAddress, String symbol, long id) throws CipherException, IOException, CancelException {
     if (wallet == null || !wallet.isLoginState()) {
       System.out.println("Warning: burnNftToken failed,  Please login first !!");
       return false;
     }
 
-    return wallet.burnNftToken(ownerAddress, nftTemplate, tokenId);
+    return wallet.burnNftToken(ownerAddress, symbol, id);
   }
 
   public boolean approveNftToken(byte[] ownerAddress, byte[] toAddr, boolean approve, String template, long tokenId) throws CipherException, IOException, CancelException {

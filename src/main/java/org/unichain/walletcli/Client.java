@@ -3444,7 +3444,8 @@ public class Client {
       }
     }
 
-    byte[] toAddr = WalletApi.decodeFromBase58Check(parameters[index++]);
+    String toAddrStr = parameters[index++];
+    byte[] toAddr = WalletApi.decodeFromBase58Check(toAddrStr);
     if (toAddr == null) {
       System.out.println("Invalid ToAddress.");
       return;
@@ -3455,9 +3456,9 @@ public class Client {
 
     boolean result = walletApiWrapper.transferNftToken(ownerAddress, toAddr, template, tokenId);
     if (result) {
-      System.out.println("TransferNftToken with toAddr: " + toAddr + " successful !!");
+      System.out.println("TransferNftToken with toAddr: " + toAddrStr + " successful!!");
     } else {
-      System.out.println("TransferNftToken with toAddr: " + toAddr + " failed !!");
+      System.out.println("TransferNftToken with toAddr: " + toAddrStr + " failed!!");
     }
   }
 
@@ -3497,7 +3498,7 @@ public class Client {
   private void approveNftToken(String[] parameters) throws CipherException, IOException, CancelException{
     if (parameters == null || (parameters.length != 4 && parameters.length != 5)) {
       System.out.println("ApproveNftToken needs 4 parameters like following: ");
-      System.out.println("ApproveNftToken [OwnerAddress] to_address approveOrDisapprove nft_template token_id");
+      System.out.println("ApproveNftToken [OwnerAddress] to_address approveOrNot symbol id");
       return;
     }
 
@@ -3523,16 +3524,16 @@ public class Client {
 
     boolean result = walletApiWrapper.approveNftToken(ownerAddress, toAddr, approve, template, tokenId);
     if (result) {
-      System.out.println("ApproveNftToken with template: " + template + " successful !!");
+      System.out.println("ApproveNftToken with symbol: " + template + " successful !!");
     } else {
-      System.out.println("ApproveNftToken with template: " + template + " failed !!");
+      System.out.println("ApproveNftToken with symbol: " + template + " failed !!");
     }
   }
 
   private void burnNftToken(String[] parameters) throws CipherException, IOException, CancelException {
     if (parameters == null || (parameters.length != 2 && parameters.length != 3)) {
       System.out.println("BurnNftToken needs 2 parameters like following: ");
-      System.out.println("BurnNftToken [OwnerAddress] nft_template token_id");
+      System.out.println("BurnNftToken [OwnerAddress] symbol id");
       return;
     }
 
@@ -3546,21 +3547,21 @@ public class Client {
       }
     }
 
-    String template = parameters[index++];
-    long tokenId = Long.parseLong(parameters[index++]);
+    String symbol = parameters[index++];
+    long id = Long.parseLong(parameters[index++]);
 
-    boolean result = walletApiWrapper.burnNftToken(ownerAddress, template, tokenId);
+    boolean result = walletApiWrapper.burnNftToken(ownerAddress, symbol, id);
     if (result) {
-      System.out.println("BurnNftToken with template: " + template + " successful !!");
+      System.out.println("BurnNftToken with symbol: " + symbol + " successful !!");
     } else {
-      System.out.println("BurnNftToken with template: " + template + " failed !!");
+      System.out.println("BurnNftToken with symbol: " + symbol + " failed !!");
     }
   }
 
   private void renounceNftMinter(String[] parameters) throws CipherException, IOException, CancelException{
     if (parameters == null || (parameters.length != 1 && parameters.length != 2)) {
       System.out.println("RenounceNftMinter needs 1 parameters like following: ");
-      System.out.println("RenounceNftMinter [OwnerAddress] nft_template");
+      System.out.println("RenounceNftMinter [OwnerAddress] symbol");
       return;
     }
 
@@ -3578,16 +3579,16 @@ public class Client {
 
     boolean result = walletApiWrapper.renounceNftMinter(ownerAddress, template);
     if (result) {
-      System.out.println("RenounceNftMinter with template: " + template + " successful !!");
+      System.out.println("RenounceNftMinter with symbol: " + template + " successful !!");
     } else {
-      System.out.println("RenounceNftMinter with template: " + template + " failed !!");
+      System.out.println("RenounceNftMinter with symbol: " + template + " failed !!");
     }
   }
 
   private void addNftMinter(String[] parameters) throws CipherException, IOException, CancelException {
     if (parameters == null || (parameters.length != 2 && parameters.length != 3)) {
       System.out.println("AddNftMinter needs 2 parameters like following: ");
-      System.out.println("AddNftMinter [OwnerAddress] nft_template minter");
+      System.out.println("AddNftMinter [OwnerAddress] symbol minter");
       return;
     }
 
@@ -3601,7 +3602,7 @@ public class Client {
       }
     }
 
-    String template = parameters[index++];
+    String symbol = parameters[index++];
 
     String minterStr = parameters[index++];
     byte[] minterAddr = WalletApi.decodeFromBase58Check(minterStr);
@@ -3610,18 +3611,18 @@ public class Client {
       return;
     }
 
-    boolean result = walletApiWrapper.addNftMinter(ownerAddress, template, minterAddr);
+    boolean result = walletApiWrapper.addNftMinter(ownerAddress, symbol, minterAddr);
     if (result) {
-      System.out.println("AddNftMinter with template: " + template + ", minter: " + minterStr +" successful !!");
+      System.out.println("AddNftMinter with symbol: " + symbol + ", minter: " + minterStr +" successful !!");
     } else {
-      System.out.println("AddNftMinter with template: " + template + ", minter: " + minterStr +" failed !!");
+      System.out.println("AddNftMinter with symbol: " + symbol + ", minter: " + minterStr +" failed !!");
     }
   }
 
   private void removeNftMinter(String[] parameters) throws CipherException, IOException, CancelException {
     if (parameters == null || (parameters.length != 1 && parameters.length != 2)) {
       System.out.println("RemoveNftMinter needs 1 parameters like following: ");
-      System.out.println("RemoveNftMinter [OwnerAddress] nft_template");
+      System.out.println("RemoveNftMinter [OwnerAddress] symbol");
       return;
     }
 
@@ -3635,13 +3636,13 @@ public class Client {
       }
     }
 
-    String template = parameters[index++];
+    String symbol = parameters[index++];
 
-    boolean result = walletApiWrapper.removeNftMinter(ownerAddress, template);
+    boolean result = walletApiWrapper.removeNftMinter(ownerAddress, symbol);
     if (result) {
-      System.out.println("RemoveNftMinter with template: " + template + " successful !!");
+      System.out.println("RemoveNftMinter with symbol: " + symbol + " successful !!");
     } else {
-      System.out.println("RemoveNftMinter with template: " + template + " failed !!");
+      System.out.println("RemoveNftMinter with symbol: " + symbol + " failed !!");
     }
   }
 
