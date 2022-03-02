@@ -3603,7 +3603,8 @@ public class Client {
 
     String template = parameters[index++];
 
-    byte[] minterAddr = WalletApi.decodeFromBase58Check(parameters[index++]);
+    String minterStr = parameters[index++];
+    byte[] minterAddr = WalletApi.decodeFromBase58Check(minterStr);
     if (minterAddr == null) {
       System.out.println("Invalid MinterAddr.");
       return;
@@ -3611,9 +3612,9 @@ public class Client {
 
     boolean result = walletApiWrapper.addNftMinter(ownerAddress, template, minterAddr);
     if (result) {
-      System.out.println("AddNftMinter with template: " + template + ", minter: " + minterAddr +" successful !!");
+      System.out.println("AddNftMinter with template: " + template + ", minter: " + minterStr +" successful !!");
     } else {
-      System.out.println("AddNftMinter with template: " + template + ", minter: " + minterAddr +" failed !!");
+      System.out.println("AddNftMinter with template: " + template + ", minter: " + minterStr +" failed !!");
     }
   }
 
@@ -3645,15 +3646,15 @@ public class Client {
   }
 
   private void mintNftToken(String[] parameters) throws CipherException, IOException, CancelException {
-    if (parameters == null || (parameters.length != 5 && parameters.length != 6)) {
+    if (parameters == null || (parameters.length != 4 && parameters.length != 5)) {
       System.out.println("MintNftToken needs 5 parameters like following: ");
-      System.out.println("MintNftToken [OwnerAddress] symbol to_address uri  [metadata or - if not set] [available_time or - if not set]");
+      System.out.println("MintNftToken [OwnerAddress] symbol to_address uri  [metadata or - if not set]");
       return;
     }
 
     int index = 0;
     byte[] ownerAddress = null;
-    if (parameters.length == 6) {
+    if (parameters.length == 5) {
       ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
       if (ownerAddress == null) {
         System.out.println("Invalid OwnerAddress.");
@@ -3665,7 +3666,6 @@ public class Client {
     String toAddrStr = parameters[index++];
     String uri = parameters[index++];
     String metadataStr = parameters[index++];
-    String availTimeStr = parameters[index++];
 
     byte[] toAddr = WalletApi.decodeFromBase58Check(toAddrStr);
     if (toAddr == null) {
@@ -3679,17 +3679,11 @@ public class Client {
     else
       metaData = metadataStr;
 
-    long availTime;
-    if(Objects.isNull(availTimeStr) || "-".equals(availTimeStr))
-      availTime = -1;
-    else
-      availTime = new Long(availTimeStr);
-
-    boolean result = walletApiWrapper.mintNftToken(ownerAddress, symbol, toAddr, uri, metaData, availTime);
+    boolean result = walletApiWrapper.mintNftToken(ownerAddress, symbol, toAddr, uri, metaData);
     if (result) {
-      System.out.println("MintNftToken with symbol: " + symbol + ", toAddr: " + toAddr + ", uri " + uri + ", metaData" + metaData + "availTimeStr:" + availTimeStr + " successful !!");
+      System.out.println("MintNftToken with symbol: " + symbol + ", toAddr: " + toAddr + ", uri " + uri + ", metaData" + metaData  + " successful !!");
     } else {
-      System.out.println("MintNftToken with symbol: " + symbol + ", toAddr: " + toAddr + ", uri " + uri + ", metaData" + metaData + "availTimeStr:" + availTimeStr + " failed !!");
+      System.out.println("MintNftToken with symbol: " + symbol + ", toAddr: " + toAddr + ", uri " + uri + ", metaData" + metaData  + " failed !!");
     }
   }
 
@@ -3729,9 +3723,9 @@ public class Client {
 
     boolean result = walletApiWrapper.createNftTemplate(ownerAddress, symbol, name, totalSupply, minter);
     if (result) {
-      System.out.println("CreateNftTemplate with symbol: " + symbol + ", name: " + name + ", totalSupply " + totalSupply + ", minter" + minterStr + " successful !!");
+      System.out.println("CreateNftTemplate with symbol: " + symbol + ", name: " + name + ", totalSupply " + totalSupply + ", minter " + minterStr + " successful !!");
     } else {
-      System.out.println("CreateNftTemplate with symbol: " + symbol + ", name: " + name + ", totalSupply " + totalSupply + ", minter" + minterStr + " successful !!");
+      System.out.println("CreateNftTemplate with symbol: " + symbol + ", name: " + name + ", totalSupply " + totalSupply + ", minter " + minterStr + " failed !!");
     }
   }
 
@@ -3854,7 +3848,7 @@ public class Client {
   private void listNftTemplate(String[] parameters) throws IOException, CipherException, CancelException{
     if (parameters == null || (parameters.length != 3)) {
       System.out.println("listNftTemplate needs 3 parameter like the following: ");
-      System.out.println("listNftTemplate [owner_address] pageIndex(-1 if not set) pageSize(-1 if not set)");
+      System.out.println("listNftTemplate owner_address pageIndex(-1 if not set) pageSize(-1 if not set)");
       return;
     }
 

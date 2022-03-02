@@ -127,7 +127,7 @@ public class GrpcClient {
   public NftTokenGetResult getNftToken(String symbol, long tokenId) {
     var request = NftTokenGet.newBuilder();
     request.setSymbol(symbol.toUpperCase());
-    request.setId(tokenId);
+    request.setTokenId(tokenId);
 
     if (blockingStubSolidity != null) {
       return blockingStubSolidity.getNftToken(request.build());

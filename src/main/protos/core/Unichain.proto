@@ -355,6 +355,7 @@ message Transaction {
       AccountPermissionUpdateContract = 46;
       ClearABIContract = 48;
       UpdateBrokerageContract = 49;
+
       FutureTransferContract = 50;
       ShieldedTransferContract = 51;
       FutureWithdrawContract = 52;
@@ -804,9 +805,8 @@ message NftToken{
   string uri = 5;
   string metadata = 6;
   int64 last_operation = 7;
-  int64 expire_time = 8;
-  bytes next = 9;
-  bytes prev = 10;
+  bytes next = 8;
+  bytes prev = 9;
 }
 
 message NftAccountTokenRelation{
@@ -848,7 +848,7 @@ message NftTokenQuery{
 
 message NftTokenGet{
   string symbol = 1;
-  int64 id = 2;
+  int64 token_id = 2;
 }
 
 message NftTokenGetResult{
@@ -859,7 +859,6 @@ message NftTokenGetResult{
   string uri = 5;
   string metadata = 6;
   int64 last_operation = 7;
-  int64 expire_time = 8;
 }
 
 message NftTokenQueryResult{
@@ -877,5 +876,5 @@ message NftBalanceOf{
 message IsApprovedForAll{
   bytes owner_address = 1;
   bytes operator = 2;
-  bool isApproved = 3;
+  bool is_approved = 3;
 }
