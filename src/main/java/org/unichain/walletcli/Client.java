@@ -2,7 +2,6 @@ package org.unichain.walletcli;
 
 import com.beust.jcommander.JCommander;
 import com.google.common.primitives.Longs;
-import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import lombok.var;
 import org.apache.commons.lang3.ArrayUtils;
@@ -158,7 +157,7 @@ public class Client {
       "ListNftToken",
       "GetNftTemplate",
       "GetNftToken",
-      "GetNftBalanceOf",
+      "GetNftBalance",
       "GetNftApprovedForAll"
   };
 
@@ -278,7 +277,7 @@ public class Client {
       "ListNftToken",
       "GetNftTemplate",
       "GetNftToken",
-      "GetNftBalanceOf",
+      "GetNftBalance",
       "GetNftApprovedForAll"
   };
 
@@ -3108,8 +3107,8 @@ public class Client {
               break;
             }
 
-            case "getnftbalanceOf": {
-              getNftBalanceOf(parameters);
+            case "getnftbalance": {
+              getNftBalance(parameters);
               break;
             }
 
@@ -3430,7 +3429,7 @@ public class Client {
   private void transferNftToken(String[] parameters) throws CipherException, IOException, CancelException{
     if (parameters == null || (parameters.length != 3 && parameters.length != 4)) {
       System.out.println("TransferNftToken needs 3 parameters like following: ");
-      System.out.println("TransferNftToken [OwnerAddress] to_address nft_template token_id");
+      System.out.println("TransferNftToken [OwnerAddress] to_address symbol id");
       return;
     }
 
@@ -3465,7 +3464,7 @@ public class Client {
   private void approveForAllNft(String[] parameters) throws CipherException, IOException, CancelException{
     if (parameters == null || (parameters.length != 2 && parameters.length != 3)) {
       System.out.println("ApproveForAllNft needs 2 parameters like following: ");
-      System.out.println("ApproveForAllNft [OwnerAddress] to_address approveOrDisapprove");
+      System.out.println("ApproveForAllNft [OwnerAddress] to_address approveOrNot");
       return;
     }
 
@@ -3575,13 +3574,13 @@ public class Client {
       }
     }
 
-    String template = parameters[index++];
+    String symbol = parameters[index++];
 
-    boolean result = walletApiWrapper.renounceNftMinter(ownerAddress, template);
+    boolean result = walletApiWrapper.renounceNftMinter(ownerAddress, symbol);
     if (result) {
-      System.out.println("RenounceNftMinter with symbol: " + template + " successful !!");
+      System.out.println("RenounceNftMinter with symbol: " + symbol + " successful !!");
     } else {
-      System.out.println("RenounceNftMinter with symbol: " + template + " failed !!");
+      System.out.println("RenounceNftMinter with symbol: " + symbol + " failed !!");
     }
   }
 
@@ -3761,10 +3760,10 @@ public class Client {
     }
   }
 
-  private void getNftBalanceOf(String[] parameters) throws IOException, CipherException, CancelException{
-    if (parameters == null || (parameters.length != 2)) {
-      System.out.println("getNftBalanceOf needs 1 parameter like the following: ");
-      System.out.println("getNftBalanceOf owner_address");
+  private void getNftBalance(String[] parameters) throws IOException, CipherException, CancelException{
+    if (parameters == null || (parameters.length != 1)) {
+      System.out.println("getNftBalance needs 1 parameter like the following: ");
+      System.out.println("getNftBalance owner_address");
       return;
     }
 
@@ -3777,7 +3776,7 @@ public class Client {
 
     NftBalanceOf result = WalletApi.getNftBalanceOf(ownerAddress);
     if (result == null) {
-      System.out.println("getNftBalanceOf failed !!");
+      System.out.println("getNftBalance failed !!");
     } else {
       System.out.println(Utils.formatMessageString(result));
     }
