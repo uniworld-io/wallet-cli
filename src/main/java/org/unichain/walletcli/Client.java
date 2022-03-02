@@ -3681,9 +3681,9 @@ public class Client {
 
     boolean result = walletApiWrapper.mintNftToken(ownerAddress, symbol, toAddr, uri, metaData);
     if (result) {
-      System.out.println("MintNftToken with symbol: " + symbol + ", toAddr: " + toAddr + ", uri " + uri + ", metaData" + metaData  + " successful !!");
+      System.out.println("MintNftToken with symbol: " + symbol + ", toAddr: " + toAddrStr + ", uri " + uri + ", metaData" + metaData  + " successful !!");
     } else {
-      System.out.println("MintNftToken with symbol: " + symbol + ", toAddr: " + toAddr + ", uri " + uri + ", metaData" + metaData  + " failed !!");
+      System.out.println("MintNftToken with symbol: " + symbol + ", toAddr: " + toAddrStr + ", uri " + uri + ", metaData" + metaData  + " failed !!");
     }
   }
 
@@ -3785,15 +3785,15 @@ public class Client {
   private void getNftToken(String[] parameters) throws IOException, CipherException, CancelException{
     if (parameters == null || (parameters.length != 2)) {
       System.out.println("getNftToken needs 2 parameter like the following: ");
-      System.out.println("getNftToken template_symbol token_id");
+      System.out.println("getNftToken symbol id");
       return;
     }
 
     int index = 0;
     String symbol = parameters[index++];
-    long tokenId = Long.parseLong(parameters[index++]);
+    long id = Long.parseLong(parameters[index++]);
 
-    NftTokenGetResult result = WalletApi.getNftToken(symbol, tokenId);
+    NftTokenGetResult result = WalletApi.getNftToken(symbol, id);
     if (result == null) {
       System.out.println("getNftToken failed !!");
     } else {
