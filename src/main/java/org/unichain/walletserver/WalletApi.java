@@ -319,6 +319,13 @@ public class WalletApi {
     return rpcCli.listNftToken(ownerAddress, symbol, pageIndex, pageSize);//call rpc
   }
 
+  public static NftTokenApproveResult listNftTokenApprove(byte[] ownerAddress, int pageIndex, int pageSize) {
+    return rpcCli.listNftTokenApprove(ownerAddress, pageIndex, pageSize);//call rpc
+  }
+
+  public static NftTokenApproveAllResult listNftTokenApproveAll(byte[] ownerAddress) {
+    return rpcCli.listNftTokenApproveAll(ownerAddress);//call rpc
+  }
 
   public static NftTemplate getNftTemplate(String symbol) {
     return rpcCli.getNftTemplate(symbol);//call rpc

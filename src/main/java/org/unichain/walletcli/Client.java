@@ -155,6 +155,8 @@ public class Client {
       "NftTransfer",
       "ListNftTemplate",
       "ListNftToken",
+      "ListNftTokenApproveAll",
+      "ListNftTokenApprove",
       "GetNftTemplate",
       "GetNftToken",
       "GetNftBalance",
@@ -3097,6 +3099,16 @@ public class Client {
               break;
             }
 
+            case "listnfttokenapprove": {
+              listNftTokenApprove(parameters);
+              break;
+            }
+
+            case "listnfttokenapproveall": {
+              listNftTokenApproveAll(parameters);
+              break;
+            }
+
             case "getnfttemplate": {
               getNftTemplate(parameters);
               break;
@@ -3865,6 +3877,53 @@ public class Client {
     NftTemplateQueryResult result = WalletApi.listNftTemplate(ownerAddress, pageIndex, pageSize);
     if (result == null) {
       System.out.println("listNftTemplate failed !!");
+    } else {
+      System.out.println(Utils.formatMessageString(result));
+    }
+  }
+
+  private void listNftTokenApprove(String[] parameters) {
+    if (parameters == null || (parameters.length != 3)) {
+      System.out.println("listNftTokenApprove needs 3 parameter like the following: ");
+      System.out.println("listNftTokenApprove owner_address pageIndex(-1 if not set) pageSize(-1 if not set)");
+      return;
+    }
+
+    int index = 0;
+    byte[] ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (ownerAddress == null) {
+      System.out.println("Invalid OwnerAddress.");
+      return;
+    }
+
+    int pageIndex = new Integer(parameters[index++]);
+    int pageSize = new Integer(parameters[index++]);
+
+    NftTokenApproveResult result = WalletApi.listNftTokenApprove(ownerAddress, pageIndex, pageSize);
+    if (result == null) {
+      System.out.println("listNftTokenApprove failed !!");
+    } else {
+      System.out.println(Utils.formatMessageString(result));
+    }
+  }
+
+  private void listNftTokenApproveAll(String[] parameters) {
+    if (parameters == null || (parameters.length != 1)) {
+      System.out.println("listNftTokenApproveAll needs 1 parameter like the following: ");
+      System.out.println("listNftTokenApproveAll owner_address");
+      return;
+    }
+
+    int index = 0;
+    byte[] ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (ownerAddress == null) {
+      System.out.println("Invalid OwnerAddress.");
+      return;
+    }
+
+    NftTokenApproveAllResult result = WalletApi.listNftTokenApproveAll(ownerAddress);
+    if (result == null) {
+      System.out.println("listNftTokenApproveAll failed !!");
     } else {
       System.out.println(Utils.formatMessageString(result));
     }
