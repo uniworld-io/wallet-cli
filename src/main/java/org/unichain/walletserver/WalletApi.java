@@ -609,30 +609,30 @@ public class WalletApi {
   }
 
 
-  public boolean removeNftMinter(byte[] ownerAddress, String nftTemplate) throws CipherException, IOException, CancelException{
+  public boolean removeNftMinter(byte[] ownerAddress, String symbol) throws CipherException, IOException, CancelException{
     if (ownerAddress == null) {
       ownerAddress = getAddress();
     }
-    Contract.RemoveNftMinterContract contract = createRemoveNftMinterContract(ownerAddress, nftTemplate);
+    Contract.RemoveNftMinterContract contract = createRemoveNftMinterContract(ownerAddress, symbol);
     Transaction transaction = rpcCli.createTransaction(contract);
     return processTransaction(transaction);
   }
 
-  public boolean renounceNftMinter(byte[] ownerAddress, String nftTemplate) throws CipherException, IOException, CancelException{
+  public boolean renounceNftMinter(byte[] ownerAddress, String symbol) throws CipherException, IOException, CancelException{
     if (ownerAddress == null) {
       ownerAddress = getAddress();
     }
-    Contract.RenounceNftMinterContract contract = createRenounceNftMinterContract(ownerAddress, nftTemplate);
+    Contract.RenounceNftMinterContract contract = createRenounceNftMinterContract(ownerAddress, symbol);
     Transaction transaction = rpcCli.createTransaction(contract);
     return processTransaction(transaction);
   }
 
 
-  public boolean addNftMinter(byte[] ownerAddress, String template, byte[] minterAddr) throws CipherException, IOException, CancelException{
+  public boolean addNftMinter(byte[] ownerAddress, String symbol, byte[] minterAddr) throws CipherException, IOException, CancelException{
     if (ownerAddress == null) {
       ownerAddress = getAddress();
     }
-    Contract.AddNftMinterContract contract = createAddNftMinterContract(ownerAddress, template, minterAddr);
+    Contract.AddNftMinterContract contract = createAddNftMinterContract(ownerAddress, symbol, minterAddr);
     Transaction transaction = rpcCli.createTransaction(contract);
     return processTransaction(transaction);
   }
@@ -646,11 +646,11 @@ public class WalletApi {
     return processTransaction(transaction);
   }
 
-  public boolean approveNftToken(byte[] ownerAddress, byte[] toAddr, boolean approve, String template, long tokenId)  throws CipherException, IOException, CancelException{
+  public boolean approveNftToken(byte[] ownerAddress, byte[] toAddr, boolean approve, String symbol, long tokenId)  throws CipherException, IOException, CancelException{
     if (ownerAddress == null) {
       ownerAddress = getAddress();
     }
-    Contract.ApproveNftTokenContract contract = createApproveNftTokenContract(ownerAddress, toAddr, approve, template, tokenId);
+    Contract.ApproveNftTokenContract contract = createApproveNftTokenContract(ownerAddress, toAddr, approve, symbol, tokenId);
     Transaction transaction = rpcCli.createTransaction(contract);
     return processTransaction(transaction);
   }
@@ -664,11 +664,11 @@ public class WalletApi {
     return processTransaction(transaction);
   }
 
-  public boolean transferNftToken(byte[] ownerAddress, byte[] toAddr, String template, long tokenId) throws CipherException, IOException, CancelException{
+  public boolean transferNftToken(byte[] ownerAddress, byte[] toAddr, String symbol, long tokenId) throws CipherException, IOException, CancelException{
     if (ownerAddress == null) {
       ownerAddress = getAddress();
     }
-    Contract.TransferNftTokenContract contract = createTransferNftTokenContract(ownerAddress, toAddr, template, tokenId);
+    Contract.TransferNftTokenContract contract = createTransferNftTokenContract(ownerAddress, toAddr, symbol, tokenId);
     Transaction transaction = rpcCli.createTransaction(contract);
     return processTransaction(transaction);
   }
@@ -1029,24 +1029,24 @@ public class WalletApi {
     return builder.build();
   }
 
-  private RemoveNftMinterContract createRemoveNftMinterContract(byte[] ownerAddress, String nftTemplate) {
+  private RemoveNftMinterContract createRemoveNftMinterContract(byte[] ownerAddress, String symbol) {
     return  Contract.RemoveNftMinterContract.newBuilder()
             .setOwner(ByteString.copyFrom(ownerAddress))
-            .setNftTemplate(nftTemplate)
+            .setSymbol(symbol)
             .build();
   }
 
-  private RenounceNftMinterContract createRenounceNftMinterContract(byte[] ownerAddress, String nftTemplate) {
+  private RenounceNftMinterContract createRenounceNftMinterContract(byte[] ownerAddress, String symbol) {
     return  Contract.RenounceNftMinterContract.newBuilder()
             .setOwner(ByteString.copyFrom(ownerAddress))
-            .setNftTemplate(nftTemplate)
+            .setSymbol(symbol)
             .build();
   }
 
-  private AddNftMinterContract createAddNftMinterContract(byte[] ownerAddress, String template, byte[] minterAddr) {
+  private AddNftMinterContract createAddNftMinterContract(byte[] ownerAddress, String symbol, byte[] minterAddr) {
     return  Contract.AddNftMinterContract.newBuilder()
             .setOwner(ByteString.copyFrom(ownerAddress))
-            .setNftTemplate(template)
+            .setSymbol(symbol)
             .setMinter(ByteString.copyFrom(minterAddr))
             .build();
   }
@@ -1054,17 +1054,17 @@ public class WalletApi {
   private BurnNftTokenContract createBurnNftMinterContract(byte[] ownerAddress, String symbol, long tokenId) {
     return  Contract.BurnNftTokenContract.newBuilder()
             .setOwner(ByteString.copyFrom(ownerAddress))
-            .setNftTemplate(symbol)
+            .setSymbol(symbol)
             .setTokenId(tokenId)
             .build();
   }
 
-  private ApproveNftTokenContract createApproveNftTokenContract(byte[] ownerAddress, byte[] toAddr, boolean approve, String template, long tokenId) {
+  private ApproveNftTokenContract createApproveNftTokenContract(byte[] ownerAddress, byte[] toAddr, boolean approve, String symbol, long tokenId) {
     return  Contract.ApproveNftTokenContract.newBuilder()
             .setOwner(ByteString.copyFrom(ownerAddress))
             .setToAddress(ByteString.copyFrom(toAddr))
             .setApprove(approve)
-            .setNftTemplate(template)
+            .setSymbol(symbol)
             .setTokenId(tokenId)
             .build();
   }
@@ -1077,11 +1077,11 @@ public class WalletApi {
             .build();
   }
 
-  private TransferNftTokenContract createTransferNftTokenContract(byte[] ownerAddress, byte[] toAddr, String template, long tokenId) {
+  private TransferNftTokenContract createTransferNftTokenContract(byte[] ownerAddress, byte[] toAddr, String symbol, long tokenId) {
     return  Contract.TransferNftTokenContract.newBuilder()
             .setOwner(ByteString.copyFrom(ownerAddress))
             .setToAddress(ByteString.copyFrom(toAddr))
-            .setNftTemplate(template)
+            .setSymbol(symbol)
             .setTokenId(tokenId)
             .build();
   }

@@ -184,22 +184,22 @@ public class WalletApiWrapper {
     return wallet.mintNftToken(ownerAddress, symbol, toAddr, uri, metaData);
   }
 
-  public boolean removeNftMinter(byte[] ownerAddress, String nftTemplate) throws CipherException, IOException, CancelException {
+  public boolean removeNftMinter(byte[] ownerAddress, String symbol) throws CipherException, IOException, CancelException {
     if (wallet == null || !wallet.isLoginState()) {
       System.out.println("Warning: removeNftMinter failed,  Please login first !!");
       return false;
     }
 
-    return wallet.removeNftMinter(ownerAddress, nftTemplate);
+    return wallet.removeNftMinter(ownerAddress, symbol);
   }
 
-  public boolean renounceNftMinter(byte[] ownerAddress, String nftTemplate) throws CipherException, IOException, CancelException {
+  public boolean renounceNftMinter(byte[] ownerAddress, String symbol) throws CipherException, IOException, CancelException {
     if (wallet == null || !wallet.isLoginState()) {
       System.out.println("Warning: renounceNftMinter failed,  Please login first !!");
       return false;
     }
 
-    return wallet.renounceNftMinter(ownerAddress, nftTemplate);
+    return wallet.renounceNftMinter(ownerAddress, symbol);
   }
 
   public boolean burnNftToken(byte[] ownerAddress, String symbol, long id) throws CipherException, IOException, CancelException {
@@ -211,13 +211,13 @@ public class WalletApiWrapper {
     return wallet.burnNftToken(ownerAddress, symbol, id);
   }
 
-  public boolean approveNftToken(byte[] ownerAddress, byte[] toAddr, boolean approve, String template, long tokenId) throws CipherException, IOException, CancelException {
+  public boolean approveNftToken(byte[] ownerAddress, byte[] toAddr, boolean approve, String symbol, long tokenId) throws CipherException, IOException, CancelException {
     if (wallet == null || !wallet.isLoginState()) {
       System.out.println("Warning: approveNftToken failed,  Please login first !!");
       return false;
     }
 
-    return wallet.approveNftToken(ownerAddress, toAddr, approve, template, tokenId);
+    return wallet.approveNftToken(ownerAddress, toAddr, approve, symbol, tokenId);
   }
 
   public boolean approveForAllNft(byte[] ownerAddress, byte[] toAddr, boolean approve) throws CipherException, IOException, CancelException {
@@ -229,23 +229,23 @@ public class WalletApiWrapper {
     return wallet.approveForAllNft(ownerAddress, toAddr, approve);
   }
 
-  public boolean addNftMinter(byte[] ownerAddress, String template, byte[] minterAddr) throws CipherException, IOException, CancelException {
+  public boolean addNftMinter(byte[] ownerAddress, String symbol, byte[] minterAddr) throws CipherException, IOException, CancelException {
     if (wallet == null || !wallet.isLoginState()) {
       System.out.println("Warning: addNftMinter failed,  Please login first !!");
       return false;
     }
 
-    return wallet.addNftMinter(ownerAddress, template, minterAddr);
+    return wallet.addNftMinter(ownerAddress, symbol, minterAddr);
   }
 
 
-  public boolean transferNftToken(byte[] ownerAddress, byte[] toAddr, String template, long tokenId) throws CipherException, IOException, CancelException {
+  public boolean transferNftToken(byte[] ownerAddress, byte[] toAddr, String symbol, long tokenId) throws CipherException, IOException, CancelException {
     if (wallet == null || !wallet.isLoginState()) {
       System.out.println("Warning: transferNftToken failed,  Please login first !!");
       return false;
     }
 
-    return wallet.transferNftToken(ownerAddress, toAddr, template, tokenId);
+    return wallet.transferNftToken(ownerAddress, toAddr, symbol, tokenId);
   }
 
   public boolean contributeTokenFeePool(byte[] ownerAddress, String tokenName, long amount) throws CipherException, IOException, CancelException {

@@ -3462,10 +3462,10 @@ public class Client {
       return;
     }
 
-    String template = parameters[index++];
+    String symbol = parameters[index++];
     long tokenId = Long.parseLong(parameters[index++]);
 
-    boolean result = walletApiWrapper.transferNftToken(ownerAddress, toAddr, template, tokenId);
+    boolean result = walletApiWrapper.transferNftToken(ownerAddress, toAddr, symbol, tokenId);
     if (result) {
       System.out.println("TransferNftToken with toAddr: " + toAddrStr + " successful!!");
     } else {
@@ -3530,14 +3530,14 @@ public class Client {
     }
 
     boolean approve = Boolean.valueOf(parameters[index++]);
-    String template = parameters[index++];
+    String symbol = parameters[index++];
     long tokenId = Long.parseLong(parameters[index++]);
 
-    boolean result = walletApiWrapper.approveNftToken(ownerAddress, toAddr, approve, template, tokenId);
+    boolean result = walletApiWrapper.approveNftToken(ownerAddress, toAddr, approve, symbol, tokenId);
     if (result) {
-      System.out.println("ApproveNftToken with symbol: " + template + " successful !!");
+      System.out.println("ApproveNftToken with symbol: " + symbol + " successful !!");
     } else {
-      System.out.println("ApproveNftToken with symbol: " + template + " failed !!");
+      System.out.println("ApproveNftToken with symbol: " + symbol + " failed !!");
     }
   }
 
