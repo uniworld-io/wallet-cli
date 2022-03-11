@@ -810,7 +810,7 @@ message NftToken{
 }
 
 message NftAccountTokenRelation{
-  bytes owner = 1;
+  bytes owner_address = 1;
   bytes head = 2;
   bytes tail = 3;
   int64 total = 4;
@@ -822,7 +822,7 @@ message NftAccountTokenRelation{
 }
 
 message NftAccountTemplateRelation{
-  bytes owner = 1;
+  bytes owner_address = 1;
   bytes head = 2;
   bytes tail = 3;
   int64 total = 4;

@@ -5,12 +5,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import com.google.protobuf.Any;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigObject;
-import io.grpc.Status;
 import lombok.extern.slf4j.Slf4j;
 import lombok.var;
 import org.apache.commons.lang3.ArrayUtils;
@@ -205,7 +203,7 @@ public class WalletApi {
     return WalletUtils.generateWalletFile(walletFile, file);
   }
 
-  public static File selcetWalletFile() {
+  public static File pickWalletFile() {
     File file = new File(FilePath);
     if (!file.exists() || !file.isDirectory()) {
       return null;
@@ -248,8 +246,8 @@ public class WalletApi {
     return wallet;
   }
 
-  public WalletFile selcetWalletFileE() throws IOException {
-    File file = selcetWalletFile();
+  public WalletFile selectWalletFile() throws IOException {
+    File file = pickWalletFile();
     if (file == null) {
       throw new IOException(
           "No keystore file found, please use registerwallet or importwallet first!");
@@ -269,7 +267,7 @@ public class WalletApi {
 
   public static boolean changeKeystorePassword(byte[] oldPassword, byte[] newPassowrd)
       throws IOException, CipherException {
-    File wallet = selcetWalletFile();
+    File wallet = pickWalletFile();
     if (wallet == null) {
       throw new IOException(
           "No keystore file found, please use registerwallet or importwallet first!");
@@ -281,7 +279,7 @@ public class WalletApi {
 
 
   private static WalletFile loadWalletFile() throws IOException {
-    File wallet = selcetWalletFile();
+    File wallet = pickWalletFile();
     if (wallet == null) {
       throw new IOException(
           "No keystore file found, please use registerwallet or importwallet first!");
@@ -379,7 +377,7 @@ public class WalletApi {
     transaction = TransactionUtils.setPermissionId(transaction);
     while (true) {
       System.out.println("Please choose your key for sign.");
-      WalletFile walletFile = selcetWalletFileE();
+      WalletFile walletFile = selectWalletFile();
       System.out.println("Please input your password.");
       char[] password = Utils.inputPassword(false);
       byte[] passwd = org.unichain.keystore.StringUtils.char2Byte(password);
@@ -410,7 +408,7 @@ public class WalletApi {
     transaction = TransactionUtils.setPermissionId(transaction);
     while (true) {
       System.out.println("Please choose your key for sign.");
-      WalletFile walletFile = selcetWalletFileE();
+      WalletFile walletFile = selectWalletFile();
       System.out.println("Please input your password.");
       char[] password = Utils.inputPassword(false);
       byte[] passwd = org.unichain.keystore.StringUtils.char2Byte(password);
@@ -1004,7 +1002,7 @@ public class WalletApi {
 
   public static Contract.CreateNftTemplateContract createNftTemplateContract(byte[] owner, String symbol, String name,long totalSupply, byte[] minter) {
     Contract.CreateNftTemplateContract.Builder builder = Contract.CreateNftTemplateContract.newBuilder()
-            .setOwner(ByteString.copyFrom(owner))
+            .setOwnerAddress(ByteString.copyFrom(owner))
             .setSymbol(symbol)
             .setName(name)
             .setTotalSupply(totalSupply);
@@ -1031,21 +1029,21 @@ public class WalletApi {
 
   private RemoveNftMinterContract createRemoveNftMinterContract(byte[] ownerAddress, String symbol) {
     return  Contract.RemoveNftMinterContract.newBuilder()
-            .setOwner(ByteString.copyFrom(ownerAddress))
+            .setOwnerAddress(ByteString.copyFrom(ownerAddress))
             .setSymbol(symbol)
             .build();
   }
 
   private RenounceNftMinterContract createRenounceNftMinterContract(byte[] ownerAddress, String symbol) {
     return  Contract.RenounceNftMinterContract.newBuilder()
-            .setOwner(ByteString.copyFrom(ownerAddress))
+            .setOwnerAddress(ByteString.copyFrom(ownerAddress))
             .setSymbol(symbol)
             .build();
   }
 
   private AddNftMinterContract createAddNftMinterContract(byte[] ownerAddress, String symbol, byte[] minterAddr) {
     return  Contract.AddNftMinterContract.newBuilder()
-            .setOwner(ByteString.copyFrom(ownerAddress))
+            .setOwnerAddress(ByteString.copyFrom(ownerAddress))
             .setSymbol(symbol)
             .setMinter(ByteString.copyFrom(minterAddr))
             .build();
@@ -1053,7 +1051,7 @@ public class WalletApi {
 
   private BurnNftTokenContract createBurnNftMinterContract(byte[] ownerAddress, String symbol, long tokenId) {
     return  Contract.BurnNftTokenContract.newBuilder()
-            .setOwner(ByteString.copyFrom(ownerAddress))
+            .setOwnerAddress(ByteString.copyFrom(ownerAddress))
             .setSymbol(symbol)
             .setTokenId(tokenId)
             .build();
@@ -1061,7 +1059,7 @@ public class WalletApi {
 
   private ApproveNftTokenContract createApproveNftTokenContract(byte[] ownerAddress, byte[] toAddr, boolean approve, String symbol, long tokenId) {
     return  Contract.ApproveNftTokenContract.newBuilder()
-            .setOwner(ByteString.copyFrom(ownerAddress))
+            .setOwnerAddress(ByteString.copyFrom(ownerAddress))
             .setToAddress(ByteString.copyFrom(toAddr))
             .setApprove(approve)
             .setSymbol(symbol)
@@ -1071,7 +1069,7 @@ public class WalletApi {
 
   private ApproveForAllNftTokenContract createApproveForAllNftContract(byte[] ownerAddress, byte[] toAddr, boolean approve) {
     return  Contract.ApproveForAllNftTokenContract.newBuilder()
-            .setOwner(ByteString.copyFrom(ownerAddress))
+            .setOwnerAddress(ByteString.copyFrom(ownerAddress))
             .setToAddress(ByteString.copyFrom(toAddr))
             .setApprove(approve)
             .build();
@@ -1079,7 +1077,7 @@ public class WalletApi {
 
   private TransferNftTokenContract createTransferNftTokenContract(byte[] ownerAddress, byte[] toAddr, String symbol, long tokenId) {
     return  Contract.TransferNftTokenContract.newBuilder()
-            .setOwner(ByteString.copyFrom(ownerAddress))
+            .setOwnerAddress(ByteString.copyFrom(ownerAddress))
             .setToAddress(ByteString.copyFrom(toAddr))
             .setSymbol(symbol)
             .setTokenId(tokenId)
@@ -2454,7 +2452,7 @@ public class WalletApi {
     transaction = TransactionUtils.setPermissionId(transaction);
 
     System.out.println("Please choose your key for sign.");
-    WalletFile walletFile = selcetWalletFileE();
+    WalletFile walletFile = selectWalletFile();
     System.out.println("Please input your password.");
     char[] password = Utils.inputPassword(false);
     byte[] passwd = org.unichain.keystore.StringUtils.char2Byte(password);
