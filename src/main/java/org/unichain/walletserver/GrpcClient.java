@@ -5,7 +5,6 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import lombok.extern.slf4j.Slf4j;
 import lombok.var;
-import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang.StringUtils;
 import org.unichain.api.GrpcAPI;
 import org.unichain.api.GrpcAPI.*;
@@ -93,13 +92,13 @@ public class GrpcClient {
     }
   }
 
-  public NftTokenQueryResult listNftToken(byte[] ownerAddress, String symbol, int pageIndex, int pageSize) {
+  public NftTokenQueryResult listNftToken(byte[] ownerAddress, String contract, int pageIndex, int pageSize) {
     var request = NftTokenQuery.newBuilder();
     request.setOwnerAddress(ByteString.copyFrom(ownerAddress));
-    if(Objects.isNull(symbol) || "-".equals(symbol))
-      request.clearSymbol();
+    if(Objects.isNull(contract) || "-".equals(contract))
+      request.clearContract();
     else
-      request.setSymbol(symbol);
+      request.setContract(contract);
 
     if(pageIndex != -1)
       request.setPageIndex(pageIndex);
@@ -140,9 +139,9 @@ public class GrpcClient {
     }
   }
 
-  public NftTemplate getNftTemplate(String symbol) {
+  public NftTemplate getNftTemplate(String contract) {
     var request = NftTemplate.newBuilder();
-    request.setSymbol(symbol);
+    request.setContract(contract);
 
     if (blockingStubSolidity != null) {
       return blockingStubSolidity.getNftTemplate(request.build());
@@ -151,9 +150,9 @@ public class GrpcClient {
     }
   }
 
-  public NftTokenGetResult getNftToken(String symbol, long Id) {
+  public NftTokenGetResult getNftToken(String contract, long Id) {
     var request = NftTokenGet.newBuilder();
-    request.setSymbol(symbol.toUpperCase());
+    request.setContract(contract.toUpperCase());
     request.setId(Id);
 
     if (blockingStubSolidity != null) {
