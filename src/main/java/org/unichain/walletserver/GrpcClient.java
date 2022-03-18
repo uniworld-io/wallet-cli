@@ -77,13 +77,15 @@ public class GrpcClient {
     }
   }
 
-  public NftTemplateQueryResult listNftTemplate(byte[] ownerAddress, int pageIndex, int pageSize) {
+  public NftTemplateQueryResult listNftTemplate(byte[] ownerAddress, int pageIndex, int pageSize, String ownerType) {
     var request = NftTemplateQuery.newBuilder();
     request.setOwnerAddress(ByteString.copyFrom(ownerAddress));
+    request.setOwnerType(ownerType);
     if(pageIndex != -1)
       request.setPageIndex(pageIndex);
     if(pageSize != -1)
       request.setPageSize(pageSize);
+
 
     if (blockingStubSolidity != null) {
       return blockingStubSolidity.listNftTemplate(request.build());

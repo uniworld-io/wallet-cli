@@ -3858,9 +3858,9 @@ public class Client {
   }
 
   private void listNftTemplate(String[] parameters) throws IOException, CipherException, CancelException{
-    if (parameters == null || (parameters.length != 3)) {
+    if (parameters == null || (parameters.length != 4)) {
       System.out.println("listNftTemplate needs 3 parameter like the following: ");
-      System.out.println("listNftTemplate owner_address pageIndex(-1 if not set) pageSize(-1 if not set)");
+      System.out.println("listNftTemplate owner_address pageIndex(-1 if not set) pageSize(-1 if not set) owner_type(MINTER or OWNER)");
       return;
     }
 
@@ -3873,8 +3873,10 @@ public class Client {
 
     int pageIndex = new Integer(parameters[index++]);
     int pageSize = new Integer(parameters[index++]);
+    String ownerType = parameters[index++];
 
-    NftTemplateQueryResult result = WalletApi.listNftTemplate(ownerAddress, pageIndex, pageSize);
+
+    NftTemplateQueryResult result = WalletApi.listNftTemplate(ownerAddress, pageIndex, pageSize, ownerType);
     if (result == null) {
       System.out.println("listNftTemplate failed !!");
     } else {

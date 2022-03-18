@@ -795,6 +795,8 @@ message NftTemplate{
   int64 last_operation = 7;
   bytes next = 8;
   bytes prev = 9;
+  bytes next_of_minter = 10;
+  bytes prev_of_minter = 11;
 }
 
 message NftToken{
@@ -832,6 +834,7 @@ message NftTemplateQuery{
   bytes owner_address = 1;
   int32 page_size = 2;
   int32 page_index = 3;
+  string owner_type = 4;
 }
 
 message NftTemplateQueryResult{
@@ -911,3 +914,4 @@ message NftTokenApproveRelation{
   bytes next = 3;
   bytes prev = 4;
 }
+

@@ -309,8 +309,8 @@ public class WalletApi {
     return rpcCli.queryTokenPool(tokenName, pageIndex, pageSize);//call rpc
   }
 
-  public static NftTemplateQueryResult listNftTemplate(byte[] ownerAddress, int pageIndex, int pageSize) {
-    return rpcCli.listNftTemplate(ownerAddress, pageIndex, pageSize);//call rpc
+  public static NftTemplateQueryResult listNftTemplate(byte[] ownerAddress, int pageIndex, int pageSize, String ownerType) {
+    return rpcCli.listNftTemplate(ownerAddress, pageIndex, pageSize, ownerType);//call rpc
   }
 
   public static NftTokenQueryResult listNftToken(byte[] ownerAddress, String contract, int pageIndex, int pageSize) {
