@@ -3910,9 +3910,9 @@ public class Client {
   }
 
   private void listNftTokenApproveAll(String[] parameters) {
-    if (parameters == null || (parameters.length != 1)) {
-      System.out.println("listNftTokenApproveAll needs 1 parameter like the following: ");
-      System.out.println("listNftTokenApproveAll owner_address");
+    if (parameters == null || (parameters.length != 3)) {
+      System.out.println("listNftTokenApproveAll needs 3 parameter like the following: ");
+      System.out.println("listNftTokenApproveAll owner_address pageIndex(-1 if not set) pageSize(-1 if not set)");
       return;
     }
 
@@ -3923,7 +3923,10 @@ public class Client {
       return;
     }
 
-    NftTokenApproveAllResult result = WalletApi.listNftTokenApproveAll(ownerAddress);
+    int pageIndex = new Integer(parameters[index++]);
+    int pageSize = new Integer(parameters[index++]);
+
+    NftTokenApproveAllResult result = WalletApi.listNftTokenApproveAll(ownerAddress, pageIndex, pageSize);
     if (result == null) {
       System.out.println("listNftTokenApproveAll failed !!");
     } else {
