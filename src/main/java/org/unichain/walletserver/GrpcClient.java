@@ -130,9 +130,14 @@ public class GrpcClient {
     }
   }
 
-  public NftTokenApproveAllResult listNftTokenApproveAll(byte[] ownerAddress) {
+  public NftTokenApproveAllResult listNftTokenApproveAll(byte[] ownerAddress, int pageIndex, int pageSize) {
     var request = NftTokenApproveAllQuery.newBuilder();
     request.setOwnerAddress(ByteString.copyFrom(ownerAddress));
+
+    if(pageIndex != -1)
+      request.setPageIndex(pageIndex);
+    if(pageSize != -1)
+      request.setPageSize(pageSize);
 
     if (blockingStubSolidity != null) {
       return blockingStubSolidity.listNftTokenApproveAll(request.build());

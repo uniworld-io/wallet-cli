@@ -321,8 +321,8 @@ public class WalletApi {
     return rpcCli.listNftTokenApprove(ownerAddress, pageIndex, pageSize);//call rpc
   }
 
-  public static NftTokenApproveAllResult listNftTokenApproveAll(byte[] ownerAddress) {
-    return rpcCli.listNftTokenApproveAll(ownerAddress);//call rpc
+  public static NftTokenApproveAllResult listNftTokenApproveAll(byte[] ownerAddress, int pageIndex, int pageSize) {
+    return rpcCli.listNftTokenApproveAll(ownerAddress, pageIndex, pageSize);//call rpc
   }
 
   public static NftTemplate getNftTemplate(String contract) {
@@ -2084,11 +2084,9 @@ public class WalletApi {
     builder.setName(contractName);
     builder.setOriginAddress(ByteString.copyFrom(address));
     builder.setAbi(abi);
-    builder.setConsumeUserResourcePercent(consumeUserResourcePercent)
-        .setOriginEnergyLimit(originEnergyLimit);
+    builder.setConsumeUserResourcePercent(consumeUserResourcePercent).setOriginEnergyLimit(originEnergyLimit);
 
     if (value != 0) {
-
       builder.setCallValue(value);
     }
     byte[] byteCode;
@@ -2100,8 +2098,7 @@ public class WalletApi {
 
     builder.setBytecode(ByteString.copyFrom(byteCode));
     CreateSmartContract.Builder createSmartContractBuilder = CreateSmartContract.newBuilder();
-    createSmartContractBuilder.setOwnerAddress(ByteString.copyFrom(address)).
-        setNewContract(builder.build());
+    createSmartContractBuilder.setOwnerAddress(ByteString.copyFrom(address)).setNewContract(builder.build());
     if (tokenId != null && !tokenId.equalsIgnoreCase("") && !tokenId.equalsIgnoreCase("#")) {
       createSmartContractBuilder.setCallTokenValue(tokenValue).setTokenId(Long.parseLong(tokenId));
     }
@@ -2124,8 +2121,7 @@ public class WalletApi {
       String addr = cur.substring(lastPosition + 1);
       String libraryAddressHex;
       try {
-        libraryAddressHex = (new String(Hex.encode(WalletApi.decodeFromBase58Check(addr)),
-            "US-ASCII")).substring(2);
+        libraryAddressHex = (new String(Hex.encode(WalletApi.decodeFromBase58Check(addr)), "US-ASCII")).substring(2);
       } catch (UnsupportedEncodingException e) {
         throw new RuntimeException(e);  // now ignore
       }
@@ -2137,8 +2133,7 @@ public class WalletApi {
         beReplaced = "__" + libraryName + repeated;
       } else if (compilerVersion.equalsIgnoreCase("v5")) {
         //0.5.4 version
-        String libraryNameKeccak256 = ByteArray
-            .toHexString(Hash.sha3(ByteArray.fromString(libraryName))).substring(0, 34);
+        String libraryNameKeccak256 = ByteArray.toHexString(Hash.sha3(ByteArray.fromString(libraryName))).substring(0, 34);
         beReplaced = "__\\$" + libraryNameKeccak256 + "\\$__";
       } else {
         throw new RuntimeException("unknown compiler version.");
@@ -2267,16 +2262,14 @@ public class WalletApi {
       System.out.println("RPC create tx failed!");
       if (transactionExtention != null) {
         System.out.println("Code = " + transactionExtention.getResult().getCode());
-        System.out
-            .println("Message = " + transactionExtention.getResult().getMessage().toStringUtf8());
+        System.out.println("Message = " + transactionExtention.getResult().getMessage().toStringUtf8());
       }
       return false;
     }
 
     TransactionExtention.Builder texBuilder = TransactionExtention.newBuilder();
     Transaction.Builder transBuilder = Transaction.newBuilder();
-    Transaction.raw.Builder rawBuilder = transactionExtention.getTransaction().getRawData()
-        .toBuilder();
+    Transaction.raw.Builder rawBuilder = transactionExtention.getTransaction().getRawData().toBuilder();
     rawBuilder.setFeeLimit(feeLimit);
     transBuilder.setRawData(rawBuilder);
     for (int i = 0; i < transactionExtention.getTransaction().getSignatureCount(); i++) {
@@ -2319,8 +2312,7 @@ public class WalletApi {
     if (transactionExtention == null || !transactionExtention.getResult().getResult()) {
       System.out.println("RPC create call tx failed!");
       System.out.println("Code = " + transactionExtention.getResult().getCode());
-      System.out
-          .println("Message = " + transactionExtention.getResult().getMessage().toStringUtf8());
+      System.out.println("Message = " + transactionExtention.getResult().getMessage().toStringUtf8());
       return false;
     }
 
