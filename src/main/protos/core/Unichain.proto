@@ -797,6 +797,7 @@ message NftTemplate{
   bytes prev = 9;
   bytes next_of_minter = 10;
   bytes prev_of_minter = 11;
+  bytes contract_address = 12;
 }
 
 message NftToken{

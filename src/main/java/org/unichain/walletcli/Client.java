@@ -1,6 +1,9 @@
 package org.unichain.walletcli;
 
 import com.beust.jcommander.JCommander;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Strings;
 import com.google.common.primitives.Longs;
 import com.google.protobuf.InvalidProtocolBufferException;
 import lombok.var;
@@ -29,12 +32,16 @@ import org.unichain.protos.Protocol.*;
 import org.unichain.walletserver.WalletApi;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Base64.Decoder;
 import java.util.Base64.Encoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 
 public class Client {
@@ -178,6 +185,7 @@ public class Client {
       "CreateWitness",
       "DeleteProposal",
       "DeployContract",
+      "DeployContractFile",
       "ExchangeCreate",
       "ExchangeInject",
       "ExchangeTransaction",
@@ -2436,7 +2444,7 @@ public class Client {
 
     if (matcher.find()) {
       String ABI = matcher.group(1);
-      List<String> tempList = new ArrayList<String>();
+      List<String> tempList = new ArrayList<>();
 
       paras = paras.replaceAll("(\\[.*?\\]) ", "");
 
@@ -2460,15 +2468,88 @@ public class Client {
 
   }
 
-  private void deployContract(String[] parameter)
-      throws IOException, CipherException, CancelException {
+  private void deployContractFile(String[] parameters) throws IOException, CipherException, CancelException {
+    if (parameters == null || parameters.length < 1){
+      System.out.println("Using DeployContractFromJson needs at least 1 parameters like: ");
+      System.out.println("DeployContractFromJson pathFile");
+      return;
+    }
+
+    assert parameters != null;
+    Path path = Paths.get(parameters[0]);
+    String text = String.join("", Files.readAllLines(path));
+    ObjectMapper mapper = new ObjectMapper();
+    JsonNode node = mapper.readTree(text);
+
+    String ownerAddress = node.get("owner").asText();
+    String contractName = node.get("contract_name").asText();
+    String ABI = node.get("abi").toString();
+    String byteCodes = node.get("byte_codes").asText();
+    String constructor = node.get("constructor").asText();
+    String argsStr = node.get("params").asText();
+    String isHex = node.get("is_hex").asText();
+    String feeLimit = node.get("fee_limit").asText();
+    String consumeUserResourcePercent = node.get("consume_user_resource_percent").asText();
+    String originEnergyLimit = node.get("origin_energy_limit").asText();
+    String value = node.get("value").asText();
+    String tokenValue = node.get("token_value").asText();
+    String tokenId = node.get("token_id").asText();
+    String libAddress = node.get("lib_address").asText();
+    String libCompileVersion = node.get("lib_compile_version").asText();
+
+    String[] params;
+
+    if(Strings.isNullOrEmpty(libAddress) && Strings.isNullOrEmpty(libCompileVersion)){
+      params = new String[]{
+              ownerAddress,
+              contractName,
+              ABI,
+              byteCodes,
+              constructor,
+              argsStr,
+              isHex,
+              feeLimit,
+              consumeUserResourcePercent,
+              originEnergyLimit,
+              value,
+              tokenValue,
+              tokenId,
+              libAddress,
+              libCompileVersion
+      };
+    }else {
+      params = new String[]{
+              ownerAddress,
+              contractName,
+              ABI,
+              byteCodes,
+              constructor,
+              argsStr,
+              isHex,
+              feeLimit,
+              consumeUserResourcePercent,
+              originEnergyLimit,
+              value,
+              tokenValue,
+              tokenId
+      };
+    }
+
+    System.out.println(Arrays.toString(params));
+    deployContract(params);
+  }
+
+  private void deployContract(String[] parameter)  throws IOException, CipherException, CancelException {
+    System.out.println("Before hande param: ");
+    System.out.println(Arrays.toString(parameter));
 
     String[] parameters = getParas(parameter);
-    if (parameters == null ||
-        parameters.length < 11) {
+    System.out.println("After hande param: ");
+    System.out.println(Arrays.toString(parameters));
+
+    if (parameters == null || parameters.length < 11) {
       System.out.println("Using deployContract needs at least 11 parameters like: ");
-      System.out.println(
-          "DeployContract [ownerAddress] contractName ABI byteCode constructor params isHex fee_limit consume_user_resource_percent origin_energy_limit value token_value token_id(e.g: UNXTOKEN, use # if don't provided) <library:address,library:address,...> <lib_compiler_version(e.g:v5)>");
+      System.out.println("DeployContract [ownerAddress] contractName ABI byteCode constructor params isHex fee_limit consume_user_resource_percent origin_energy_limit value token_value token_id(e.g: UNXTOKEN, use # if don't provided) <library:address,library:address,...> <lib_compiler_version(e.g:v5)>");
 //      System.out.println(
 //          "Note: Please append the param for constructor tightly with byteCode without any space");
       return;
@@ -2479,6 +2560,7 @@ public class Client {
     if (ownerAddress != null) {
       idx++;
     }
+
 
     String contractName = parameters[idx++];
     String abiStr = parameters[idx++];
@@ -3354,6 +3436,11 @@ public class Client {
               break;
             }
 
+            case "deploycontractfile": {
+              deployContractFile(parameters);
+              break;
+            }
+
             case "triggercontract": {
               triggerContract(parameters, false);
               break;
@@ -3944,7 +4031,7 @@ public class Client {
     }
   }
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws CipherException, IOException, CancelException {
     Client cli = new Client();
     JCommander.newBuilder()
         .addObject(cli)
