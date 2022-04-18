@@ -5,12 +5,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import com.google.protobuf.Any;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigObject;
-import io.grpc.Status;
 import lombok.extern.slf4j.Slf4j;
 import lombok.var;
 import org.apache.commons.lang3.ArrayUtils;
@@ -205,7 +203,7 @@ public class WalletApi {
     return WalletUtils.generateWalletFile(walletFile, file);
   }
 
-  public static File selcetWalletFile() {
+  public static File pickWalletFile() {
     File file = new File(FilePath);
     if (!file.exists() || !file.isDirectory()) {
       return null;
@@ -248,8 +246,8 @@ public class WalletApi {
     return wallet;
   }
 
-  public WalletFile selcetWalletFileE() throws IOException {
-    File file = selcetWalletFile();
+  public WalletFile selectWalletFile() throws IOException {
+    File file = pickWalletFile();
     if (file == null) {
       throw new IOException(
           "No keystore file found, please use registerwallet or importwallet first!");
@@ -269,7 +267,7 @@ public class WalletApi {
 
   public static boolean changeKeystorePassword(byte[] oldPassword, byte[] newPassowrd)
       throws IOException, CipherException {
-    File wallet = selcetWalletFile();
+    File wallet = pickWalletFile();
     if (wallet == null) {
       throw new IOException(
           "No keystore file found, please use registerwallet or importwallet first!");
@@ -281,7 +279,7 @@ public class WalletApi {
 
 
   private static WalletFile loadWalletFile() throws IOException {
-    File wallet = selcetWalletFile();
+    File wallet = pickWalletFile();
     if (wallet == null) {
       throw new IOException(
           "No keystore file found, please use registerwallet or importwallet first!");
@@ -309,6 +307,39 @@ public class WalletApi {
 
   public static TokenPage queryTokenPool(String tokenName, int pageIndex, int pageSize) {
     return rpcCli.queryTokenPool(tokenName, pageIndex, pageSize);//call rpc
+  }
+
+  public static NftTemplateQueryResult listNftTemplate(byte[] ownerAddress, int pageIndex, int pageSize, String ownerType) {
+    return rpcCli.listNftTemplate(ownerAddress, pageIndex, pageSize, ownerType);//call rpc
+  }
+
+  public static NftTokenQueryResult listNftToken(byte[] ownerAddress, String contract, int pageIndex, int pageSize) {
+    return rpcCli.listNftToken(ownerAddress, contract, pageIndex, pageSize);//call rpc
+  }
+
+  public static NftTokenApproveResult listNftTokenApprove(byte[] ownerAddress, int pageIndex, int pageSize) {
+    return rpcCli.listNftTokenApprove(ownerAddress, pageIndex, pageSize);//call rpc
+  }
+
+  public static NftTokenApproveAllResult listNftTokenApproveAll(byte[] ownerAddress, int pageIndex, int pageSize) {
+    return rpcCli.listNftTokenApproveAll(ownerAddress, pageIndex, pageSize);//call rpc
+  }
+
+  public static NftTemplate getNftTemplate(String contract) {
+    return rpcCli.getNftTemplate(contract);//call rpc
+  }
+
+
+  public static NftTokenGetResult getNftToken(String contract, long tokenId) {
+    return rpcCli.getNftToken(contract, tokenId);//call rpc
+  }
+
+  public static NftBalanceOf getNftBalanceOf(byte[] ownerAddress) {
+    return rpcCli.getNftBalanceOf(ownerAddress);//call rpc
+  }
+
+  public static IsApprovedForAll getNftApprovedForAll(byte[] ownerAddress, byte[] operator) {
+    return rpcCli.getNftApprovedForAll(ownerAddress, operator);//call rpc
   }
 
   public static FutureTokenPack queryToken(byte[] address, String name, int pageSize, int pageIndex) {
@@ -346,7 +377,7 @@ public class WalletApi {
     transaction = TransactionUtils.setPermissionId(transaction);
     while (true) {
       System.out.println("Please choose your key for sign.");
-      WalletFile walletFile = selcetWalletFileE();
+      WalletFile walletFile = selectWalletFile();
       System.out.println("Please input your password.");
       char[] password = Utils.inputPassword(false);
       byte[] passwd = org.unichain.keystore.StringUtils.char2Byte(password);
@@ -377,7 +408,7 @@ public class WalletApi {
     transaction = TransactionUtils.setPermissionId(transaction);
     while (true) {
       System.out.println("Please choose your key for sign.");
-      WalletFile walletFile = selcetWalletFileE();
+      WalletFile walletFile = selectWalletFile();
       System.out.println("Please input your password.");
       char[] password = Utils.inputPassword(false);
       byte[] passwd = org.unichain.keystore.StringUtils.char2Byte(password);
@@ -557,6 +588,89 @@ public class WalletApi {
     return processTransaction(transaction);
   }
 
+  public boolean createNftTemplate(byte[] owner, String contract, String name, long totalSupply, byte[] minter) throws CipherException, IOException, CancelException {
+    if (owner == null) {
+      owner = getAddress();
+    }
+    Contract.CreateNftTemplateContract createNftTemplateContract = createNftTemplateContract(owner, contract, name, totalSupply, minter);
+    Transaction transaction = rpcCli.createTransaction(createNftTemplateContract);
+    return processTransaction(transaction);
+  }
+
+  public boolean mintNftToken(byte[] ownerAddress, String contract, byte[] toAddr, String uri, String metaData)  throws CipherException, IOException, CancelException {
+    if (ownerAddress == null) {
+      ownerAddress = getAddress();
+    }
+    Contract.MintNftTokenContract mintNftTokenContract = createMintNftTokenContract(ownerAddress, contract, toAddr, uri, metaData);
+    Transaction transaction = rpcCli.createTransaction(mintNftTokenContract);
+    return processTransaction(transaction);
+  }
+
+
+  public boolean removeNftMinter(byte[] ownerAddress, String contract) throws CipherException, IOException, CancelException{
+    if (ownerAddress == null) {
+      ownerAddress = getAddress();
+    }
+    Contract.RemoveNftMinterContract removeNftMinterContract = createRemoveNftMinterContract(ownerAddress, contract);
+    Transaction transaction = rpcCli.createTransaction(removeNftMinterContract);
+    return processTransaction(transaction);
+  }
+
+  public boolean renounceNftMinter(byte[] ownerAddress, String contract) throws CipherException, IOException, CancelException{
+    if (ownerAddress == null) {
+      ownerAddress = getAddress();
+    }
+    Contract.RenounceNftMinterContract renounceNftMinterContract = createRenounceNftMinterContract(ownerAddress, contract);
+    Transaction transaction = rpcCli.createTransaction(renounceNftMinterContract);
+    return processTransaction(transaction);
+  }
+
+
+  public boolean addNftMinter(byte[] ownerAddress, String contract, byte[] minterAddr) throws CipherException, IOException, CancelException{
+    if (ownerAddress == null) {
+      ownerAddress = getAddress();
+    }
+    Contract.AddNftMinterContract addNftMinterContract = createAddNftMinterContract(ownerAddress, contract, minterAddr);
+    Transaction transaction = rpcCli.createTransaction(addNftMinterContract);
+    return processTransaction(transaction);
+  }
+
+  public boolean burnNftToken(byte[] ownerAddress, String contract, long tokenId) throws CipherException, IOException, CancelException{
+    if (ownerAddress == null) {
+      ownerAddress = getAddress();
+    }
+    Contract.BurnNftTokenContract burnNftMinterContract = createBurnNftMinterContract(ownerAddress, contract, tokenId);
+    Transaction transaction = rpcCli.createTransaction(burnNftMinterContract);
+    return processTransaction(transaction);
+  }
+
+  public boolean approveNftToken(byte[] ownerAddress, byte[] toAddr, boolean approve, String contract, long tokenId)  throws CipherException, IOException, CancelException{
+    if (ownerAddress == null) {
+      ownerAddress = getAddress();
+    }
+    Contract.ApproveNftTokenContract approveNftTokenContract = createApproveNftTokenContract(ownerAddress, toAddr, approve, contract, tokenId);
+    Transaction transaction = rpcCli.createTransaction(approveNftTokenContract);
+    return processTransaction(transaction);
+  }
+
+  public boolean approveForAllNft(byte[] ownerAddress, byte[] toAddr, boolean approve) throws CipherException, IOException, CancelException{
+    if (ownerAddress == null) {
+      ownerAddress = getAddress();
+    }
+    Contract.ApproveForAllNftTokenContract contract = createApproveForAllNftContract(ownerAddress, toAddr, approve);
+    Transaction transaction = rpcCli.createTransaction(contract);
+    return processTransaction(transaction);
+  }
+
+  public boolean transferNftToken(byte[] ownerAddress, byte[] toAddr, String contract, long tokenId) throws CipherException, IOException, CancelException{
+    if (ownerAddress == null) {
+      ownerAddress = getAddress();
+    }
+    Contract.TransferNftTokenContract tokenContract = createTransferNftTokenContract(ownerAddress, toAddr, contract, tokenId);
+    Transaction transaction = rpcCli.createTransaction(tokenContract);
+    return processTransaction(transaction);
+  }
+
   public boolean contributeTokenPoolFee(byte[] owner, String tokenName, long amount) throws CipherException, IOException, CancelException {
     if (owner == null) {
       owner = getAddress();
@@ -595,7 +709,7 @@ public class WalletApi {
   }
 
 
-  public boolean transferToken( byte[] owner, byte[] toAddress, String tokenName, long amount, long availableTime) throws CipherException, IOException, CancelException {
+  public boolean transferToken(byte[] owner, byte[] toAddress, String tokenName, long amount, long availableTime) throws CipherException, IOException, CancelException {
     if (owner == null) {
       owner = getAddress();
     }
@@ -604,7 +718,7 @@ public class WalletApi {
     return processTransaction(transaction);
   }
 
-  public boolean transferTokenOwner( byte[] owner, byte[] toAddress, String tokenName) throws CipherException, IOException, CancelException {
+  public boolean transferTokenOwner(byte[] owner, byte[] toAddress, String tokenName) throws CipherException, IOException, CancelException {
     if (owner == null) {
       owner = getAddress();
     }
@@ -613,7 +727,7 @@ public class WalletApi {
     return processTransaction(transaction);
   }
 
-  public boolean exchangeToken( byte[] owner, String tokenName, long unw) throws CipherException, IOException, CancelException {
+  public boolean exchangeToken(byte[] owner, String tokenName, long unw) throws CipherException, IOException, CancelException {
     if (owner == null) {
       owner = getAddress();
     }
@@ -883,6 +997,91 @@ public class WalletApi {
       builder.setEndTime(endTime);
 
     return builder.build();
+  }
+
+
+  public static Contract.CreateNftTemplateContract createNftTemplateContract(byte[] owner, String contract, String name,long totalSupply, byte[] minter) {
+    Contract.CreateNftTemplateContract.Builder builder = Contract.CreateNftTemplateContract.newBuilder()
+            .setOwnerAddress(ByteString.copyFrom(owner))
+            .setContract(contract)
+            .setName(name)
+            .setTotalSupply(totalSupply);
+
+    if(minter != null)
+      builder.setMinter(ByteString.copyFrom(minter));
+    return builder.build();
+  }
+
+  public static Contract.MintNftTokenContract createMintNftTokenContract(byte[] ownerAddress, String contract, byte[] toAddr, String uri, String metaData) {
+    Contract.MintNftTokenContract.Builder builder = Contract.MintNftTokenContract.newBuilder()
+            .setOwnerAddress(ByteString.copyFrom(ownerAddress))
+            .setContract(contract)
+            .setToAddress(ByteString.copyFrom(toAddr))
+            .setUri(uri);
+
+    if(metaData != null)
+      builder.setMetadata(metaData);
+    else
+      builder.clearMetadata();
+
+    return builder.build();
+  }
+
+  private RemoveNftMinterContract createRemoveNftMinterContract(byte[] ownerAddress, String contract) {
+    return  Contract.RemoveNftMinterContract.newBuilder()
+            .setOwnerAddress(ByteString.copyFrom(ownerAddress))
+            .setContract(contract)
+            .build();
+  }
+
+  private RenounceNftMinterContract createRenounceNftMinterContract(byte[] ownerAddress, String contract) {
+    return  Contract.RenounceNftMinterContract.newBuilder()
+            .setOwnerAddress(ByteString.copyFrom(ownerAddress))
+            .setContract(contract)
+            .build();
+  }
+
+  private AddNftMinterContract createAddNftMinterContract(byte[] ownerAddress, String contract, byte[] minterAddr) {
+    return  Contract.AddNftMinterContract.newBuilder()
+            .setOwnerAddress(ByteString.copyFrom(ownerAddress))
+            .setContract(contract)
+            .setMinter(ByteString.copyFrom(minterAddr))
+            .build();
+  }
+
+  private BurnNftTokenContract createBurnNftMinterContract(byte[] ownerAddress, String contract, long tokenId) {
+    return  Contract.BurnNftTokenContract.newBuilder()
+            .setOwnerAddress(ByteString.copyFrom(ownerAddress))
+            .setContract(contract)
+            .setTokenId(tokenId)
+            .build();
+  }
+
+  private ApproveNftTokenContract createApproveNftTokenContract(byte[] ownerAddress, byte[] toAddr, boolean approve, String contract, long tokenId) {
+    return  Contract.ApproveNftTokenContract.newBuilder()
+            .setOwnerAddress(ByteString.copyFrom(ownerAddress))
+            .setToAddress(ByteString.copyFrom(toAddr))
+            .setApprove(approve)
+            .setContract(contract)
+            .setTokenId(tokenId)
+            .build();
+  }
+
+  private ApproveForAllNftTokenContract createApproveForAllNftContract(byte[] ownerAddress, byte[] toAddr, boolean approve) {
+    return  Contract.ApproveForAllNftTokenContract.newBuilder()
+            .setOwnerAddress(ByteString.copyFrom(ownerAddress))
+            .setToAddress(ByteString.copyFrom(toAddr))
+            .setApprove(approve)
+            .build();
+  }
+
+  private TransferNftTokenContract createTransferNftTokenContract(byte[] ownerAddress, byte[] toAddr, String contract, long tokenId) {
+    return  Contract.TransferNftTokenContract.newBuilder()
+            .setOwnerAddress(ByteString.copyFrom(ownerAddress))
+            .setToAddress(ByteString.copyFrom(toAddr))
+            .setContract(contract)
+            .setTokenId(tokenId)
+            .build();
   }
 
   public static Contract.ContributeTokenPoolFeeContract createContributeTokenPoolFee(byte[] owner, String tokenName, long amount) {
@@ -1885,11 +2084,9 @@ public class WalletApi {
     builder.setName(contractName);
     builder.setOriginAddress(ByteString.copyFrom(address));
     builder.setAbi(abi);
-    builder.setConsumeUserResourcePercent(consumeUserResourcePercent)
-        .setOriginEnergyLimit(originEnergyLimit);
+    builder.setConsumeUserResourcePercent(consumeUserResourcePercent).setOriginEnergyLimit(originEnergyLimit);
 
     if (value != 0) {
-
       builder.setCallValue(value);
     }
     byte[] byteCode;
@@ -1901,8 +2098,7 @@ public class WalletApi {
 
     builder.setBytecode(ByteString.copyFrom(byteCode));
     CreateSmartContract.Builder createSmartContractBuilder = CreateSmartContract.newBuilder();
-    createSmartContractBuilder.setOwnerAddress(ByteString.copyFrom(address)).
-        setNewContract(builder.build());
+    createSmartContractBuilder.setOwnerAddress(ByteString.copyFrom(address)).setNewContract(builder.build());
     if (tokenId != null && !tokenId.equalsIgnoreCase("") && !tokenId.equalsIgnoreCase("#")) {
       createSmartContractBuilder.setCallTokenValue(tokenValue).setTokenId(Long.parseLong(tokenId));
     }
@@ -1925,8 +2121,7 @@ public class WalletApi {
       String addr = cur.substring(lastPosition + 1);
       String libraryAddressHex;
       try {
-        libraryAddressHex = (new String(Hex.encode(WalletApi.decodeFromBase58Check(addr)),
-            "US-ASCII")).substring(2);
+        libraryAddressHex = (new String(Hex.encode(WalletApi.decodeFromBase58Check(addr)), "US-ASCII")).substring(2);
       } catch (UnsupportedEncodingException e) {
         throw new RuntimeException(e);  // now ignore
       }
@@ -1938,8 +2133,7 @@ public class WalletApi {
         beReplaced = "__" + libraryName + repeated;
       } else if (compilerVersion.equalsIgnoreCase("v5")) {
         //0.5.4 version
-        String libraryNameKeccak256 = ByteArray
-            .toHexString(Hash.sha3(ByteArray.fromString(libraryName))).substring(0, 34);
+        String libraryNameKeccak256 = ByteArray.toHexString(Hash.sha3(ByteArray.fromString(libraryName))).substring(0, 34);
         beReplaced = "__\\$" + libraryNameKeccak256 + "\\$__";
       } else {
         throw new RuntimeException("unknown compiler version.");
@@ -2068,16 +2262,14 @@ public class WalletApi {
       System.out.println("RPC create tx failed!");
       if (transactionExtention != null) {
         System.out.println("Code = " + transactionExtention.getResult().getCode());
-        System.out
-            .println("Message = " + transactionExtention.getResult().getMessage().toStringUtf8());
+        System.out.println("Message = " + transactionExtention.getResult().getMessage().toStringUtf8());
       }
       return false;
     }
 
     TransactionExtention.Builder texBuilder = TransactionExtention.newBuilder();
     Transaction.Builder transBuilder = Transaction.newBuilder();
-    Transaction.raw.Builder rawBuilder = transactionExtention.getTransaction().getRawData()
-        .toBuilder();
+    Transaction.raw.Builder rawBuilder = transactionExtention.getTransaction().getRawData().toBuilder();
     rawBuilder.setFeeLimit(feeLimit);
     transBuilder.setRawData(rawBuilder);
     for (int i = 0; i < transactionExtention.getTransaction().getSignatureCount(); i++) {
@@ -2120,8 +2312,7 @@ public class WalletApi {
     if (transactionExtention == null || !transactionExtention.getResult().getResult()) {
       System.out.println("RPC create call tx failed!");
       System.out.println("Code = " + transactionExtention.getResult().getCode());
-      System.out
-          .println("Message = " + transactionExtention.getResult().getMessage().toStringUtf8());
+      System.out.println("Message = " + transactionExtention.getResult().getMessage().toStringUtf8());
       return false;
     }
 
@@ -2253,7 +2444,7 @@ public class WalletApi {
     transaction = TransactionUtils.setPermissionId(transaction);
 
     System.out.println("Please choose your key for sign.");
-    WalletFile walletFile = selcetWalletFileE();
+    WalletFile walletFile = selectWalletFile();
     System.out.println("Please input your password.");
     char[] password = Utils.inputPassword(false);
     byte[] passwd = org.unichain.keystore.StringUtils.char2Byte(password);
@@ -2294,5 +2485,4 @@ public class WalletApi {
   public static GrpcAPI.NumberMessage getBrokerage(byte[] owner) {
     return rpcCli.getBrokerage(owner);
   }
-
 }

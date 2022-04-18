@@ -283,7 +283,7 @@ public class Utils {
     return jsonObject;
   }
 
-  //@fixme add new contract
+  //Add new contract
   public static JSONObject printTransactionToJSON(Transaction transaction, boolean selfType) {
     JSONObject jsonTransaction = JSONObject.parseObject(JsonFormat.printToString(transaction, selfType));
     JSONArray contracts = new JSONArray();
@@ -459,6 +459,42 @@ public class Utils {
           case WithdrawFutureTokenContract:
             WithdrawFutureTokenContract withdrawFutureTokenContract = contract.getParameter().unpack(WithdrawFutureTokenContract.class);
             contractJson = JSONObject.parseObject(JsonFormat.printToString(withdrawFutureTokenContract, selfType));
+            break;
+          case CreateNftTemplateContract:
+            CreateNftTemplateContract createNftTemplateContract = contract.getParameter().unpack(CreateNftTemplateContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(createNftTemplateContract, selfType));
+            break;
+          case MintNftTokenContract:
+            MintNftTokenContract mintNftTokenContract = contract.getParameter().unpack(MintNftTokenContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(mintNftTokenContract, selfType));
+            break;
+          case RemoveNftMinterContract:
+            RemoveNftMinterContract removeNftMinterContract = contract.getParameter().unpack(RemoveNftMinterContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(removeNftMinterContract, selfType));
+            break;
+          case AddNftMinterContract:
+            AddNftMinterContract addNftMinterContract = contract.getParameter().unpack(AddNftMinterContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(addNftMinterContract, selfType));
+            break;
+          case RenounceNftMinterContract:
+            RenounceNftMinterContract renounceNftMinterContract = contract.getParameter().unpack(RenounceNftMinterContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(renounceNftMinterContract, selfType));
+            break;
+          case BurnNftTokenContract:
+            BurnNftTokenContract burnNftTokenContract = contract.getParameter().unpack(BurnNftTokenContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(burnNftTokenContract, selfType));
+            break;
+          case ApproveNftTokenContract:
+            ApproveNftTokenContract approveNftTokenContract = contract.getParameter().unpack(ApproveNftTokenContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(approveNftTokenContract, selfType));
+            break;
+          case ApproveForAllNftTokenContract:
+            ApproveForAllNftTokenContract approveForAllNftTokenContract = contract.getParameter().unpack(ApproveForAllNftTokenContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(approveForAllNftTokenContract, selfType));
+            break;
+          case TransferNftTokenContract:
+            TransferNftTokenContract transferNftTokenContract = contract.getParameter().unpack(TransferNftTokenContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(transferNftTokenContract, selfType));
             break;
           default:
         }

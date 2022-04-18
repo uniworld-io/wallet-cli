@@ -5,7 +5,6 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import lombok.extern.slf4j.Slf4j;
 import lombok.var;
-import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang.StringUtils;
 import org.unichain.api.GrpcAPI;
 import org.unichain.api.GrpcAPI.*;
@@ -75,6 +74,121 @@ public class GrpcClient {
       return blockingStubSolidity.getTokenPool(request.build());
     } else {
       return blockingStubFull.getTokenPool(request.build());
+    }
+  }
+
+  public NftTemplateQueryResult listNftTemplate(byte[] ownerAddress, int pageIndex, int pageSize, String ownerType) {
+    var request = NftTemplateQuery.newBuilder();
+    request.setOwnerAddress(ByteString.copyFrom(ownerAddress));
+    request.setOwnerType(ownerType);
+    if(pageIndex != -1)
+      request.setPageIndex(pageIndex);
+    if(pageSize != -1)
+      request.setPageSize(pageSize);
+
+
+    if (blockingStubSolidity != null) {
+      return blockingStubSolidity.listNftTemplate(request.build());
+    } else {
+      return blockingStubFull.listNftTemplate(request.build());
+    }
+  }
+
+  public NftTokenQueryResult listNftToken(byte[] ownerAddress, String contract, int pageIndex, int pageSize) {
+    var request = NftTokenQuery.newBuilder();
+    request.setOwnerAddress(ByteString.copyFrom(ownerAddress));
+    if(Objects.isNull(contract) || "-".equals(contract))
+      request.clearContract();
+    else
+      request.setContract(contract);
+
+    if(pageIndex != -1)
+      request.setPageIndex(pageIndex);
+    if(pageSize != -1)
+      request.setPageSize(pageSize);
+
+    if (blockingStubSolidity != null) {
+      return blockingStubSolidity.listNftToken(request.build());
+    } else {
+      return blockingStubFull.listNftToken(request.build());
+    }
+  }
+
+  public NftTokenApproveResult listNftTokenApprove(byte[] ownerAddress, int pageIndex, int pageSize) {
+    var request = NftTokenApproveQuery.newBuilder();
+    request.setOwnerAddress(ByteString.copyFrom(ownerAddress));
+
+    if(pageIndex != -1)
+      request.setPageIndex(pageIndex);
+    if(pageSize != -1)
+      request.setPageSize(pageSize);
+
+    if (blockingStubSolidity != null) {
+      return blockingStubSolidity.listNftTokenApprove(request.build());
+    } else {
+      return blockingStubFull.listNftTokenApprove(request.build());
+    }
+  }
+
+  public NftTokenApproveAllResult listNftTokenApproveAll(byte[] ownerAddress, int pageIndex, int pageSize) {
+    var request = NftTokenApproveAllQuery.newBuilder();
+    request.setOwnerAddress(ByteString.copyFrom(ownerAddress));
+
+    if(pageIndex != -1)
+      request.setPageIndex(pageIndex);
+    if(pageSize != -1)
+      request.setPageSize(pageSize);
+
+    if (blockingStubSolidity != null) {
+      return blockingStubSolidity.listNftTokenApproveAll(request.build());
+    } else {
+      return blockingStubFull.listNftTokenApproveAll(request.build());
+    }
+  }
+
+  public NftTemplate getNftTemplate(String contract) {
+    var request = NftTemplate.newBuilder();
+    request.setContract(contract);
+
+    if (blockingStubSolidity != null) {
+      return blockingStubSolidity.getNftTemplate(request.build());
+    } else {
+      return blockingStubFull.getNftTemplate(request.build());
+    }
+  }
+
+  public NftTokenGetResult getNftToken(String contract, long Id) {
+    var request = NftTokenGet.newBuilder();
+    request.setContract(contract.toUpperCase());
+    request.setId(Id);
+
+    if (blockingStubSolidity != null) {
+      return blockingStubSolidity.getNftToken(request.build());
+    } else {
+      return blockingStubFull.getNftToken(request.build());
+    }
+  }
+
+  public NftBalanceOf getNftBalanceOf(byte[] ownerAddress) {
+    var request = NftBalanceOf.newBuilder();
+    request.setOwnerAddress(ByteString.copyFrom(ownerAddress));
+
+    if (blockingStubSolidity != null) {
+      return blockingStubSolidity.getNftBalanceOf(request.build());
+    } else {
+      return blockingStubFull.getNftBalanceOf(request.build());
+    }
+  }
+
+  public IsApprovedForAll getNftApprovedForAll(byte[] ownerAddress, byte[] operator) {
+    var request = IsApprovedForAll.newBuilder();
+    request.setOwnerAddress(ByteString.copyFrom(ownerAddress));
+    request.setOperator(ByteString.copyFrom(operator));
+
+    if (blockingStubSolidity != null) {
+      return blockingStubSolidity.getNftApprovedForAll(request.build());
+    } else {
+      return blockingStubFull.getNftApprovedForAll(request.build());
     }
   }
 
@@ -208,6 +322,42 @@ public class GrpcClient {
     builder.setAmount(amount);
 
     return blockingStubFull.easyTransferAssetByPrivate(builder.build());
+  }
+
+  public Transaction createTransaction(Contract.CreateNftTemplateContract contract) {
+    return blockingStubFull.createNftTemplate(contract);
+  }
+
+  public Transaction createTransaction(Contract.MintNftTokenContract contract) {
+    return blockingStubFull.mintNftToken(contract);
+  }
+
+  public Transaction createTransaction(Contract.RemoveNftMinterContract contract) {
+    return blockingStubFull.removeNftMinter(contract);
+  }
+
+  public Transaction createTransaction(Contract.AddNftMinterContract contract) {
+    return blockingStubFull.addNftMinter(contract);
+  }
+
+  public Transaction createTransaction(Contract.RenounceNftMinterContract contract) {
+    return blockingStubFull.renounceNftMinter(contract);
+  }
+
+  public Transaction createTransaction(Contract.BurnNftTokenContract contract) {
+    return blockingStubFull.burnNftToken(contract);
+  }
+
+  public Transaction createTransaction(Contract.ApproveNftTokenContract contract) {
+    return blockingStubFull.approveNftToken(contract);
+  }
+
+  public Transaction createTransaction(Contract.ApproveForAllNftTokenContract contract) {
+    return blockingStubFull.approveForAllNftToken(contract);
+  }
+
+  public Transaction createTransaction(Contract.TransferNftTokenContract contract) {
+    return blockingStubFull.transferNftToken(contract);
   }
 
   public Transaction createTransaction(Contract.ExchangeTokenContract contract) {
