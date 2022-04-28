@@ -8,7 +8,7 @@ import "google/api/annotations.proto";
 
 option java_package = "org.unichain.api"; //Specify the name of the package that generated the Java file
 option java_outer_classname = "GrpcAPI"; //Specify the class name of the generated Java file
-option go_package = "github.com/uniworld-io/grpc-gateway/api";
+option go_package = "github.com/unichainprotocol/grpc-gateway/api";
 
 service Wallet {
   rpc GetFutureTransfer (FutureQuery) returns (FuturePack) {
@@ -63,10 +63,10 @@ service Wallet {
 
   rpc ListNftTemplate (NftTemplateQuery) returns (NftTemplateQueryResult) {
     option (google.api.http) = {
-      post: "/wallet/listnfttemplate"
+      post: "/wallet/listnftcontract"
       body: "*"
       additional_bindings {
-        get: "/wallet/listnfttemplate"
+        get: "/wallet/listnftcontract"
       }
     };
   };
@@ -84,10 +84,10 @@ service Wallet {
 
   rpc GetNftTemplate (NftTemplate) returns (NftTemplate) {
     option (google.api.http) = {
-      post: "/wallet/getnfttemplate"
+      post: "/wallet/getnftcontract"
       body: "*"
       additional_bindings {
-        get: "/wallet/getnfttemplate"
+        get: "/wallet/getnftcontract"
       }
     };
   };
@@ -250,10 +250,10 @@ service Wallet {
 
   rpc CreateNftTemplate (CreateNftTemplateContract) returns (Transaction) {
     option (google.api.http) = {
-      post: "/wallet/createnfttemplate"
+      post: "/wallet/createnftcontract"
       body: "*"
       additional_bindings {
-        get: "/wallet/createnfttemplate"
+        get: "/wallet/createnftcontract"
       }
     };
   };
@@ -425,6 +425,79 @@ service Wallet {
       body: "*"
       additional_bindings {
         get: "/wallet/withdrawfuturetoken"
+      }
+    };
+  }
+
+  /**
+    PoS Bridge interface
+   */
+  rpc PosBridgeSetup (PosBridgeSetupContract) returns (Transaction) {
+    option (google.api.http) = {
+      post: "/wallet/posbridgesetup"
+      body: "*"
+      additional_bindings {
+        get: "/wallet/posbridgesetup"
+      }
+    };
+  }
+
+  rpc PosBridgeMapToken (PosBridgeMapTokenContract) returns (Transaction) {
+    option (google.api.http) = {
+      post: "/wallet/posbridgemaptoken"
+      body: "*"
+      additional_bindings {
+        get: "/wallet/posbridgemaptoken"
+      }
+    };
+  }
+
+  rpc PosBridgeCleanMapToken (PosBridgeCleanMapTokenContract) returns (Transaction) {
+    option (google.api.http) = {
+      post: "/wallet/posbridgecleanmaptoken"
+      body: "*"
+      additional_bindings {
+        get: "/wallet/posbridgecleanmaptoken"
+      }
+    };
+  }
+
+  rpc PosBridgeDeposit(PosBridgeDepositContract) returns (Transaction) {
+    option (google.api.http) = {
+      post: "/wallet/posbridgedeposit"
+      body: "*"
+      additional_bindings {
+        get: "/wallet/posbridgedeposit"
+      }
+    };
+  }
+
+  rpc PosBridgeDepositExec(PosBridgeDepositExecContract) returns (Transaction) {
+    option (google.api.http) = {
+      post: "/wallet/posbridgedepositexec"
+      body: "*"
+      additional_bindings {
+        get: "/wallet/posbridgedepositexec"
+      }
+    };
+  }
+
+  rpc PosBridgeWithdraw(PosBridgeWithdrawContract) returns (Transaction) {
+    option (google.api.http) = {
+      post: "/wallet/posbridgewithdraw"
+      body: "*"
+      additional_bindings {
+        get: "/wallet/posbridgewithdraw"
+      }
+    };
+  }
+
+  rpc PosBridgeWithdrawExec(PosBridgeWithdrawExecContract) returns (Transaction) {
+    option (google.api.http) = {
+      post: "/wallet/posbridgewithdrawexec"
+      body: "*"
+      additional_bindings {
+        get: "/wallet/posbridgewithdrawexec"
       }
     };
   }
@@ -1018,10 +1091,10 @@ service WalletSolidity {
 
   rpc ListNftTemplate (NftTemplateQuery) returns (NftTemplateQueryResult) {
     option (google.api.http) = {
-      post: "/walletsolidity/listnfttemplate"
+      post: "/walletsolidity/listnftcontract"
       body: "*"
       additional_bindings {
-        get: "/walletsolidity/listnfttemplate"
+        get: "/walletsolidity/listnftcontract"
       }
     };
   };
@@ -1038,10 +1111,10 @@ service WalletSolidity {
 
   rpc GetNftTemplate (NftTemplate) returns (NftTemplate) {
     option (google.api.http) = {
-      post: "/walletsolidity/getnfttemplate"
+      post: "/walletsolidity/getnftcontract"
       body: "*"
       additional_bindings {
-        get: "/walletsolidity/getnfttemplate"
+        get: "/walletsolidity/getnftcontract"
       }
     };
   };

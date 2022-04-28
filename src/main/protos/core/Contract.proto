@@ -19,7 +19,7 @@ package protocol;
 
 option java_package = "org.unichain.protos"; //Specify the name of the package that generated the Java file
 option java_outer_classname = "Contract"; //Specify the class name of the generated Java file
-option go_package = "github.com/uniworld-io/grpc-gateway/core";
+option go_package = "github.com/unichainprotocol/grpc-gateway/core";
 
 import "core/Unichain.proto";
 
@@ -128,7 +128,7 @@ message CreateTokenContract {
   int64 fee_pool = 12;
   int64 burned = 13;
   int64 latest_operation_time = 14;
-  int64 lot =15;
+  int64 lot = 15;
   int64 fee_pool_origin = 16;
   int64 exch_unx_num = 17; //#unw
   int64 exch_num = 18; //exchange to #token
@@ -145,7 +145,7 @@ message TransferTokenOwnerContract {
 message ExchangeTokenContract {
   bytes owner_address = 1;
   string token_name = 2;
-  int64 amount =3;
+  int64 amount = 3;
 }
 
 message ContributeTokenPoolFeeContract {
@@ -166,7 +166,7 @@ message UpdateTokenParamsContract {
   int64 fee_pool = 9;
   int64 exch_unx_num = 10; //exchange by unw
   int64 exch_num = 11; //exchange to by token
-  int64 create_acc_fee= 12; //create account fee by token
+  int64 create_acc_fee = 12; //create account fee by token
 }
 
 message MineTokenContract {
@@ -395,7 +395,7 @@ message RenounceNftMinterContract{
 message BurnNftTokenContract{
   bytes owner_address = 1;
   string contract = 2;
-  int64 token_id =3;
+  int64 token_id = 3;
 }
 
 message ApproveNftTokenContract{
@@ -403,7 +403,7 @@ message ApproveNftTokenContract{
   bytes to_address = 2;
   bool approve = 3;
   string contract = 4;
-  int64 token_id =5;
+  int64 token_id = 5;
 }
 
 message ApproveForAllNftTokenContract{
@@ -417,4 +417,91 @@ message TransferNftTokenContract{
   bytes to_address = 2;
   string contract = 3;
   int64 token_id = 4;
+}
+
+
+/**
+ all calldata is abi params encoded
+ */
+message PosBridgeSetupContract{
+  bytes owner_address = 1;
+  bytes new_owner= 2;
+  int64 min_validator = 3;
+  repeated bytes validators = 4;
+}
+
+message PosBridgeMapTokenContract{
+  bytes owner_address = 1;
+  bytes calldata = 2;
+  bytes root_token= 3;
+  int64 root_chainid = 4;
+  bytes child_token= 5;
+  int64 child_chainid = 6;
+  bool  root_or_child = 7; //if root: this network is root, bytes is string or else standard hex address
+}
+
+message PosBridgeCleanMapTokenContract{
+    bytes owner_address = 1;
+    bytes root_token= 2;
+    int64 root_chainid = 3;
+    bytes child_token= 4;
+    int64 child_chainid = 5;
+    bool  root_or_child = 6; //if root: this network is root, bytes is string or else standard hex address
+}
+
+message PosBridgeDepositContract{
+  bytes owner_address = 1;
+  int64 type = 2; // 1: native, 2: urc20, 3: nft
+  string root_token = 3; //if native : unw hardcoded
+  bytes child_address = 4;
+  int64 child_chainid = 5;
+  int64 data = 6; //amount or token id
+}
+
+/**
+  calldata format: comming soon
+  {
+     digest: bytes32,
+     message: {
+       rootTokenAddr: 0x...,
+       rootChainId: 0x...,
+       childTokenAddr: 0x...,
+       childChainId: 0x...,
+       depositedAddr: 0x...,
+       amount: 1000
+     },
+     signatures: bytes[]
+  }
+ */
+message PosBridgeDepositExecContract{
+  bytes owner_address = 1;
+  bytes calldata= 2;
+}
+
+message PosBridgeWithdrawContract{
+  bytes owner_address = 1;
+  int64 type = 2; // 1: native 2: urc20, 3: nft
+  string childToken = 3;
+  uint32 rootChainId = 4;
+  bytes rootAddress = 5;
+  int64 data = 6; //amount or tokenid
+}
+
+/**
+  calldata format: comming soon
+     digest: bytes32,
+     signatures: bytes[]
+     message: {
+       childAddr: 0x...,
+       childToken: 0x...,
+       rootToken: 0x...,
+       rootAddress: 0x...,
+       rootChainId: 0x...,
+       withdrawedAddr: 0x...
+       amount: 1000
+     }
+ */
+message PosBridgeWithdrawExecContract{
+  bytes owner_address = 1;
+  bytes calldata= 2;
 }

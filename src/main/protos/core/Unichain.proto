@@ -8,7 +8,7 @@ package protocol;
 
 option java_package = "org.unichain.protos"; //Specify the name of the package that generated the Java file
 option java_outer_classname = "Protocol"; //Specify the class name of the generated Java file
-option go_package = "github.com/uniworld-io/grpc-gateway/core";
+option go_package = "github.com/unichainprotocol/grpc-gateway/core";
 
 enum AccountType {
   Normal = 0;
@@ -374,13 +374,21 @@ message Transaction {
       MintNftTokenContract = 64;
       RemoveNftMinterContract = 65;
       AddNftMinterContract = 66;
-
       RenounceNftMinterContract = 67;
       BurnNftTokenContract = 68;
       ApproveNftTokenContract = 69;
       ApproveForAllNftTokenContract = 70;
       TransferNftTokenContract = 71;
+
+      PosBridgeSetupContract = 90;
+      PosBridgeMapTokenContract = 91;
+      PosBridgeCleanMapTokenContract =92;
+      PosBridgeDepositContract = 93;
+      PosBridgeDepositExecContract = 94;
+      PosBridgeWithdrawContract =95;
+      PosBridgeWithdrawExecContract = 96;
     }
+
     ContractType type = 1;
     google.protobuf.Any parameter = 2;
     bytes provider = 3;
@@ -922,4 +930,3 @@ message NftTokenApproveRelation{
   bytes next = 3;
   bytes prev = 4;
 }
-
