@@ -324,6 +324,40 @@ public class GrpcClient {
     return blockingStubFull.easyTransferAssetByPrivate(builder.build());
   }
 
+  /**
+   * POSBridge
+   */
+  public Transaction createTransaction(Contract.PosBridgeSetupContract contract) {
+    return blockingStubFull.posBridgeSetup(contract);
+  }
+
+  public Transaction createTransaction(Contract.PosBridgeMapTokenContract contract) {
+    return blockingStubFull.posBridgeMapToken(contract);
+  }
+
+  public Transaction createTransaction(Contract.PosBridgeCleanMapTokenContract contract) {
+    return blockingStubFull.posBridgeCleanMapToken(contract);
+  }
+
+  public Transaction createTransaction(Contract.PosBridgeDepositContract contract) {
+    return blockingStubFull.posBridgeDeposit(contract);
+  }
+
+  public Transaction createTransaction(Contract.PosBridgeDepositExecContract contract) {
+    return blockingStubFull.posBridgeDepositExec(contract);
+  }
+
+  public Transaction createTransaction(Contract.PosBridgeWithdrawContract contract) {
+    return blockingStubFull.posBridgeWithdraw(contract);
+  }
+
+  public Transaction createTransaction(Contract.PosBridgeWithdrawExecContract contract) {
+    return blockingStubFull.posBridgeWithdrawExec(contract);
+  }
+
+  /**
+   * NFT
+   */
   public Transaction createTransaction(Contract.CreateNftTemplateContract contract) {
     return blockingStubFull.createNftTemplate(contract);
   }

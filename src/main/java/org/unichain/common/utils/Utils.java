@@ -23,6 +23,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.protobuf.Any;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.Message;
+import lombok.var;
 import org.unichain.api.GrpcAPI.*;
 import org.unichain.common.crypto.Hash;
 import org.unichain.common.crypto.Sha256Hash;
@@ -496,6 +497,41 @@ public class Utils {
             TransferNftTokenContract transferNftTokenContract = contract.getParameter().unpack(TransferNftTokenContract.class);
             contractJson = JSONObject.parseObject(JsonFormat.printToString(transferNftTokenContract, selfType));
             break;
+          case PosBridgeSetupContract:{
+            var parsedContract = contract.getParameter().unpack(PosBridgeSetupContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(parsedContract, selfType));
+            break;
+          }
+          case PosBridgeMapTokenContract:{
+            var parsedContract = contract.getParameter().unpack(PosBridgeMapTokenContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(parsedContract, selfType));
+            break;
+          }
+          case PosBridgeCleanMapTokenContract:{
+            var parsedContract = contract.getParameter().unpack(PosBridgeCleanMapTokenContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(parsedContract, selfType));
+            break;
+          }
+          case PosBridgeDepositContract:{
+            var parsedContract = contract.getParameter().unpack(PosBridgeDepositContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(parsedContract, selfType));
+            break;
+          }
+          case PosBridgeDepositExecContract:{
+            var parsedContract = contract.getParameter().unpack(PosBridgeDepositExecContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(parsedContract, selfType));
+            break;
+          }
+          case PosBridgeWithdrawContract:{
+            var parsedContract = contract.getParameter().unpack(PosBridgeWithdrawContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(parsedContract, selfType));
+            break;
+          }
+          case PosBridgeWithdrawExecContract:{
+            var parsedContract = contract.getParameter().unpack(PosBridgeWithdrawExecContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(parsedContract, selfType));
+            break;
+          }
           default:
         }
         JSONObject parameter = new JSONObject();
