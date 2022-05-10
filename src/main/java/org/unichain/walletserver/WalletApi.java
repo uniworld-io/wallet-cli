@@ -664,65 +664,65 @@ public class WalletApi {
   }
 
   //@todo later
-  public boolean posBridgeSetup(byte[] ownerAddress, byte[] newOwner, long minValidator, String validators) throws CipherException, IOException, CancelException{
+  public boolean posBridgeSetup(byte[] ownerAddress, byte[] newOwner, long minValidator, String validators, int consensusF1, int consensusF2) throws CipherException, IOException, CancelException{
     if (ownerAddress == null) {
       ownerAddress = getAddress();
     }
-    Contract.PosBridgeSetupContract contract = createPosBridgeSetupContract(ownerAddress, newOwner, minValidator, validators);
+    Contract.PosBridgeSetupContract contract = createPosBridgeSetupContract(ownerAddress, newOwner, minValidator, validators, consensusF1, consensusF2);
     Transaction transaction = rpcCli.createTransaction(contract);
     return processTransaction(transaction);
   }
 
-  public boolean posBridgeMapToken(byte[] ownerAddress, boolean rootOrChild, byte[] rootToken, long rootChainId, byte[] childToken, long childChainId) throws CipherException, IOException, CancelException{
+  public boolean posBridgeMapToken(byte[] ownerAddress, String rootToken, long rootChainId, String childToken, long childChainId, int type) throws CipherException, IOException, CancelException{
     if (ownerAddress == null) {
       ownerAddress = getAddress();
     }
-    Contract.PosBridgeMapTokenContract contract = createPosBridgeMapToken(ownerAddress, rootOrChild, rootToken, rootChainId, childToken, childChainId);
+    Contract.PosBridgeMapTokenContract contract = createPosBridgeMapToken(ownerAddress, rootToken, rootChainId, childToken, childChainId, type);
     Transaction transaction = rpcCli.createTransaction(contract);
     return processTransaction(transaction);
   }
 
-  public boolean posBridgeCleanMapToken(byte[] ownerAddress, boolean rootOrChild, byte[] rootToken, long rootChainId, byte[] childToken, long childChainId) throws CipherException, IOException, CancelException{
+  public boolean posBridgeCleanMapToken(byte[] ownerAddress, String rootToken, long rootChainId, String childToken, long childChainId, int type) throws CipherException, IOException, CancelException{
     if (ownerAddress == null) {
       ownerAddress = getAddress();
     }
-    Contract.PosBridgeCleanMapTokenContract contract = createPosBridgeCleanMapToken(ownerAddress, rootOrChild, rootToken, rootChainId, childToken, childChainId);
+    Contract.PosBridgeCleanMapTokenContract contract = createPosBridgeCleanMapToken(ownerAddress, rootToken, rootChainId, childToken, childChainId, type);
     Transaction transaction = rpcCli.createTransaction(contract);
     return processTransaction(transaction);
   }
 
-  public boolean posBridgeDeposit(byte[] ownerAddress, long type, String rootToken, byte[] childAddr, long childChainId, long data) throws CipherException, IOException, CancelException{
+  public boolean posBridgeDeposit(byte[] ownerAddress, String rootToken, String receiveAddr, long childChainId, long data) throws CipherException, IOException, CancelException{
     if (ownerAddress == null) {
       ownerAddress = getAddress();
     }
-    Contract.PosBridgeDepositContract contract = createPosBridgeDeposit(ownerAddress, type, rootToken, childAddr, childChainId, data);
+    Contract.PosBridgeDepositContract contract = createPosBridgeDeposit(ownerAddress, rootToken, receiveAddr, childChainId, data);
     Transaction transaction = rpcCli.createTransaction(contract);
     return processTransaction(transaction);
   }
 
-  public boolean posBridgeDepositExec(byte[] ownerAddress, byte[] calldata) throws CipherException, IOException, CancelException{
+  public boolean posBridgeDepositExec(byte[] ownerAddress, byte[] signatures, byte[] msg) throws CipherException, IOException, CancelException{
     if (ownerAddress == null) {
       ownerAddress = getAddress();
     }
-    Contract.PosBridgeDepositExecContract contract = createPosBridgeDepositExec(ownerAddress, calldata);
+    Contract.PosBridgeDepositExecContract contract = createPosBridgeDepositExec(ownerAddress, signatures, msg);
     Transaction transaction = rpcCli.createTransaction(contract);
     return processTransaction(transaction);
   }
 
-  public boolean posBridgeWithdraw(byte[] ownerAddress, long type, String childToken, int rootChainId, byte[] rootAddress, long data) throws CipherException, IOException, CancelException{
+  public boolean posBridgeWithdraw(byte[] ownerAddress, String childToken, String receiveAddress, long data) throws CipherException, IOException, CancelException{
     if (ownerAddress == null) {
       ownerAddress = getAddress();
     }
-    Contract.PosBridgeWithdrawContract contract = createPosBridgeWithdraw(ownerAddress, type, childToken, rootChainId, rootAddress, data);
+    Contract.PosBridgeWithdrawContract contract = createPosBridgeWithdraw(ownerAddress, childToken, receiveAddress, data);
     Transaction transaction = rpcCli.createTransaction(contract);
     return processTransaction(transaction);
   }
 
-  public boolean posBridgeWithdrawExec(byte[] ownerAddress, byte[] calldata) throws CipherException, IOException, CancelException{
+  public boolean posBridgeWithdrawExec(byte[] ownerAddress, byte[] signatures, byte[] msg) throws CipherException, IOException, CancelException{
     if (ownerAddress == null) {
       ownerAddress = getAddress();
     }
-    Contract.PosBridgeWithdrawExecContract contract = createPosBridgeWithdrawExec(ownerAddress, calldata);
+    Contract.PosBridgeWithdrawExecContract contract = createPosBridgeWithdrawExec(ownerAddress, signatures, msg);
     Transaction transaction = rpcCli.createTransaction(contract);
     return processTransaction(transaction);
   }
@@ -1140,7 +1140,7 @@ public class WalletApi {
             .build();
   }
 
-  private PosBridgeSetupContract createPosBridgeSetupContract(byte[] ownerAddress, byte[] newOwner, long minValidator, String validators) {
+  private PosBridgeSetupContract createPosBridgeSetupContract(byte[] ownerAddress, byte[] newOwner, long minValidator, String validators,  int consensusF1, int consensusF2) {
     var builder =  Contract.PosBridgeSetupContract.newBuilder()
             .setOwnerAddress(ByteString.copyFrom(ownerAddress));
     if(newOwner != null)
@@ -1162,67 +1162,86 @@ public class WalletApi {
     else
       builder.clearValidators();
 
+    if(consensusF1 > 0)
+      builder.setConsensusF1(consensusF1);
+    else
+      builder.clearConsensusF1();
+
+    if(consensusF2 > 0)
+      builder.setConsensusF2(consensusF2);
+    else
+      builder.clearConsensusF2();
+
     return builder.build();
   }
 
-  private PosBridgeMapTokenContract createPosBridgeMapToken(byte[] ownerAddress, boolean rootOrChild, byte[] rootToken, long rootChainId, byte[] childToken, long childChainId) {
+  /**
+   bytes owner_address = 1;
+   int64 root_chainid = 2;
+   string root_token= 3; //hex address if token, symbol if native
+   int64 child_chainid = 4;
+   string child_token= 5; //hex address
+   uint32 type = 6; //1:native, 2:erc20, 3:erc721
+   * @return
+   */
+  private PosBridgeMapTokenContract createPosBridgeMapToken(byte[] ownerAddress, String rootToken, long rootChainId, String childToken, long childChainId, int type) {
     var builder =  Contract.PosBridgeMapTokenContract.newBuilder()
             .setOwnerAddress(ByteString.copyFrom(ownerAddress))
-            .setRootOrChild(rootOrChild)
-            .setRootToken(ByteString.copyFrom(rootToken))
             .setRootChainid(rootChainId)
-            .setChildToken(ByteString.copyFrom(childToken))
-            .setChildChainid(childChainId);
+            .setRootToken(rootToken)
+            .setChildChainid(childChainId)
+            .setChildToken(childToken)
+            .setType(type);
 
     return builder.build();
   }
 
-  private PosBridgeCleanMapTokenContract createPosBridgeCleanMapToken(byte[] ownerAddress, boolean rootOrChild, byte[] rootToken, long rootChainId, byte[] childToken, long childChainId) {
+  private PosBridgeCleanMapTokenContract createPosBridgeCleanMapToken(byte[] ownerAddress, String rootToken, long rootChainId, String childToken, long childChainId, int type) {
     var builder =  Contract.PosBridgeCleanMapTokenContract.newBuilder()
             .setOwnerAddress(ByteString.copyFrom(ownerAddress))
-            .setRootOrChild(rootOrChild)
-            .setRootToken(ByteString.copyFrom(rootToken))
             .setRootChainid(rootChainId)
-            .setChildToken(ByteString.copyFrom(childToken))
-            .setChildChainid(childChainId);
+            .setRootToken(rootToken)
+            .setChildChainid(childChainId)
+            .setChildToken(childToken)
+            .setType(type);
 
     return builder.build();
   }
 
-  private PosBridgeDepositContract createPosBridgeDeposit(byte[] ownerAddress, long type, String rootToken, byte[] childAddr, long childChainId, long data) {
+  private PosBridgeDepositContract createPosBridgeDeposit(byte[] ownerAddress, String rootToken, String receiveAddr, long childChainId, long data) {
     var builder =  Contract.PosBridgeDepositContract.newBuilder()
             .setOwnerAddress(ByteString.copyFrom(ownerAddress))
-            .setType(type)
             .setRootToken(rootToken)
-            .setChildAddress(ByteString.copyFrom(childAddr))
             .setChildChainid(childChainId)
+            .setReceiveAddress(receiveAddr)
             .setData(data);
 
     return builder.build();
   }
 
-  private PosBridgeDepositExecContract createPosBridgeDepositExec(byte[] ownerAddress, byte[] calldata) {
+  private PosBridgeDepositExecContract createPosBridgeDepositExec(byte[] ownerAddress, byte[] signatures, byte[] msg) {
     var builder =  Contract.PosBridgeDepositExecContract.newBuilder()
             .setOwnerAddress(ByteString.copyFrom(ownerAddress))
-            .setCalldata(ByteString.copyFrom(calldata));
+            .setSignatures(ByteString.copyFrom(signatures))
+            .setMessage(ByteString.copyFrom(msg));
+
     return builder.build();
   }
 
-  private PosBridgeWithdrawContract createPosBridgeWithdraw(byte[] ownerAddress, long type, String childToken, int rootChainId, byte[] rootAddress, long data) {
+  private PosBridgeWithdrawContract createPosBridgeWithdraw(byte[] ownerAddress, String childToken, String receiveAddress, long data) {
     var builder =  Contract.PosBridgeWithdrawContract.newBuilder()
             .setOwnerAddress(ByteString.copyFrom(ownerAddress))
-            .setType(type)
             .setChildToken(childToken)
-            .setRootChainId(rootChainId)
-            .setRootAddress(ByteString.copyFrom(rootAddress))
+            .setReceiveAddress(receiveAddress)
             .setData(data);
     return builder.build();
   }
 
-  private PosBridgeWithdrawExecContract createPosBridgeWithdrawExec(byte[] ownerAddress, byte[] calldata) {
+  private PosBridgeWithdrawExecContract createPosBridgeWithdrawExec(byte[] ownerAddress, byte[] signatures, byte[] msg) {
     var builder =  Contract.PosBridgeWithdrawExecContract.newBuilder()
             .setOwnerAddress(ByteString.copyFrom(ownerAddress))
-            .setCalldata(ByteString.copyFrom(calldata));
+            .setSignatures(ByteString.copyFrom(signatures))
+            .setMessage(ByteString.copyFrom(msg));
     return builder.build();
   }
 

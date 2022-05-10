@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
 import com.google.common.primitives.Longs;
-import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import lombok.var;
 import org.apache.commons.lang3.ArrayUtils;
@@ -3580,290 +3579,215 @@ public class Client {
     }
   }
 
-  /**
-   * message PosBridgeDepositExecContract{
-   *   bytes owner_address = 1;
-   *   bytes calldata= 2;
-   * }
-   */
   private void posBridgeWithdrawExec(String[] parameters) throws Exception{
-    if (parameters == null || (parameters.length != 1 && parameters.length != 2)) {
-      System.out.println("posBridgeWithdrawExec needs 1 parameters like following: ");
-      System.out.println("posBridgeWithdrawExec [OwnerAddress] calldata[hex byte like 0x..]");
+    if (parameters == null || (parameters.length != 2 && parameters.length != 3)) {
+      System.out.println("posBridgeWithdrawExec needs 2 parameters like following: ");
+      System.out.println("posBridgeWithdrawExec [OwnerAddress] signatures[hex] msg[hex]");
       return;
     }
 
     int index = 0;
     byte[] ownerAddress = null;
-    if (parameters.length == 2) {
+    if (parameters.length == 3) {
       ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
       if (ownerAddress == null) {
         System.out.println("Invalid OwnerAddress.");
         return;
       }
     }
-    byte[] calldata = ByteArray.fromHexString(parameters[index++]);
+    byte[] signatures = ByteArray.fromHexString(parameters[index++]);
+    byte[] msg = ByteArray.fromHexString(parameters[index++]);
 
-    boolean result = walletApiWrapper.posBridgeWithdrawExec(ownerAddress, calldata);
+    boolean result = walletApiWrapper.posBridgeWithdrawExec(ownerAddress, signatures, msg);
     if (result) {
-      System.out.println("posBridgeWithdrawExec with calldata hex: " + calldata + " successful!!");
+      System.out.println("posBridgeWithdrawExec with signatures hex: " + signatures + ", msg hex: " + msg + " successful!!");
     } else {
-      System.out.println("posBridgeWithdrawExec with calldata hex: " + calldata + " failed!!");    }
+      System.out.println("posBridgeWithdrawExec with signatures hex: " + signatures +  ", msg hex: " + msg + " failed!!");    }
   }
 
-  /**
-   * message PosBridgeWithdrawContract{
-   *   bytes owner_address = 1;
-   *   int64 type = 2; // 1: native 2: urc20, 3: nft
-   *   string childToken = 3;
-   *   uint32 rootChainId = 4;
-   *   bytes rootAddress = 5;
-   *   int64 data = 6; //amount or tokenid
-   * }
-   */
   private void posBridgeWithdraw(String[] parameters) throws Exception{
-    if (parameters == null || (parameters.length != 5 && parameters.length != 6)) {
-      System.out.println("posBridgeWithdraw needs 5 parameters like following: ");
-      System.out.println("posBridgeWithdraw [OwnerAddress] type[1=native,2=urc30,3=nft] childToken[token symbol]  rootChainId  rootAddress[hex addr like 0x...] data[amount or nft id]");
-      return;
-    }
-
-    int index = 0;
-    byte[] ownerAddress = null;
-    if (parameters.length == 6) {
-      ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
-      if (ownerAddress == null) {
-        System.out.println("Invalid OwnerAddress.");
-        return;
-      }
-    }
-    long type = Long.valueOf(parameters[index++]);
-    String childToken = parameters[index++];
-    int rootChainId = Integer.valueOf(parameters[index++]);
-    byte[] rootAddress = ByteArray.fromHexString(parameters[index++]);
-    long data = Long.valueOf(parameters[index++]);
-
-    boolean result = walletApiWrapper.posBridgeWithdraw(ownerAddress, type, childToken, rootChainId, rootAddress, data);
-    if(result) {
-      System.out.println("posBridgeWithdraw with type: " + type + "childToken: " + childToken + ", rootChainId: " + rootChainId + ", rootAddress: " + rootAddress +  ", data: " + data + " successful!!");
-    } else {
-      System.out.println("posBridgeWithdraw with type: " + type + "childToken: " + childToken + ", rootChainId: " + rootChainId + ", rootAddress: " + rootAddress +  ", data: " + data + " successful!!");
-    }
-  }
-
-  /**
-   *   message PosBridgeDepositExecContract{
-   *     bytes owner_address = 1;
-   *     bytes calldata= 2;
-   *   }
-   */
-  private void posBridgeDepositExec(String[] parameters) throws Exception{
-    if (parameters == null || (parameters.length != 1 && parameters.length != 2)) {
-      System.out.println("posBridgeDepositExec needs 1 parameters like following: ");
-      System.out.println("posBridgeDepositExec [OwnerAddress] calldata[hex byte like 0x..]");
-      return;
-    }
-
-    int index = 0;
-    byte[] ownerAddress = null;
-    if (parameters.length == 2) {
-      ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
-      if (ownerAddress == null) {
-        System.out.println("Invalid OwnerAddress.");
-        return;
-      }
-    }
-    byte[] calldata = ByteArray.fromHexString(parameters[index++]);
-
-    boolean result = walletApiWrapper.posBridgeDepositExec(ownerAddress, calldata);
-    if (result) {
-      System.out.println("posBridgeDepositExec with calldata hex: " + calldata + " successful!!");
-    } else {
-      System.out.println("posBridgeDepositExec with calldata hex: " + calldata + " failed!!");    }
-  }
-
-  /**
-   *
-   message PosBridgeDepositContract{
-   bytes owner_address = 1;
-   int64 type = 2; // 1: native, 2: urc20, 3: nft
-   string root_token = 3; //if native : unw hardcoded
-   bytes child_address = 4;
-   int64 child_chainid = 5;
-   int64 data = 6; //amount or token id
-   }
-   */
-  private void posBridgeDeposit(String[] parameters) throws Exception{
-    if (parameters == null || (parameters.length != 5 && parameters.length != 6)) {
-      System.out.println("posBridgeDeposit needs 5 parameters like following: ");
-      System.out.println("posBridgeDeposit [OwnerAddress] type[1=native,2=urc30,3=nft] root_token[token symbol] child_address[hex addr like 0x...] child_chainid data[amount or nft id]");
-      return;
-    }
-
-    int index = 0;
-    byte[] ownerAddress = null;
-    if (parameters.length == 6) {
-      ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
-      if (ownerAddress == null) {
-        System.out.println("Invalid OwnerAddress.");
-        return;
-      }
-    }
-    long type = Long.valueOf(parameters[index++]);
-    String rootToken = parameters[index++];
-    byte[] childAddr = ByteArray.fromHexString(parameters[index++]);
-    long childChainId = Long.valueOf(parameters[index++]);
-    long data = Long.valueOf(parameters[index++]);
-
-    boolean result = walletApiWrapper.posBridgeDeposit(ownerAddress, type, rootToken, childAddr, childChainId, data);
-    if (result) {
-      System.out.println("posBridgeDeposit with type: " + type + "rootToken: " + rootToken + ", childAddr: " + childAddr + ", childChainId: " + childChainId +  ", data: " + data + " successful!!");
-    } else {
-      System.out.println("posBridgeDeposit with type: " + type + "rootToken: " + rootToken + ", childAddr: " + childAddr + ", childChainId: " + childChainId +  ", data: " + data + " failed!!");
-    }
-  }
-
-  /**
-   bytes owner_address = 1;
-   bytes root_token= 2;
-   int64 root_chainid = 3;
-   bytes child_token= 4;
-   int64 child_chainid = 5;
-   bool  root_or_child = 6; //if root: this network is root, bytes is string or else standard hex address
-   */
-  private void posBridgeCleanMapToken(String[] parameters) throws CipherException, IOException, CancelException{
-    if (parameters == null || (parameters.length != 5 && parameters.length != 6)) {
-      System.out.println("posBridgeCleanMapToken needs 5 parameters like following: ");
-      System.out.println("posBridgeCleanMapToken [OwnerAddress] root_or_child root_token root_chainid child_token child_chainid");
-      return;
-    }
-
-    int index = 0;
-    byte[] ownerAddress = null;
-    if (parameters.length == 6) {
-      ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
-      if (ownerAddress == null) {
-        System.out.println("Invalid OwnerAddress.");
-        return;
-      }
-    }
-
-    boolean rootOrChild = Boolean.valueOf(parameters[index++]);
-    byte[] rootToken;
-    String rootTokenStr = parameters[index++];
-    if(rootOrChild)
-      rootToken = ByteString.copyFromUtf8(rootTokenStr).toByteArray();
-    else
-      rootToken = WalletApi.decodeFromBase58Check(rootTokenStr);
-
-    if (rootToken == null) {
-      System.out.println("Invalid rootToken.");
-      return;
-    }
-
-    long rootChainId = Long.parseLong(parameters[index++]);
-
-    String childTokenStr = parameters[index++];
-    byte[] childToken;
-    if(rootOrChild)
-      childToken = WalletApi.decodeFromBase58Check(childTokenStr);
-    else
-      childToken = ByteString.copyFromUtf8(childTokenStr).toByteArray();
-
-    if (childToken == null) {
-      System.out.println("Invalid childToken.");
-      return;
-    }
-
-    long childChainId = Long.parseLong(parameters[index++]);
-
-    boolean result = walletApiWrapper.posBridgeCleanMapToken(ownerAddress, rootOrChild, rootToken, rootChainId, childToken, childChainId);
-    if (result) {
-      System.out.println("posBridgeCleanMapToken with rootOrChild: " + rootOrChild + "rootToken: " + rootToken + ", rootChainId: " + rootChainId + ", childToken: " + childToken +  ", childChainId: " + childChainId + " successful!!");
-    } else {
-      System.out.println("posBridgeCleanMapToken with rootOrChild: " + rootOrChild + "rootToken: " + rootToken + ", rootChainId: " + rootChainId + ", childToken: " + childToken +  ", childChainId: " + childChainId + " failed!!");
-    }
-  }
-
-
-  /**
-   bytes owner_address = 1;
-   bytes root_token= 2;
-   int64 root_chainid = 3;
-   bytes child_token= 4;
-   int64 child_chainid = 5;
-   bool  root_or_child = 6; //if root: this network is root, bytes is string or else standard hex address
-   */
-  private void posBridgeMapToken(String[] parameters) throws CipherException, IOException, CancelException{
-    if (parameters == null || (parameters.length != 5 && parameters.length != 6)) {
-      System.out.println("posBridgeMapToken needs 5 parameters like following: ");
-      System.out.println("posBridgeMapToken [OwnerAddress] root_or_child root_token root_chainid child_token child_chainid");
-      return;
-    }
-
-    int index = 0;
-    byte[] ownerAddress = null;
-    if (parameters.length == 6) {
-      ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
-      if (ownerAddress == null) {
-        System.out.println("Invalid OwnerAddress.");
-        return;
-      }
-    }
-
-    boolean rootOrChild = Boolean.valueOf(parameters[index++]);
-    byte[] rootToken;
-    String rootTokenStr = parameters[index++];
-    if(rootOrChild)
-      rootToken = ByteString.copyFromUtf8(rootTokenStr).toByteArray();
-    else
-      rootToken = WalletApi.decodeFromBase58Check(rootTokenStr);
-
-    if (rootToken == null) {
-      System.out.println("Invalid rootToken.");
-      return;
-    }
-
-    long rootChainId = Long.parseLong(parameters[index++]);
-
-    String childTokenStr = parameters[index++];
-    byte[] childToken;
-    if(rootOrChild)
-      childToken = WalletApi.decodeFromBase58Check(childTokenStr);
-    else
-      childToken = ByteString.copyFromUtf8(childTokenStr).toByteArray();
-
-    if (childToken == null) {
-      System.out.println("Invalid childToken.");
-      return;
-    }
-
-    long childChainId = Long.parseLong(parameters[index++]);
-
-    boolean result = walletApiWrapper.posBridgeMapToken(ownerAddress, rootOrChild, rootToken, rootChainId, childToken, childChainId);
-    if (result) {
-      System.out.println("posBridgeMapToken with rootOrChild: " + rootOrChild + "rootToken: " + rootToken + ", rootChainId: " + rootChainId + ", childToken: " + childToken +  ", childChainId: " + childChainId + " successful!!");
-    } else {
-      System.out.println("posBridgeMapToken with rootOrChild: " + rootOrChild + "rootToken: " + rootToken + ", rootChainId: " + rootChainId + ", childToken: " + childToken +  ", childChainId: " + childChainId + " failed!!");
-    }
-  }
-
-  /**
-   *   bytes owner_address = 1;
-   *   bytes new_owner= 2;
-   *   int64 min_validator = 3;
-   *   repeated bytes validators = 4;
-   */
-  private void posBridgeSetup(String[] parameters) throws CipherException, IOException, CancelException{
     if (parameters == null || (parameters.length != 3 && parameters.length != 4)) {
-      System.out.println("posBridgeSetup needs 3 parameters like following: ");
-      System.out.println("posBridgeSetup [OwnerAddress] new_owner[- if not set] min_validator[- if not set] validators[- if not set or \"v1|v2|v3\"]");
+      System.out.println("posBridgeWithdraw needs 4 parameters like following: ");
+      System.out.println("posBridgeWithdraw [OwnerAddress] childToken[token symbol]  receiveAddress[hex addr like 0x...] data[amount or nft id]");
       return;
     }
 
     int index = 0;
     byte[] ownerAddress = null;
     if (parameters.length == 4) {
+      ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+      if (ownerAddress == null) {
+        System.out.println("Invalid OwnerAddress.");
+        return;
+      }
+    }
+    String childToken = parameters[index++];
+    String receiveAddress = parameters[index++];
+    long data = Long.valueOf(parameters[index++]);
+
+    boolean result = walletApiWrapper.posBridgeWithdraw(ownerAddress, childToken, receiveAddress, data);
+    if(result) {
+      System.out.println("posBridgeWithdraw with childToken: " + childToken + ", receiveAddress: " + receiveAddress + ", data: " + data + " successful!!");
+    } else {
+      System.out.println("posBridgeWithdraw with childToken: " + childToken + ", receiveAddress: " + receiveAddress + ", data: " + data + " failed!!");
+    }
+  }
+
+  private void posBridgeDepositExec(String[] parameters) throws Exception{
+    if (parameters == null || (parameters.length != 2 && parameters.length != 3)) {
+      System.out.println("posBridgeDepositExec needs 2 parameters like following: ");
+      System.out.println("posBridgeDepositExec [OwnerAddress] signatures[hex] msg[hex]");
+      return;
+    }
+
+    int index = 0;
+    byte[] ownerAddress = null;
+    if (parameters.length == 3) {
+      ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+      if (ownerAddress == null) {
+        System.out.println("Invalid OwnerAddress.");
+        return;
+      }
+    }
+    byte[] signatures = ByteArray.fromHexString(parameters[index++]);
+    byte[] msg = ByteArray.fromHexString(parameters[index++]);
+
+    boolean result = walletApiWrapper.posBridgeDepositExec(ownerAddress, signatures, msg);
+    if (result) {
+      System.out.println("posBridgeDepositExec with signatures hex: " + signatures + ", msg hex: " + msg + " successful!!");
+    } else {
+      System.out.println("posBridgeDepositExec with signatures hex: " + signatures +  ", msg hex: " + msg + " failed!!");    }
+  }
+
+  private void posBridgeDeposit(String[] parameters) throws Exception{
+    if (parameters == null || (parameters.length != 5 && parameters.length != 6)) {
+      System.out.println("posBridgeDeposit needs 5 parameters like following: ");
+      System.out.println("posBridgeDeposit [OwnerAddress] root_token[token addr] receiveAddr[hex addr like 0x...] child_chainid data[amount or nft id]");
+      return;
+    }
+
+    int index = 0;
+    byte[] ownerAddress = null;
+    if (parameters.length == 6) {
+      ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+      if (ownerAddress == null) {
+        System.out.println("Invalid OwnerAddress.");
+        return;
+      }
+    }
+    String rootToken = parameters[index++];
+    String receiveAddr = parameters[index++];
+    long childChainId = Long.valueOf(parameters[index++]);
+    long data = Long.valueOf(parameters[index++]);
+
+    boolean result = walletApiWrapper.posBridgeDeposit(ownerAddress, rootToken, receiveAddr, childChainId, data);
+    if (result) {
+      System.out.println("posBridgeDeposit with rootToken: " + rootToken + ", receiveAddr: " + receiveAddr + ", childChainId: " + childChainId +  ", data: " + data + " successful!!");
+    } else {
+      System.out.println("posBridgeDeposit with rootToken: " + rootToken + ", receiveAddr: " + receiveAddr + ", childChainId: " + childChainId +  ", data: " + data + " failed!!");
+    }
+  }
+
+  private void posBridgeCleanMapToken(String[] parameters) throws CipherException, IOException, CancelException{
+    if (parameters == null || (parameters.length != 5 && parameters.length != 6)) {
+      System.out.println("posBridgeCleanMapToken needs 5 parameters like following: ");
+      System.out.println("posBridgeCleanMapToken [OwnerAddress] root_token root_chainid child_token child_chainid type[1,2,3]");
+      return;
+    }
+
+    int index = 0;
+    byte[] ownerAddress = null;
+    if (parameters.length == 6) {
+      ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+      if (ownerAddress == null) {
+        System.out.println("Invalid OwnerAddress.");
+        return;
+      }
+    }
+
+    String rootToken = parameters[index++];
+
+    if (!WalletApi.addressValid(Hex.decode(rootToken))) {
+      System.out.println("Invalid rootToken.");
+      return;
+    }
+
+    long rootChainId = Long.parseLong(parameters[index++]);
+
+    String childToken = parameters[index++];
+
+    if (!WalletApi.addressValid(Hex.decode(childToken))){
+      System.out.println("Invalid childToken.");
+      return;
+    }
+
+    long childChainId = Long.parseLong(parameters[index++]);
+
+    int assetType = Integer.parseInt(parameters[index++]);
+
+    boolean result = walletApiWrapper.posBridgeCleanMapToken(ownerAddress, rootToken, rootChainId, childToken, childChainId, assetType);
+    if (result) {
+      System.out.println("posBridgeCleanMapToken with rootToken: " + rootToken + ", rootChainId: " + rootChainId + ", childToken: " + childToken +  ", childChainId: " + childChainId +  ", assetType: " + assetType + " successful!!");
+    } else {
+      System.out.println("posBridgeCleanMapToken with rootToken: " + rootToken + ", rootChainId: " + rootChainId + ", childToken: " + childToken +  ", childChainId: " + childChainId + ", assetType: " + assetType +" failed!!");
+    }
+  }
+
+  private void posBridgeMapToken(String[] parameters) throws CipherException, IOException, CancelException{
+    if (parameters == null || (parameters.length != 5 && parameters.length != 6)) {
+      System.out.println("posBridgeMapToken needs 5 parameters like following: ");
+      System.out.println("posBridgeMapToken [OwnerAddress] root_token root_chainid child_token child_chainid type[1,2,3]");
+      return;
+    }
+
+    int index = 0;
+    byte[] ownerAddress = null;
+    if (parameters.length == 6) {
+      ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+      if (ownerAddress == null) {
+        System.out.println("Invalid OwnerAddress.");
+        return;
+      }
+    }
+
+    String rootToken = parameters[index++];
+
+    if (!WalletApi.addressValid(Hex.decode(rootToken))) {
+      System.out.println("Invalid rootToken.");
+      return;
+    }
+
+    long rootChainId = Long.parseLong(parameters[index++]);
+
+    String childToken = parameters[index++];
+
+    if (!WalletApi.addressValid(Hex.decode(childToken))){
+      System.out.println("Invalid childToken.");
+      return;
+    }
+
+    long childChainId = Long.parseLong(parameters[index++]);
+
+    int assetType = Integer.parseInt(parameters[index++]);
+
+    boolean result = walletApiWrapper.posBridgeMapToken(ownerAddress, rootToken, rootChainId, childToken, childChainId, assetType);
+    if (result) {
+      System.out.println("posBridgeMapToken with rootToken: " + rootToken + ", rootChainId: " + rootChainId + ", childToken: " + childToken +  ", childChainId: " + childChainId +  ", assetType: " + assetType + " successful!!");
+    } else {
+      System.out.println("posBridgeMapToken with rootToken: " + rootToken + ", rootChainId: " + rootChainId + ", childToken: " + childToken +  ", childChainId: " + childChainId + ", assetType: " + assetType +" failed!!");
+    }
+  }
+
+  private void posBridgeSetup(String[] parameters) throws CipherException, IOException, CancelException{
+    if (parameters == null || (parameters.length != 5 && parameters.length != 6)) {
+      System.out.println("posBridgeSetup needs 3 parameters like following: ");
+      System.out.println("posBridgeSetup [OwnerAddress] new_owner[- if not set] min_validator[- if not set] validators[- if not set or \"v1|v2|v3\"] consensus_f1[- if not set] consensus_f2[- if not set]");
+      return;
+    }
+
+    int index = 0;
+    byte[] ownerAddress = null;
+    if (parameters.length == 6) {
       ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
       if (ownerAddress == null) {
         System.out.println("Invalid OwnerAddress.");
@@ -3896,7 +3820,23 @@ public class Client {
       validators = null;
     }
 
-    boolean result = walletApiWrapper.posBridgeSetup(ownerAddress, newOwnerAddr, minValidator, validators);
+    String consensusF1Str = parameters[index++];
+    int consensusF1 = -1;
+
+    if(!"-".equalsIgnoreCase(consensusF1Str))
+    {
+      consensusF1 = Integer.parseInt(consensusF1Str);
+    }
+
+    String consensusF2Str = parameters[index++];
+    int consensusF2 = -1;
+
+    if(!"-".equalsIgnoreCase(consensusF2Str))
+    {
+      consensusF2 = Integer.parseInt(consensusF2Str);
+    }
+
+    boolean result = walletApiWrapper.posBridgeSetup(ownerAddress, newOwnerAddr, minValidator, validators, consensusF1, consensusF2);
     if (result) {
       System.out.println("posBridgeSetup with newOwner: " + newOwnerAddr + "minValidator: " + minValidator + ", validators: " + validators + " successful!!");
     } else {

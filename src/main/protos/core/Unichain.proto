@@ -14,6 +14,7 @@ enum AccountType {
   Normal = 0;
   AssetIssue = 1;
   Contract = 2;
+  System = 3;
 }
 
 // AccountId, (name, address) use name, (null, address) use address, (name, null) use name,
@@ -135,6 +136,17 @@ message FuturePack {
   int64 upper_time = 4;
   int64 total_balance = 5;
   repeated Future deals = 6;
+}
+
+/**
+used for both token urc30 & nft indexing
+ */
+message TokenAddressSymbolIndex{
+  string  symbol = 1;
+}
+
+message TokenSymbolAddressIndex{
+  bytes address = 1;
 }
 
 /* Account */
@@ -805,7 +817,7 @@ message NftTemplate{
   bytes prev = 9;
   bytes next_of_minter = 10;
   bytes prev_of_minter = 11;
-  bytes contract_address = 12;
+  bytes address = 12;
 }
 
 message NftToken{
@@ -929,4 +941,21 @@ message NftTokenApproveRelation{
   bytes token_id = 2;
   bytes next = 3;
   bytes prev = 4;
+}
+
+message PosBridgeConfig{
+  bytes owner_address = 1;
+  int64 min_validator = 2;
+  int64 consensus_f1 =3;
+  int64 consensus_f2 =4;
+  map<string, string> validators = 5;
+  bool initialized = 6;
+  bytes native_predicate_address = 7;
+  bytes token_predicate_address = 8;
+  bytes nft_predicate_address = 9;
+}
+
+message PosBridgeTokenMapping{
+  map<string, string>  tokens = 1;//with rootchain: chainId --> token
+  int64 type = 2; //1:native, 2: erc20 3: nft
 }

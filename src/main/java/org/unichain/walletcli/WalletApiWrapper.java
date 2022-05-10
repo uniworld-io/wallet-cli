@@ -248,69 +248,69 @@ public class WalletApiWrapper {
     return wallet.transferNftToken(ownerAddress, toAddr, contract, tokenId);
   }
 
-  public boolean posBridgeSetup(byte[] ownerAddress, byte[] newOwner, long minValidator, String validators) throws CipherException, IOException, CancelException {
+  public boolean posBridgeSetup(byte[] ownerAddress, byte[] newOwner, long minValidator, String validators, int consensusF1, int consensusF2) throws CipherException, IOException, CancelException {
     if (wallet == null || !wallet.isLoginState()) {
       System.out.println("Warning: posBridgeSetup failed,  Please login first !!");
       return false;
     }
 
-    return wallet.posBridgeSetup(ownerAddress, newOwner, minValidator, validators);
+    return wallet.posBridgeSetup(ownerAddress, newOwner, minValidator, validators, consensusF1, consensusF2);
   }
 
-  public boolean posBridgeMapToken(byte[] ownerAddress, boolean rootOrChild, byte[] rootToken, long rootChainId, byte[] childToken, long childChainId) throws CipherException, IOException, CancelException{
+  public boolean posBridgeMapToken(byte[] ownerAddress, String rootToken, long rootChainId, String childToken, long childChainId, int type) throws CipherException, IOException, CancelException{
     if (wallet == null || !wallet.isLoginState()) {
       System.out.println("Warning: posBridgeMapToken failed,  Please login first !!");
       return false;
     }
 
-    return wallet.posBridgeMapToken(ownerAddress, rootOrChild, rootToken, rootChainId, childToken, childChainId);
+    return wallet.posBridgeMapToken(ownerAddress, rootToken, rootChainId, childToken, childChainId, type);
   }
 
 
-  public boolean posBridgeCleanMapToken(byte[] ownerAddress, boolean rootOrChild, byte[] rootToken, long rootChainId, byte[] childToken, long childChainId) throws CipherException, IOException, CancelException{
+  public boolean posBridgeCleanMapToken(byte[] ownerAddress, String rootToken, long rootChainId, String childToken, long childChainId, int type) throws CipherException, IOException, CancelException{
     if (wallet == null || !wallet.isLoginState()) {
       System.out.println("Warning: posBridgeCleanMapToken failed,  Please login first !!");
       return false;
     }
 
-    return wallet.posBridgeCleanMapToken(ownerAddress, rootOrChild, rootToken, rootChainId, childToken, childChainId);
+    return wallet.posBridgeCleanMapToken(ownerAddress, rootToken, rootChainId, childToken, childChainId, type);
   }
 
-  public boolean posBridgeDeposit(byte[] ownerAddress, long type, String rootToken, byte[] childAddr, long childChainId, long data) throws CipherException, IOException, CancelException{
+  public boolean posBridgeDeposit(byte[] ownerAddress, String rootToken, String receiveAddr, long childChainId, long data) throws CipherException, IOException, CancelException{
     if (wallet == null || !wallet.isLoginState()) {
       System.out.println("Warning: posBridgeDeposit failed,  Please login first !!");
       return false;
     }
 
-    return wallet.posBridgeDeposit(ownerAddress, type, rootToken, childAddr, childChainId, data);
+    return wallet.posBridgeDeposit(ownerAddress, rootToken, receiveAddr, childChainId, data);
   }
 
-  public boolean posBridgeDepositExec(byte[] ownerAddress, byte[] calldata) throws CipherException, IOException, CancelException{
+  public boolean posBridgeDepositExec(byte[] ownerAddress, byte[] signatures, byte[] msg) throws CipherException, IOException, CancelException{
     if (wallet == null || !wallet.isLoginState()) {
       System.out.println("Warning: posBridgeDepositExec failed,  Please login first !!");
       return false;
     }
 
-    return wallet.posBridgeDepositExec(ownerAddress, calldata);
+    return wallet.posBridgeDepositExec(ownerAddress, signatures, msg);
   }
 
 
-  public boolean posBridgeWithdraw(byte[] ownerAddress, long type, String childToken, int rootChainId, byte[] rootAddress, long data) throws CipherException, IOException, CancelException{
+  public boolean posBridgeWithdraw(byte[] ownerAddress, String childToken, String receiveAddress, long data) throws CipherException, IOException, CancelException{
     if (wallet == null || !wallet.isLoginState()) {
       System.out.println("Warning: posBridgeWithdraw failed,  Please login first !!");
       return false;
     }
 
-    return wallet.posBridgeWithdraw(ownerAddress, type, childToken, rootChainId, rootAddress, data);
+    return wallet.posBridgeWithdraw(ownerAddress, childToken, receiveAddress, data);
   }
 
-  public boolean posBridgeWithdrawExec(byte[] ownerAddress, byte[] calldata) throws CipherException, IOException, CancelException{
+  public boolean posBridgeWithdrawExec(byte[] ownerAddress, byte[] signatures, byte[] msg) throws CipherException, IOException, CancelException{
     if (wallet == null || !wallet.isLoginState()) {
       System.out.println("Warning: posBridgeWithdrawExec failed,  Please login first !!");
       return false;
     }
 
-    return wallet.posBridgeWithdrawExec(ownerAddress, calldata);
+    return wallet.posBridgeWithdrawExec(ownerAddress, signatures, msg);
   }
 
   public boolean contributeTokenFeePool(byte[] ownerAddress, String tokenName, long amount) throws CipherException, IOException, CancelException {
