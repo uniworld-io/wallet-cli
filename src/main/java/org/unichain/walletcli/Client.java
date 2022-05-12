@@ -3582,7 +3582,7 @@ public class Client {
   private void posBridgeWithdrawExec(String[] parameters) throws Exception{
     if (parameters == null || (parameters.length != 2 && parameters.length != 3)) {
       System.out.println("posBridgeWithdrawExec needs 2 parameters like following: ");
-      System.out.println("posBridgeWithdrawExec [OwnerAddress] signatures[hex] msg[hex]");
+      System.out.println("posBridgeWithdrawExec [OwnerAddress] signatures[multi hex with | split] msg[hex]");
       return;
     }
 
@@ -3595,8 +3595,8 @@ public class Client {
         return;
       }
     }
-    byte[] signatures = ByteArray.fromHexString(parameters[index++]);
-    byte[] msg = ByteArray.fromHexString(parameters[index++]);
+    var signatures = Arrays.asList(parameters[index++].split("|"));
+    var msg = parameters[index++];
 
     boolean result = walletApiWrapper.posBridgeWithdrawExec(ownerAddress, signatures, msg);
     if (result) {
@@ -3649,8 +3649,8 @@ public class Client {
         return;
       }
     }
-    byte[] signatures = ByteArray.fromHexString(parameters[index++]);
-    byte[] msg = ByteArray.fromHexString(parameters[index++]);
+    var signatures = Arrays.asList(parameters[index++].split("|"));
+    var msg = parameters[index++];
 
     boolean result = walletApiWrapper.posBridgeDepositExec(ownerAddress, signatures, msg);
     if (result) {
@@ -3779,9 +3779,9 @@ public class Client {
   }
 
   private void posBridgeSetup(String[] parameters) throws CipherException, IOException, CancelException{
-    if (parameters == null || (parameters.length != 5 && parameters.length != 6)) {
-      System.out.println("posBridgeSetup needs 3 parameters like following: ");
-      System.out.println("posBridgeSetup [OwnerAddress] new_owner[- if not set] min_validator[- if not set] validators[- if not set or \"v1|v2|v3\"] consensus_f1[- if not set] consensus_f2[- if not set]");
+    if (parameters == null || (parameters.length != 7 && parameters.length != 8)) {
+      System.out.println("posBridgeSetup needs 7 parameters like following: ");
+      System.out.println("posBridgeSetup [OwnerAddress] new_owner[- if not set] min_validator[- if not set] validators[- if not set or \"v1|v2|v3\"] consensus_rate[- if not set] native_predicate[ | if not set] token_predicate[ | if not set] nft_predicate[ | if not set]");
       return;
     }
 
@@ -3820,23 +3820,19 @@ public class Client {
       validators = null;
     }
 
-    String consensusF1Str = parameters[index++];
-    int consensusF1 = -1;
+    String consensusRateStr = parameters[index++];
+    int consensusRate = -1;
 
-    if(!"-".equalsIgnoreCase(consensusF1Str))
+    if(!"-".equalsIgnoreCase(consensusRateStr))
     {
-      consensusF1 = Integer.parseInt(consensusF1Str);
+      consensusRate = Integer.parseInt(consensusRateStr);
     }
 
-    String consensusF2Str = parameters[index++];
-    int consensusF2 = -1;
+    String predicateNative = parameters[index++];
+    String predicateToken = parameters[index++];
+    String predicateNft = parameters[index++];
 
-    if(!"-".equalsIgnoreCase(consensusF2Str))
-    {
-      consensusF2 = Integer.parseInt(consensusF2Str);
-    }
-
-    boolean result = walletApiWrapper.posBridgeSetup(ownerAddress, newOwnerAddr, minValidator, validators, consensusF1, consensusF2);
+    boolean result = walletApiWrapper.posBridgeSetup(ownerAddress, newOwnerAddr, minValidator, validators, consensusRate, predicateNative, predicateToken, predicateNft);
     if (result) {
       System.out.println("posBridgeSetup with newOwner: " + newOwnerAddr + "minValidator: " + minValidator + ", validators: " + validators + " successful!!");
     } else {

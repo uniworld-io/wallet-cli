@@ -664,11 +664,11 @@ public class WalletApi {
   }
 
   //@todo later
-  public boolean posBridgeSetup(byte[] ownerAddress, byte[] newOwner, long minValidator, String validators, int consensusF1, int consensusF2) throws CipherException, IOException, CancelException{
+  public boolean posBridgeSetup(byte[] ownerAddress, byte[] newOwner, long minValidator, String validators, int consensusRate, String nativePredicate, String tokenPredicate, String nftPredicate) throws CipherException, IOException, CancelException{
     if (ownerAddress == null) {
       ownerAddress = getAddress();
     }
-    Contract.PosBridgeSetupContract contract = createPosBridgeSetupContract(ownerAddress, newOwner, minValidator, validators, consensusF1, consensusF2);
+    Contract.PosBridgeSetupContract contract = createPosBridgeSetupContract(ownerAddress, newOwner, minValidator, validators, consensusRate, nativePredicate, tokenPredicate, nftPredicate);
     Transaction transaction = rpcCli.createTransaction(contract);
     return processTransaction(transaction);
   }
@@ -700,7 +700,7 @@ public class WalletApi {
     return processTransaction(transaction);
   }
 
-  public boolean posBridgeDepositExec(byte[] ownerAddress, byte[] signatures, byte[] msg) throws CipherException, IOException, CancelException{
+  public boolean posBridgeDepositExec(byte[] ownerAddress, List<String> signatures, String msg) throws CipherException, IOException, CancelException{
     if (ownerAddress == null) {
       ownerAddress = getAddress();
     }
@@ -718,7 +718,7 @@ public class WalletApi {
     return processTransaction(transaction);
   }
 
-  public boolean posBridgeWithdrawExec(byte[] ownerAddress, byte[] signatures, byte[] msg) throws CipherException, IOException, CancelException{
+  public boolean posBridgeWithdrawExec(byte[] ownerAddress,  List<String> signatures, String msg) throws CipherException, IOException, CancelException{
     if (ownerAddress == null) {
       ownerAddress = getAddress();
     }
@@ -1140,7 +1140,7 @@ public class WalletApi {
             .build();
   }
 
-  private PosBridgeSetupContract createPosBridgeSetupContract(byte[] ownerAddress, byte[] newOwner, long minValidator, String validators,  int consensusF1, int consensusF2) {
+  private PosBridgeSetupContract createPosBridgeSetupContract(byte[] ownerAddress, byte[] newOwner, long minValidator, String validators,  int consensusRate, String nativePredicate, String tokenPredicate, String nftPredicate) {
     var builder =  Contract.PosBridgeSetupContract.newBuilder()
             .setOwnerAddress(ByteString.copyFrom(ownerAddress));
     if(newOwner != null)
@@ -1162,15 +1162,25 @@ public class WalletApi {
     else
       builder.clearValidators();
 
-    if(consensusF1 > 0)
-      builder.setConsensusF1(consensusF1);
+    if(consensusRate > 0)
+      builder.setConsensusRate(consensusRate);
     else
-      builder.clearConsensusF1();
+      builder.clearConsensusRate();
 
-    if(consensusF2 > 0)
-      builder.setConsensusF2(consensusF2);
+    if(nativePredicate != null)
+      builder.setPredicateNative(nativePredicate);
     else
-      builder.clearConsensusF2();
+      builder.clearPredicateNative();
+
+    if(tokenPredicate != null)
+      builder.setPredicateToken(tokenPredicate);
+    else
+      builder.clearPredicateToken();
+
+    if(nftPredicate != null)
+      builder.setPredicateNft(nftPredicate);
+    else
+      builder.clearPredicateNft();
 
     return builder.build();
   }
@@ -1219,11 +1229,11 @@ public class WalletApi {
     return builder.build();
   }
 
-  private PosBridgeDepositExecContract createPosBridgeDepositExec(byte[] ownerAddress, byte[] signatures, byte[] msg) {
+  private PosBridgeDepositExecContract createPosBridgeDepositExec(byte[] ownerAddress, List<String> signatures, String msg) {
     var builder =  Contract.PosBridgeDepositExecContract.newBuilder()
             .setOwnerAddress(ByteString.copyFrom(ownerAddress))
-            .setSignatures(ByteString.copyFrom(signatures))
-            .setMessage(ByteString.copyFrom(msg));
+            .addAllSignatures(signatures)
+            .setMessage(msg);
 
     return builder.build();
   }
@@ -1237,11 +1247,11 @@ public class WalletApi {
     return builder.build();
   }
 
-  private PosBridgeWithdrawExecContract createPosBridgeWithdrawExec(byte[] ownerAddress, byte[] signatures, byte[] msg) {
+  private PosBridgeWithdrawExecContract createPosBridgeWithdrawExec(byte[] ownerAddress, List<String> signatures, String msg) {
     var builder =  Contract.PosBridgeWithdrawExecContract.newBuilder()
             .setOwnerAddress(ByteString.copyFrom(ownerAddress))
-            .setSignatures(ByteString.copyFrom(signatures))
-            .setMessage(ByteString.copyFrom(msg));
+            .addAllSignatures(signatures)
+            .setMessage(msg);
     return builder.build();
   }
 

@@ -367,6 +367,7 @@ message CreateNftTemplateContract{
   int64 total_supply = 3;
   bytes minter = 4;
   bytes owner_address = 5;
+  bytes address = 6;
 }
 
 message MintNftTokenContract{
@@ -428,8 +429,10 @@ message PosBridgeSetupContract{
   bytes new_owner= 2;
   int64 min_validator = 3;
   repeated bytes validators = 4;
-  uint32 consensus_f1 = 5;
-  uint32 consensus_f2 = 6; //consensus rate: f1/f2 = 2/3 for example
+  uint32 consensus_rate = 5; //percent 0 to 100
+  string predicate_native = 6; //hex
+  string predicate_token = 7; //hex
+  string predicate_nft = 8; //hex
 }
 
 //call from admin
@@ -449,7 +452,7 @@ message PosBridgeCleanMapTokenContract{
     string root_token= 3; //hex address if token, symbol if native
     int64 child_chainid = 4;
     string child_token= 5;
-    uint32 type = 6; //1:native, 2:erc20, 3:nft
+    uint32 type = 6; //1:native, 2:erc20, 3:erc721
 }
 
 //call from user
@@ -472,42 +475,34 @@ message PosBridgeWithdrawContract{
 /**
   calldata format:
   {
-     signatures: bytes[] //rlp encoded
-     message: bytes[] // rlp encoded of {
-       rootChainId: 0x...,
-       rootTokenAddr: 0x...,
-       childChainId: 0x...,
-       childTokenAddr: 0x...,
-       depositAddr:0x...
-       receiveAddr: 0x...,
-       data: 1000L //token amount or id
-       type: 1 //1: native 2: urc20, 3: nft
+     signatures: string[]
+     message: bytes[] // abi encoded {
+       rootChainId: hex
+       rootTokenAddr: hex
+       childChainId: hex
+       receiveAddr: hex
+       value: hex, token amount or Id
      }
   }
  */
 message PosBridgeDepositExecContract{
   bytes owner_address = 1;
-  bytes signatures = 2;
-  bytes message = 3;
+  repeated string signatures = 2;
+  string message = 3;
 }
 
 /**
-     digest: bytes32,
-     signatures: rlp encoded signatures
-     message: rlp encoded bytes of
-     {
-       childChainId: 0x...
-       childTokenAddr: 0x...
-       rootChainId: 0x...
-       rootTokenAddr: 0x...
-       withdrawAddr: 0x...
-       receiveAddr: 0x...
-       data: 1000
-       type: 1 //1: native 2: urc20, 3: nft
+      signatures: string[]
+      message: bytes[] // abi encoded {
+       childChainId: hex
+       childTokenAddr: hex
+       rootChainId: hex
+       receiveAddr: hex
+       value: hex, token amount or Id
      }
  */
 message PosBridgeWithdrawExecContract{
   bytes owner_address = 1;
-  bytes signatures = 2;//rlp encoded
-  bytes message = 3; //rlp encoded
+  repeated string signatures = 2;
+  string message = 3;
 }

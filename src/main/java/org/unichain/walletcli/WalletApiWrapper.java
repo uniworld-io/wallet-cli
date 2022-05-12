@@ -16,6 +16,7 @@ import org.unichain.walletserver.WalletApi;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -248,13 +249,13 @@ public class WalletApiWrapper {
     return wallet.transferNftToken(ownerAddress, toAddr, contract, tokenId);
   }
 
-  public boolean posBridgeSetup(byte[] ownerAddress, byte[] newOwner, long minValidator, String validators, int consensusF1, int consensusF2) throws CipherException, IOException, CancelException {
+  public boolean posBridgeSetup(byte[] ownerAddress, byte[] newOwner, long minValidator, String validators, int consensusRate, String nativePredicate, String tokenPredicate, String nftPredicate) throws CipherException, IOException, CancelException {
     if (wallet == null || !wallet.isLoginState()) {
       System.out.println("Warning: posBridgeSetup failed,  Please login first !!");
       return false;
     }
 
-    return wallet.posBridgeSetup(ownerAddress, newOwner, minValidator, validators, consensusF1, consensusF2);
+    return wallet.posBridgeSetup(ownerAddress, newOwner, minValidator, validators, consensusRate, nativePredicate, tokenPredicate, nftPredicate);
   }
 
   public boolean posBridgeMapToken(byte[] ownerAddress, String rootToken, long rootChainId, String childToken, long childChainId, int type) throws CipherException, IOException, CancelException{
@@ -285,7 +286,7 @@ public class WalletApiWrapper {
     return wallet.posBridgeDeposit(ownerAddress, rootToken, receiveAddr, childChainId, data);
   }
 
-  public boolean posBridgeDepositExec(byte[] ownerAddress, byte[] signatures, byte[] msg) throws CipherException, IOException, CancelException{
+  public boolean posBridgeDepositExec(byte[] ownerAddress, List<String> signatures, String msg) throws CipherException, IOException, CancelException{
     if (wallet == null || !wallet.isLoginState()) {
       System.out.println("Warning: posBridgeDepositExec failed,  Please login first !!");
       return false;
@@ -304,7 +305,7 @@ public class WalletApiWrapper {
     return wallet.posBridgeWithdraw(ownerAddress, childToken, receiveAddress, data);
   }
 
-  public boolean posBridgeWithdrawExec(byte[] ownerAddress, byte[] signatures, byte[] msg) throws CipherException, IOException, CancelException{
+  public boolean posBridgeWithdrawExec(byte[] ownerAddress, List<String> signatures, String msg) throws CipherException, IOException, CancelException{
     if (wallet == null || !wallet.isLoginState()) {
       System.out.println("Warning: posBridgeWithdrawExec failed,  Please login first !!");
       return false;

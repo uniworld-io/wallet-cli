@@ -81,6 +81,7 @@ message TokenPoolQuery {
   string token_name = 1;
   int32  page_size = 2;
   int32 page_index = 3;
+  string token_addr = 4;
 }
 
 message FutureTokenQuery {
@@ -868,13 +869,13 @@ message NftTemplateQueryResult{
 
 message NftTokenQuery{
   bytes owner_address = 1;
-  string contract = 2;
+  string contract = 2;//symbol or hex address
   int32 page_size = 3;
   int32 page_index = 4;
 }
 
 message NftTokenGet{
-  string contract = 1;
+  string contract = 1; //symbol or hex address
   int64 id = 2;
 }
 
@@ -946,16 +947,49 @@ message NftTokenApproveRelation{
 message PosBridgeConfig{
   bytes owner_address = 1;
   int64 min_validator = 2;
-  int64 consensus_f1 =3;
-  int64 consensus_f2 =4;
-  map<string, string> validators = 5;
-  bool initialized = 6;
-  bytes native_predicate_address = 7;
-  bytes token_predicate_address = 8;
-  bytes nft_predicate_address = 9;
+  uint32 consensus_rate =3;
+  map<string, string> validators = 4;
+  bool initialized = 5;
+  bytes native_predicate_address = 6;
+  bytes token_predicate_address = 7;
+  bytes nft_predicate_address = 8;
 }
 
 message PosBridgeTokenMapping{
   map<string, string>  tokens = 1;//with rootchain: chainId --> token
   int64 type = 2; //1:native, 2: erc20 3: nft
+}
+
+//@todo later
+message PosBridgeTokenMappedEvent{
+
+}
+
+//@todo later
+message PosBridgeTokenUnmappedEvent{
+
+}
+
+//@todo later
+message PosBridgeTokenDepositedEvent{
+/**
+ childChainId: 0x...
+       childTokenAddr: 0x...
+       rootChainId: 0x...
+       rootTokenAddr: 0x...
+       withdrawAddr: 0x...
+       receiveAddr: 0x...
+       data: 1000
+       type: 1 //1:native, 2:erc20, 3:erc721
+ */
+}
+
+//@todo later
+message PosBridgeTokenWithdrawEvent{
+
+}
+
+//@todo later
+message PosBridgeTokenSetupEvent{
+
 }
