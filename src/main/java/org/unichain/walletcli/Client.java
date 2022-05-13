@@ -264,6 +264,8 @@ public class Client {
       "WithdrawFutureToken",
       "ListTokenPool",
       "GetTokenFuture",
+      "GetPosBridgeConfig",
+      "GetPosBridgeTokenMap",
       "SendShieldedCoin",
       "SendShieldedCoinWithoutAsk",
       "SetAccountId",
