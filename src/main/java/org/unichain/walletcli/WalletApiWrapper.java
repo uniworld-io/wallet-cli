@@ -176,13 +176,13 @@ public class WalletApiWrapper {
     return wallet.createNftTemplate(ownerAddress, contract, name, totalSupply, minter);
   }
 
-  public boolean mintNftToken(byte[] ownerAddress, String contract, byte[] toAddr, String uri, String metaData) throws CipherException, IOException, CancelException {
+  public boolean mintNftToken(byte[] ownerAddress, String contract, byte[] toAddr, String uri, long tokenId) throws CipherException, IOException, CancelException {
     if (wallet == null || !wallet.isLoginState()) {
       System.out.println("Warning: mintNftToken failed,  Please login first !!");
       return false;
     }
 
-    return wallet.mintNftToken(ownerAddress, contract, toAddr, uri, metaData);
+    return wallet.mintNftToken(ownerAddress, contract, toAddr, uri, tokenId);
   }
 
   public boolean removeNftMinter(byte[] ownerAddress, String contract) throws CipherException, IOException, CancelException {

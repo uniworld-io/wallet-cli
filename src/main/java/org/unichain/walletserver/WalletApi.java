@@ -600,11 +600,11 @@ public class WalletApi {
     return processTransaction(transaction);
   }
 
-  public boolean mintNftToken(byte[] ownerAddress, String contract, byte[] toAddr, String uri, String metaData)  throws CipherException, IOException, CancelException {
+  public boolean mintNftToken(byte[] ownerAddress, String contract, byte[] toAddr, String uri, long tokenId)  throws CipherException, IOException, CancelException {
     if (ownerAddress == null) {
       ownerAddress = getAddress();
     }
-    Contract.MintNftTokenContract mintNftTokenContract = createMintNftTokenContract(ownerAddress, contract, toAddr, uri, metaData);
+    Contract.MintNftTokenContract mintNftTokenContract = createMintNftTokenContract(ownerAddress, contract, toAddr, uri, tokenId);
     Transaction transaction = rpcCli.createTransaction(mintNftTokenContract);
     return processTransaction(transaction);
   }
@@ -1087,17 +1087,17 @@ public class WalletApi {
     return builder.build();
   }
 
-  public static Contract.MintNftTokenContract createMintNftTokenContract(byte[] ownerAddress, String contract, byte[] toAddr, String uri, String metaData) {
+  public static Contract.MintNftTokenContract createMintNftTokenContract(byte[] ownerAddress, String contract, byte[] toAddr, String uri, long tokenId) {
     Contract.MintNftTokenContract.Builder builder = Contract.MintNftTokenContract.newBuilder()
             .setOwnerAddress(ByteString.copyFrom(ownerAddress))
             .setContract(contract)
             .setToAddress(ByteString.copyFrom(toAddr))
             .setUri(uri);
 
-    if(metaData != null)
-      builder.setMetadata(metaData);
+    if(tokenId > 0)
+      builder.setTokenId(tokenId);
     else
-      builder.clearMetadata();
+      builder.clearTokenId();
 
     return builder.build();
   }

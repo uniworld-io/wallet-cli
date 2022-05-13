@@ -4093,7 +4093,7 @@ public class Client {
   private void mintNftToken(String[] parameters) throws CipherException, IOException, CancelException {
     if (parameters == null || (parameters.length != 4 && parameters.length != 5)) {
       System.out.println("MintNftToken needs 5 parameters like following: ");
-      System.out.println("MintNftToken [OwnerAddress] contract to_address uri  [metadata or - if not set]");
+      System.out.println("MintNftToken [OwnerAddress] contract to_address uri  tokenId[- if not set]");
       return;
     }
 
@@ -4110,7 +4110,7 @@ public class Client {
     String contract = parameters[index++];
     String toAddrStr = parameters[index++];
     String uri = parameters[index++];
-    String metadataStr = parameters[index++];
+    String tokenIdStr = parameters[index++];
 
     byte[] toAddr = WalletApi.decodeFromBase58Check(toAddrStr);
     if (toAddr == null) {
@@ -4118,17 +4118,17 @@ public class Client {
       return;
     }
 
-    String metaData;
-    if(Objects.isNull(metadataStr) || "-".equals(metadataStr))
-      metaData = null;
+    long tokenId;
+    if(Objects.isNull(tokenIdStr) || "-".equals(tokenIdStr))
+      tokenId = -1;
     else
-      metaData = metadataStr;
+      tokenId = Long.parseLong(tokenIdStr);
 
-    boolean result = walletApiWrapper.mintNftToken(ownerAddress, contract, toAddr, uri, metaData);
+    boolean result = walletApiWrapper.mintNftToken(ownerAddress, contract, toAddr, uri, tokenId);
     if (result) {
-      System.out.println("MintNftToken with contract: " + contract + ", toAddr: " + toAddrStr + ", uri " + uri + ", metaData" + metaData  + " successful !!");
+      System.out.println("MintNftToken with contract: " + contract + ", toAddr: " + toAddrStr + ", uri " + uri + ", tokenId" + tokenIdStr  + " successful !!");
     } else {
-      System.out.println("MintNftToken with contract: " + contract + ", toAddr: " + toAddrStr + ", uri " + uri + ", metaData" + metaData  + " failed !!");
+      System.out.println("MintNftToken with contract: " + contract + ", toAddr: " + toAddrStr + ", uri " + uri + ", tokenId" + tokenIdStr  + " failed !!");
     }
   }
 
