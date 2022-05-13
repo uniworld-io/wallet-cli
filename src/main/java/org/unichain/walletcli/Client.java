@@ -130,6 +130,8 @@ public class Client {
         "WithdrawFutureToken",
         "ListTokenPool",
         "GetTokenFuture",
+        "GetPosBridgeConfig",
+        "GetPosBridgeTokenMap",
         "SendShieldedCoin",
         "SendShieldedCoinWithoutAsk",
         "SetAccountId",
@@ -3265,6 +3267,16 @@ public class Client {
               break;
             }
 
+            case "getposbridgeconfig": {
+              getPosBridgeConfig(parameters);
+              break;
+            }
+
+            case "getposbridgetokenmap": {
+              getPosBridgeTokenMap(parameters);
+              break;
+            }
+
             case "transferasset": {
               transferAsset(parameters);
               break;
@@ -3837,6 +3849,25 @@ public class Client {
       System.out.println("posBridgeSetup with newOwner: " + newOwnerAddr + "minValidator: " + minValidator + ", validators: " + validators + " successful!!");
     } else {
       System.out.println("posBridgeSetup with newOwner: " + newOwnerAddr + "minValidator: " + minValidator + ", validators: " + validators + " failed!!");
+    }
+  }
+
+  //@todo later
+  private void getPosBridgeConfig(String[] parameters) throws CipherException, IOException, CancelException{
+    var config = WalletApi.getPosBridgeConfig();
+    if (config == null) {
+      System.out.println("getPosBridgeConfig failed !!");
+    } else {
+      System.out.println(Utils.formatMessageString(config));
+    }
+  }
+
+  private void getPosBridgeTokenMap(String[] parameters) throws CipherException, IOException, CancelException{
+    var config = WalletApi.getPosBridgeTokenMap();
+    if (config == null) {
+      System.out.println("getPosBridgeTokenMap failed !!");
+    } else {
+      System.out.println(Utils.formatMessageString(config));
     }
   }
 

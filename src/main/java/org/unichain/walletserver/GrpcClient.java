@@ -717,6 +717,21 @@ public class GrpcClient {
       return blockingStubFull.getBlockByNum(builder.build());
     }
   }
+  public PosBridgeConfig getPosBridgeConfig() {
+    if (blockingStubSolidity != null) {
+      return blockingStubSolidity.getPosBridgeConfig(EmptyMessage.newBuilder().build());
+    } else {
+      return blockingStubFull.getPosBridgeConfig(EmptyMessage.newBuilder().build());
+    }
+  }
+
+  public PosBridgeTokenMappingPage getPosBridgeTokenMap() {
+    if (blockingStubSolidity != null) {
+      return blockingStubSolidity.getPosBridgeTokenMap(EmptyMessage.newBuilder().build());
+    } else {
+      return blockingStubFull.getPosBridgeTokenMap(EmptyMessage.newBuilder().build());
+    }
+  }
 
   public long getTransactionCountByBlockNum(long blockNum) {
     NumberMessage.Builder builder = NumberMessage.newBuilder();

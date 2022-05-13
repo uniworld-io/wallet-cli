@@ -306,6 +306,8 @@ public class WalletApi {
     return rpcCli.queryAccount(address);//call rpc
   }
 
+
+
   public static TokenPage queryTokenPool(String tokenName, int pageIndex, int pageSize) {
     return rpcCli.queryTokenPool(tokenName, pageIndex, pageSize);//call rpc
   }
@@ -725,6 +727,14 @@ public class WalletApi {
     Contract.PosBridgeWithdrawExecContract contract = createPosBridgeWithdrawExec(ownerAddress, signatures, msg);
     Transaction transaction = rpcCli.createTransaction(contract);
     return processTransaction(transaction);
+  }
+
+  public static PosBridgeConfig getPosBridgeConfig() throws CipherException, IOException, CancelException{
+    return rpcCli.getPosBridgeConfig();
+  }
+
+  public static PosBridgeTokenMappingPage getPosBridgeTokenMap() throws CipherException, IOException, CancelException{
+    return rpcCli.getPosBridgeTokenMap();
   }
 
   public boolean transferNftToken(byte[] ownerAddress, byte[] toAddr, String contract, long tokenId) throws CipherException, IOException, CancelException{
