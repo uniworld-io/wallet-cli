@@ -167,13 +167,13 @@ public class WalletApiWrapper {
     return wallet.createToken(ownerAddress, tokenName, abbr, maxSupply, totalSupply, startTime, endTime, description, url, fee, extra_fee_rate, feePool, lot, exchUnwNum, exchTokenNum, createAccFee);
   }
 
-  public boolean createNftTemplate(byte[] ownerAddress, String contract, String name, long totalSupply, byte[] minter) throws CipherException, IOException, CancelException {
+  public boolean createNftContract(byte[] ownerAddress, String symbol, String desc, long totalSupply, byte[] minter) throws CipherException, IOException, CancelException {
     if (wallet == null || !wallet.isLoginState()) {
-      System.out.println("Warning: createNftTemplate failed,  Please login first !!");
+      System.out.println("Warning: createNftContract failed,  Please login first !!");
       return false;
     }
 
-    return wallet.createNftTemplate(ownerAddress, contract, name, totalSupply, minter);
+    return wallet.createNftContract(ownerAddress, symbol, desc, totalSupply, minter);
   }
 
   public boolean mintNftToken(byte[] ownerAddress, String contract, byte[] toAddr, String uri, long tokenId) throws CipherException, IOException, CancelException {

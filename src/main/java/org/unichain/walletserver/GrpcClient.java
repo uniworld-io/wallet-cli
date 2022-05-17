@@ -5,6 +5,7 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import lombok.extern.slf4j.Slf4j;
 import lombok.var;
+import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang.StringUtils;
 import org.unichain.api.GrpcAPI;
 import org.unichain.api.GrpcAPI.*;
@@ -227,7 +228,7 @@ public class GrpcClient {
 
   public Account queryAccount(byte[] address) {
     ByteString addressBS = ByteString.copyFrom(address);
-    System.out.println("GetAccount [" + ByteArray.toHexString(addressBS.toByteArray()) + " --> " + WalletApi.encode58Check(addressBS.toByteArray()));
+    System.out.println("GetAccount [0x" + Hex.encodeHex(addressBS.toByteArray()) + "|" + WalletApi.encode58Check(addressBS.toByteArray()));
     Account request = Account.newBuilder().setAddress(addressBS).build();
     if (blockingStubSolidity != null) {
       return blockingStubSolidity.getAccount(request);

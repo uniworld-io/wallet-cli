@@ -3146,8 +3146,8 @@ public class Client {
              * Nft
              */
 
-            case "nftcreatetemplate": {
-              createNftTemplate(parameters);
+            case "nftcreatecontract": {
+              createNftContract(parameters);
               break;
             }
 
@@ -4134,10 +4134,10 @@ public class Client {
     }
   }
 
-  private void createNftTemplate(String[] parameters) throws IOException, CipherException, CancelException {
+  private void createNftContract(String[] parameters) throws IOException, CipherException, CancelException {
     if (parameters == null || (parameters.length != 4 && parameters.length != 5)) {
-      System.out.println("CreateNftTemplate needs 4 parameters like following: ");
-      System.out.println("CreateNftTemplate [OwnerAddress] contract name total_supply  [minter or - if not set]");
+      System.out.println("CreateNftContract needs 4 parameters like following: ");
+      System.out.println("CreateNftContract [OwnerAddress] symbol desc total_supply  [minter or - if not set]");
       return;
     }
 
@@ -4151,7 +4151,7 @@ public class Client {
       }
     }
 
-    String contract = parameters[index++];
+    String symbol = parameters[index++];
     String name = parameters[index++];
     long totalSupply = new Long(parameters[index++]);
     String minterStr = parameters[index++];
@@ -4168,11 +4168,11 @@ public class Client {
       }
     }
 
-    boolean result = walletApiWrapper.createNftTemplate(ownerAddress, contract, name, totalSupply, minter);
+    boolean result = walletApiWrapper.createNftContract(ownerAddress, symbol, name, totalSupply, minter);
     if (result) {
-      System.out.println("CreateNftTemplate with contract: " + contract + ", name: " + name + ", totalSupply " + totalSupply + ", minter " + minterStr + " successful !!");
+      System.out.println("CreateNftContract with symbol: " + symbol + ", desc: " + name + ", totalSupply " + totalSupply + ", minter " + minterStr + " successful !!");
     } else {
-      System.out.println("CreateNftTemplate with contract: " + contract + ", name: " + name + ", totalSupply " + totalSupply + ", minter " + minterStr + " failed !!");
+      System.out.println("CreateNftContract with symbol: " + symbol + ", desc: " + name + ", totalSupply " + totalSupply + ", minter " + minterStr + " failed !!");
     }
   }
 

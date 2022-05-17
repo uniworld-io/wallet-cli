@@ -591,12 +591,12 @@ public class WalletApi {
     return processTransaction(transaction);
   }
 
-  public boolean createNftTemplate(byte[] owner, String contract, String name, long totalSupply, byte[] minter) throws CipherException, IOException, CancelException {
+  public boolean createNftContract(byte[] owner, String symbol, String desc, long totalSupply, byte[] minter) throws CipherException, IOException, CancelException {
     if (owner == null) {
       owner = getAddress();
     }
-    Contract.CreateNftTemplateContract createNftTemplateContract = createNftTemplateContract(owner, contract, name, totalSupply, minter);
-    Transaction transaction = rpcCli.createTransaction(createNftTemplateContract);
+    var ctx = createNftTemplateContract(owner, symbol, desc, totalSupply, minter);
+    Transaction transaction = rpcCli.createTransaction(ctx);
     return processTransaction(transaction);
   }
 
@@ -1075,11 +1075,11 @@ public class WalletApi {
   }
 
 
-  public static Contract.CreateNftTemplateContract createNftTemplateContract(byte[] owner, String contract, String name,long totalSupply, byte[] minter) {
+  public static Contract.CreateNftTemplateContract createNftTemplateContract(byte[] owner, String symbol, String desc,long totalSupply, byte[] minter) {
     Contract.CreateNftTemplateContract.Builder builder = Contract.CreateNftTemplateContract.newBuilder()
             .setOwnerAddress(ByteString.copyFrom(owner))
-            .setContract(contract)
-            .setName(name)
+            .setContract(symbol)
+            .setName(desc)
             .setTotalSupply(totalSupply);
 
     if(minter != null)
