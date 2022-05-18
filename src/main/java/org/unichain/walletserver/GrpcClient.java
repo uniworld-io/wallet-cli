@@ -78,10 +78,10 @@ public class GrpcClient {
     }
   }
 
-  public NftTemplateQueryResult listNftTemplate(byte[] ownerAddress, int pageIndex, int pageSize, String ownerType) {
+  public NftTemplateQueryResult listNftContract(byte[] ownerAddress, int pageIndex, int pageSize, String ownerOrMinter) {
     var request = NftTemplateQuery.newBuilder();
     request.setOwnerAddress(ByteString.copyFrom(ownerAddress));
-    request.setOwnerType(ownerType);
+    request.setOwnerType(ownerOrMinter);
     if(pageIndex != -1)
       request.setPageIndex(pageIndex);
     if(pageSize != -1)
@@ -95,13 +95,10 @@ public class GrpcClient {
     }
   }
 
-  public NftTokenQueryResult listNftToken(byte[] ownerAddress, String contract, int pageIndex, int pageSize) {
+  public NftTokenQueryResult listNftToken(byte[] ownerAddress, Optional<byte[]> contractAddr, int pageIndex, int pageSize) {
     var request = NftTokenQuery.newBuilder();
     request.setOwnerAddress(ByteString.copyFrom(ownerAddress));
-    if(Objects.isNull(contract) || "-".equals(contract))
-      request.clearContract();
-    else
-      request.setContract(contract);
+    contractAddr.ifPresent(v -> request.setAddress(ByteString.copyFrom(v)));
 
     if(pageIndex != -1)
       request.setPageIndex(pageIndex);
@@ -147,10 +144,9 @@ public class GrpcClient {
     }
   }
 
-  public NftTemplate getNftTemplate(String contract) {
+  public NftTemplate getNftTemplate(byte[] addr) {
     var request = NftTemplate.newBuilder();
-    request.setContract(contract);
-
+    request.setAddress(ByteString.copyFrom(addr));
     if (blockingStubSolidity != null) {
       return blockingStubSolidity.getNftTemplate(request.build());
     } else {
@@ -158,9 +154,9 @@ public class GrpcClient {
     }
   }
 
-  public NftTokenGetResult getNftToken(String contract, long Id) {
+  public NftTokenGetResult getNftToken(byte[] address, long Id) {
     var request = NftTokenGet.newBuilder();
-    request.setContract(contract.toUpperCase());
+    request.setAddress(ByteString.copyFrom(address));
     request.setId(Id);
 
     if (blockingStubSolidity != null) {
@@ -228,7 +224,7 @@ public class GrpcClient {
 
   public Account queryAccount(byte[] address) {
     ByteString addressBS = ByteString.copyFrom(address);
-    System.out.println("GetAccount [0x" + Hex.encodeHex(addressBS.toByteArray()) + "|" + WalletApi.encode58Check(addressBS.toByteArray()));
+    System.out.println("GetAccount: 0x" + Hex.encodeHex(addressBS.toByteArray()) + "|" + WalletApi.encode58Check(addressBS.toByteArray()));
     Account request = Account.newBuilder().setAddress(addressBS).build();
     if (blockingStubSolidity != null) {
       return blockingStubSolidity.getAccount(request);

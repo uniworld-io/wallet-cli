@@ -807,7 +807,7 @@ message NodeInfo {
 }
 
 message NftTemplate{
-  string contract = 1;
+  string symbol = 1;
   string name = 2;
   int64 total_supply = 3;
   int64 token_index = 4;
@@ -822,7 +822,7 @@ message NftTemplate{
 }
 
 message NftToken{
-  string contract = 1;
+  string symbol = 1;
   int64 id = 2;
   bytes owner_address = 3;
   bytes approval = 4;
@@ -830,6 +830,7 @@ message NftToken{
   int64 last_operation = 6;
   bytes next = 7;
   bytes prev = 8;
+  bytes address = 9;
 }
 
 message NftAccountTokenRelation{
@@ -868,24 +869,25 @@ message NftTemplateQueryResult{
 
 message NftTokenQuery{
   bytes owner_address = 1;
-  string contract = 2;//symbol or hex address
+  bytes address = 2;
   int32 page_size = 3;
   int32 page_index = 4;
 }
 
 message NftTokenGet{
-  string contract = 1; //symbol or hex address
+  bytes address = 1;
   int64 id = 2;
 }
 
 message NftTokenGetResult{
-  string contract = 1;
+  string symbol = 1;
   int64 id = 2;
   bytes owner_address = 3;
   bytes approval = 4;
   string uri = 5;
   string metadata = 6;
   int64 last_operation = 7;
+  bytes address = 8;
 }
 
 message NftTokenQueryResult{
@@ -949,55 +951,34 @@ message PosBridgeConfig{
   uint32 consensus_rate =3;
   map<string, string> validators = 4;
   bool initialized = 5;
-  bytes native_predicate_address = 6;
-  bytes token_predicate_address = 7;
-  bytes nft_predicate_address = 8;
+  PosBridgePredicate predicates = 6;
 }
 
-message PosBridgeTokenMapping{
-  map<string, string>  tokens = 1;//with rootchain: chainId --> token
-  int64 type = 2; //1:native, 2: erc20 3: nft
-  string chain_id = 3;
-  string token_address = 4;
+message PosBridgePredicate{
+  bytes predicate_native = 1;
+  bytes predicate_erc20 = 2;
+  bytes predicate_erc721 = 3;
 }
+
+message PostBridgeRootTokenMap{
+  int64 childChainId = 1;
+  string childToken = 2;
+  string rootToken = 3;
+  int32 tokenType = 4;
+}
+
+message PostBridgeChildTokenMap{
+  int64 rootChainId = 1;
+  string rootToken = 2;
+  string childToken = 3;
+  int32 tokenType = 4;
+}
+
 
 message PosBridgeTokenMappingPage {
   int64  page_size = 1;
   int64 page_index = 2;
   int64 total = 3;
-  repeated PosBridgeTokenMapping token_maps = 4;
-}
-
-//@todo later
-message PosBridgeTokenMappedEvent{
-
-}
-
-//@todo later
-message PosBridgeTokenUnmappedEvent{
-
-}
-
-//@todo later
-message PosBridgeTokenDepositedEvent{
-/**
- childChainId: 0x...
-       childTokenAddr: 0x...
-       rootChainId: 0x...
-       rootTokenAddr: 0x...
-       withdrawAddr: 0x...
-       receiveAddr: 0x...
-       data: 1000
-       type: 1 //1:native, 2:erc20, 3:erc721
- */
-}
-
-//@todo later
-message PosBridgeTokenWithdrawEvent{
-
-}
-
-//@todo later
-message PosBridgeTokenSetupEvent{
-
+  repeated PostBridgeRootTokenMap root_token_maps = 4;
+  repeated PostBridgeChildTokenMap child_token_maps = 5;
 }
