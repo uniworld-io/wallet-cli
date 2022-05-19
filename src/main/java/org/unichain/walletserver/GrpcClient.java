@@ -87,7 +87,6 @@ public class GrpcClient {
     if(pageSize != -1)
       request.setPageSize(pageSize);
 
-
     if (blockingStubSolidity != null) {
       return blockingStubSolidity.listNftTemplate(request.build());
     } else {
@@ -154,10 +153,10 @@ public class GrpcClient {
     }
   }
 
-  public NftTokenGetResult getNftToken(byte[] address, long Id) {
+  public NftTokenGetResult getNftToken(byte[] contractAddr, long tokenId) {
     var request = NftTokenGet.newBuilder();
-    request.setAddress(ByteString.copyFrom(address));
-    request.setId(Id);
+    request.setAddress(ByteString.copyFrom(contractAddr));
+    request.setId(tokenId);
 
     if (blockingStubSolidity != null) {
       return blockingStubSolidity.getNftToken(request.build());
@@ -177,10 +176,10 @@ public class GrpcClient {
     }
   }
 
-  public IsApprovedForAll getNftApprovedForAll(byte[] ownerAddress, byte[] operator) {
-    var request = IsApprovedForAll.newBuilder();
+  public isApprovedForAll getNftApprovedForAll(byte[] ownerAddress, byte[] operatorAddr) {
+    var request = isApprovedForAll.newBuilder();
     request.setOwnerAddress(ByteString.copyFrom(ownerAddress));
-    request.setOperator(ByteString.copyFrom(operator));
+    request.setOperator(ByteString.copyFrom(operatorAddr));
 
     if (blockingStubSolidity != null) {
       return blockingStubSolidity.getNftApprovedForAll(request.build());
