@@ -176,8 +176,8 @@ public class GrpcClient {
     }
   }
 
-  public isApprovedForAll getNftApprovedForAll(byte[] ownerAddress, byte[] operatorAddr) {
-    var request = isApprovedForAll.newBuilder();
+  public IsApprovedForAll getNftApprovedForAll(byte[] ownerAddress, byte[] operatorAddr) {
+    var request = IsApprovedForAll.newBuilder();
     request.setOwnerAddress(ByteString.copyFrom(ownerAddress));
     request.setOperator(ByteString.copyFrom(operatorAddr));
 

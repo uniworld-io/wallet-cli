@@ -4221,7 +4221,7 @@ public class Client {
       return;
     }
 
-    isApprovedForAll result = WalletApi.getNftApprovedForAll(ownerAddress, operatorAddr);
+    IsApprovedForAll result = WalletApi.getNftApprovedForAll(ownerAddress, operatorAddr);
     if (result == null) {
       System.out.println("getNftApprovedForAll failed !!");
     } else {

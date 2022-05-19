@@ -338,7 +338,7 @@ public class WalletApi {
     return rpcCli.getNftBalanceOf(ownerAddress);//call rpc
   }
 
-  public static isApprovedForAll getNftApprovedForAll(byte[] ownerAddress, byte[] operatorAddr) {
+  public static IsApprovedForAll getNftApprovedForAll(byte[] ownerAddress, byte[] operatorAddr) {
     return rpcCli.getNftApprovedForAll(ownerAddress, operatorAddr);//call rpc
   }
 
