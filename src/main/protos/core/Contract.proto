@@ -30,6 +30,13 @@ message TokenPage {
   repeated CreateTokenContract tokens = 4;
 }
 
+message Urc40TokenPage {
+  int64  page_size = 1;
+  int64 page_index = 2;
+  int64 total = 3;
+  repeated Urc40CreateTokenContract tokens = 4;
+}
+
 message AccountCreateContract {
   bytes owner_address = 1;
   bytes account_address = 2;
@@ -113,6 +120,9 @@ message WitnessUpdateContract {
   bytes update_url = 12;
 }
 
+/**
+  urc30 contracts
+ */
 message CreateTokenContract {
   bytes owner_address = 1;
   string name = 2;
@@ -193,6 +203,108 @@ message TransferTokenContract {
 message WithdrawFutureTokenContract {
   bytes owner_address = 1;
   string token_name = 2;
+}
+
+/**
+  urc40 token
+ */
+message Urc40CreateTokenContract {
+  bytes owner_address = 1;
+  bytes address = 2;
+  string symbol = 3;
+  string name = 4;
+  int64 decimals = 5;
+  int64 max_supply = 6;
+  int64 total_supply = 7;
+  int64 start_time = 8;
+  int64 end_time = 9;
+  string description = 10;
+  string url = 11;
+  int64 fee = 12;
+  int64 extra_fee_rate = 13;
+  int64 fee_pool = 14;
+  int64 burned = 15;
+  int64 latest_operation_time = 16;
+  int64 lot = 17;
+  int64 fee_pool_origin = 18;
+  int64 exch_unx_num = 19;
+  int64 exch_num = 20;
+  bool  exch_enable = 21;
+  int64 critical_update_time = 22;
+  int64 create_acc_fee = 23;
+}
+
+message Urc40TransferTokenContract {
+  bytes owner_address = 1;
+  bytes to_address = 2;
+  bytes address = 3;
+  int64 amount = 4;
+  int64 available_time = 5;
+}
+
+message Urc40ApproveContract{
+  bytes owner_address = 1;
+  bytes address = 2;
+  bytes spender = 3;
+  int64 amount = 4;
+}
+
+message Urc40TransferFromContract{
+  bytes owner_address = 1;
+  bytes address = 2;
+  bytes from = 3;
+  bytes to = 4;
+  int64 amount = 5;
+}
+
+message Urc40MineTokenContract {
+  bytes owner_address = 1;
+  bytes address = 2;
+  int64 amount = 3;
+}
+
+message Urc40BurnTokenContract {
+  bytes owner_address = 1;
+  bytes address = 2;
+  int64 amount = 3;
+}
+
+message Urc40TransferTokenOwnerContract {
+  bytes owner_address = 1;
+  bytes to_address = 2;
+  bytes address = 3;
+}
+
+message Urc40ExchangeTokenContract {
+  bytes owner_address = 1;
+  bytes address = 2;
+  int64 amount = 3;
+}
+
+message Urc40ContributeTokenPoolFeeContract {
+  bytes owner_address = 1;
+  bytes address = 2;
+  int64 amount = 3;
+}
+
+message Urc40UpdateTokenParamsContract {
+  bytes owner_address = 1;
+  bytes address = 2;
+  int64 amount = 3;
+  int64 extra_fee_rate = 4;
+  int64 lot = 5;
+  string url = 6;
+  string description = 7;
+  int64 total_supply = 8;
+  int64 fee_pool = 9;
+  int64 exch_unx_num = 10;
+  int64 exch_num = 11;
+  int64 create_acc_fee = 12;
+}
+
+message Urc40WithdrawFutureTokenContract {
+  bytes owner_address = 1;
+  bytes address = 2;
 }
 
 message AssetIssueContract {
@@ -359,16 +471,16 @@ message UpdateBrokerageContract {
   int32 brokerage = 2; // 1 mean 1%
 }
 
-message CreateNftTemplateContract{
-  string symbol = 1;
-  string name = 2;
-  int64 total_supply = 3;
-  bytes minter = 4;
-  bytes owner_address = 5;
-  bytes address = 6;
+message Urc721CreateContract{
+  bytes owner_address = 1;
+  bytes address = 2;
+  string symbol = 3;
+  string name = 4;
+  int64 total_supply = 5;
+  bytes minter = 6;
 }
 
-message MintNftTokenContract{
+message Urc721MintContract{
   bytes owner_address = 1;
   bytes address = 2;
   bytes to_address = 3;
@@ -376,46 +488,46 @@ message MintNftTokenContract{
   int64 token_id = 5;
 }
 
-message RemoveNftMinterContract{
+message Urc721RemoveMinterContract{
   bytes owner_address = 1;
   bytes address = 2;
 }
 
-message AddNftMinterContract{
-  bytes minter = 1;
-  bytes owner_address = 2;
-  bytes address = 3;
+message Urc721AddMinterContract{
+  bytes owner_address = 1;
+  bytes address = 2;
+  bytes minter = 3;
 }
 
-message RenounceNftMinterContract{
+message Urc721RenounceMinterContract{
   bytes owner_address = 1;
   bytes address = 2;
 }
 
-message BurnNftTokenContract{
+message Urc721BurnContract{
   bytes owner_address = 1;
   bytes address = 2;
   int64 token_id = 3;
 }
 
-message ApproveNftTokenContract{
+message Urc721ApproveContract{
+  bytes owner_address = 1;
+  bytes address = 2;
+  int64 token_id = 3;
+  bytes to = 4;
+  bool approve = 5;
+}
+
+message Urc721SetApprovalForAllContract{
   bytes owner_address = 1;
   bytes to_address = 2;
   bool approve = 3;
-  bytes address = 4;
-  int64 token_id = 5;
 }
 
-message ApproveForAllNftTokenContract{
+message Urc721TransferFromContract{
   bytes owner_address = 1;
-  bytes to_address = 2;
-  bool approve = 3;
-}
-
-message TransferNftTokenContract{
-  bytes owner_address = 1;
-  bytes to_address = 2;
   bytes address = 3;
+  bytes to = 2;
   int64 token_id = 4;
 }
 

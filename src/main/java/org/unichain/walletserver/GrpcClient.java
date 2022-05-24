@@ -78,8 +78,8 @@ public class GrpcClient {
     }
   }
 
-  public NftTemplateQueryResult listNftContract(byte[] ownerAddress, int pageIndex, int pageSize, String ownerOrMinter) {
-    var request = NftTemplateQuery.newBuilder();
+  public Urc721ContractPage urc721ContractList(byte[] ownerAddress, int pageIndex, int pageSize, String ownerOrMinter) {
+    var request = Urc721ContractQuery.newBuilder();
     request.setOwnerAddress(ByteString.copyFrom(ownerAddress));
     request.setOwnerType(ownerOrMinter);
     if(pageIndex != -1)
@@ -88,14 +88,14 @@ public class GrpcClient {
       request.setPageSize(pageSize);
 
     if (blockingStubSolidity != null) {
-      return blockingStubSolidity.listNftTemplate(request.build());
+      return blockingStubSolidity.urc721ListContract(request.build());
     } else {
-      return blockingStubFull.listNftTemplate(request.build());
+      return blockingStubFull.urc721ListContract(request.build());
     }
   }
 
-  public NftTokenQueryResult listNftToken(byte[] ownerAddress, Optional<byte[]> contractAddr, int pageIndex, int pageSize) {
-    var request = NftTokenQuery.newBuilder();
+  public Urc721TokenPage urc721TokenList(byte[] ownerAddress, Optional<byte[]> contractAddr, int pageIndex, int pageSize) {
+    var request = Urc721TokenQuery.newBuilder();
     request.setOwnerAddress(ByteString.copyFrom(ownerAddress));
     contractAddr.ifPresent(v -> request.setAddress(ByteString.copyFrom(v)));
 
@@ -105,86 +105,125 @@ public class GrpcClient {
       request.setPageSize(pageSize);
 
     if (blockingStubSolidity != null) {
-      return blockingStubSolidity.listNftToken(request.build());
+      return blockingStubSolidity.urc721ListToken(request.build());
     } else {
-      return blockingStubFull.listNftToken(request.build());
+      return blockingStubFull.urc721ListToken(request.build());
     }
   }
 
-  public NftTokenApproveResult listNftTokenApprove(byte[] ownerAddress, int pageIndex, int pageSize) {
-    var request = NftTokenApproveQuery.newBuilder();
-    request.setOwnerAddress(ByteString.copyFrom(ownerAddress));
-
-    if(pageIndex != -1)
-      request.setPageIndex(pageIndex);
-    if(pageSize != -1)
-      request.setPageSize(pageSize);
-
-    if (blockingStubSolidity != null) {
-      return blockingStubSolidity.listNftTokenApprove(request.build());
-    } else {
-      return blockingStubFull.listNftTokenApprove(request.build());
-    }
-  }
-
-  public NftTokenApproveAllResult listNftTokenApproveAll(byte[] ownerAddress, int pageIndex, int pageSize) {
-    var request = NftTokenApproveAllQuery.newBuilder();
-    request.setOwnerAddress(ByteString.copyFrom(ownerAddress));
-
-    if(pageIndex != -1)
-      request.setPageIndex(pageIndex);
-    if(pageSize != -1)
-      request.setPageSize(pageSize);
-
-    if (blockingStubSolidity != null) {
-      return blockingStubSolidity.listNftTokenApproveAll(request.build());
-    } else {
-      return blockingStubFull.listNftTokenApproveAll(request.build());
-    }
-  }
-
-  public NftTemplate getNftTemplate(byte[] addr) {
-    var request = NftTemplate.newBuilder();
+  public Urc721Contract urc721ContractGet(byte[] addr) {
+    var request = Urc721Contract.newBuilder();
     request.setAddress(ByteString.copyFrom(addr));
     if (blockingStubSolidity != null) {
-      return blockingStubSolidity.getNftTemplate(request.build());
+      return blockingStubSolidity.urc721GetContract(request.build());
     } else {
-      return blockingStubFull.getNftTemplate(request.build());
+      return blockingStubFull.urc721GetContract(request.build());
     }
   }
 
-  public NftTokenGetResult getNftToken(byte[] contractAddr, long tokenId) {
-    var request = NftTokenGet.newBuilder();
+  public Urc721Token urc721TokenGet(byte[] contractAddr, long tokenId) {
+    var request = Urc721Token.newBuilder();
     request.setAddress(ByteString.copyFrom(contractAddr));
     request.setId(tokenId);
 
     if (blockingStubSolidity != null) {
-      return blockingStubSolidity.getNftToken(request.build());
+      return blockingStubSolidity.urc721GetToken(request.build());
     } else {
-      return blockingStubFull.getNftToken(request.build());
+      return blockingStubFull.urc721GetToken(request.build());
     }
   }
 
-  public NftBalanceOf getNftBalanceOf(byte[] ownerAddress) {
-    var request = NftBalanceOf.newBuilder();
+  public Urc721BalanceOf urc721BalanceOf(byte[] ownerAddress,  byte[] address) {
+    var request = Urc721BalanceOf.newBuilder();
     request.setOwnerAddress(ByteString.copyFrom(ownerAddress));
+    request.setAddress(ByteString.copyFrom(address));
 
     if (blockingStubSolidity != null) {
-      return blockingStubSolidity.getNftBalanceOf(request.build());
+      return blockingStubSolidity.urc721GetBalanceOf(request.build());
     } else {
-      return blockingStubFull.getNftBalanceOf(request.build());
+      return blockingStubFull.urc721GetBalanceOf(request.build());
     }
   }
 
-  public IsApprovedForAll getNftApprovedForAll(byte[] ownerAddress, byte[] operatorAddr) {
-    var request = IsApprovedForAll.newBuilder();
+  public StringMessage urc721TokenUri(byte[] address, long id) {
+    var request = Urc721Token.newBuilder();
+    request.setAddress(ByteString.copyFrom(address));
+    request.setId(id);
+
+    if (blockingStubSolidity != null) {
+      return blockingStubSolidity.urc721GetTokenUri(request.build());
+    } else {
+      return blockingStubFull.urc721GetTokenUri(request.build());
+    }
+  }
+
+  public StringMessage urc721GetName(byte[] contractAddr) {
+    var request = AddressMessage.newBuilder();
+    request.setAddress(ByteString.copyFrom(contractAddr));
+
+    if (blockingStubSolidity != null) {
+      return blockingStubSolidity.urc721GetName(request.build());
+    } else {
+      return blockingStubFull.urc721GetName(request.build());
+    }
+  }
+
+  public StringMessage urc721GetSymbol(byte[] contractAddr) {
+    var request = AddressMessage.newBuilder();
+    request.setAddress(ByteString.copyFrom(contractAddr));
+
+    if (blockingStubSolidity != null) {
+      return blockingStubSolidity.urc721GetSymbol(request.build());
+    } else {
+      return blockingStubFull.urc721GetSymbol(request.build());
+    }
+  }
+
+  public NumberMessage urc721GetTotalSupply(byte[] contractAddr) {
+    var request = AddressMessage.newBuilder();
+    request.setAddress(ByteString.copyFrom(contractAddr));
+
+    if (blockingStubSolidity != null) {
+      return blockingStubSolidity.urc721GetTotalSupply(request.build());
+    } else {
+      return blockingStubFull.urc721GetTotalSupply(request.build());
+    }
+  }
+
+  public AddressMessage urc721GetOwnerOf(byte[] contractAddr, long tokenId) {
+    var request = Urc721Token.newBuilder();
+    request.setAddress(ByteString.copyFrom(contractAddr));
+    request.setId(tokenId);
+
+    if (blockingStubSolidity != null) {
+      return blockingStubSolidity.urc721GetOwnerOf(request.build());
+    } else {
+      return blockingStubFull.urc721GetOwnerOf(request.build());
+    }
+  }
+
+  public AddressMessage urc721GetApproved(byte[] contractAddr, long tokenId) {
+    var request = Urc721Token.newBuilder();
+    request.setAddress(ByteString.copyFrom(contractAddr));
+    request.setId(tokenId);
+
+    if (blockingStubSolidity != null) {
+      return blockingStubSolidity.urc721GetApproved(request.build());
+    } else {
+      return blockingStubFull.urc721GetApproved(request.build());
+    }
+  }
+
+
+  public Urc721IsApprovedForAll urc721IsApprovedForAll(byte[] ownerAddress, byte[] operatorAddr) {
+    var request = Urc721IsApprovedForAll.newBuilder();
     request.setOwnerAddress(ByteString.copyFrom(ownerAddress));
     request.setOperator(ByteString.copyFrom(operatorAddr));
 
     if (blockingStubSolidity != null) {
-      return blockingStubSolidity.getNftApprovedForAll(request.build());
+      return blockingStubSolidity.urc721GetIsApprovedForAll(request.build());
     } else {
-      return blockingStubFull.getNftApprovedForAll(request.build());
+      return blockingStubFull.urc721GetIsApprovedForAll(request.build());
     }
   }
 
@@ -354,40 +393,40 @@ public class GrpcClient {
   /**
    * NFT
    */
-  public Transaction createTransaction(Contract.CreateNftTemplateContract contract) {
-    return blockingStubFull.createNftTemplate(contract);
+  public Transaction createTransaction(Contract.Urc721CreateContract contract) {
+    return blockingStubFull.createUrc721Contract(contract);
   }
 
-  public Transaction createTransaction(Contract.MintNftTokenContract contract) {
-    return blockingStubFull.mintNftToken(contract);
+  public Transaction createTransaction(Contract.Urc721MintContract contract) {
+    return blockingStubFull.urc721Mint(contract);
   }
 
-  public Transaction createTransaction(Contract.RemoveNftMinterContract contract) {
-    return blockingStubFull.removeNftMinter(contract);
+  public Transaction createTransaction(Contract.Urc721RemoveMinterContract contract) {
+    return blockingStubFull.urc721RemoveMinter(contract);
   }
 
-  public Transaction createTransaction(Contract.AddNftMinterContract contract) {
-    return blockingStubFull.addNftMinter(contract);
+  public Transaction createTransaction(Contract.Urc721AddMinterContract contract) {
+    return blockingStubFull.urc721AddMinter(contract);
   }
 
-  public Transaction createTransaction(Contract.RenounceNftMinterContract contract) {
-    return blockingStubFull.renounceNftMinter(contract);
+  public Transaction createTransaction(Contract.Urc721RenounceMinterContract contract) {
+    return blockingStubFull.urc721RenounceMinter(contract);
   }
 
-  public Transaction createTransaction(Contract.BurnNftTokenContract contract) {
-    return blockingStubFull.burnNftToken(contract);
+  public Transaction createTransaction(Contract.Urc721BurnContract contract) {
+    return blockingStubFull.urc721Burn(contract);
   }
 
-  public Transaction createTransaction(Contract.ApproveNftTokenContract contract) {
-    return blockingStubFull.approveNftToken(contract);
+  public Transaction createTransaction(Contract.Urc721ApproveContract contract) {
+    return blockingStubFull.urc721Approve(contract);
   }
 
-  public Transaction createTransaction(Contract.ApproveForAllNftTokenContract contract) {
-    return blockingStubFull.approveForAllNftToken(contract);
+  public Transaction createTransaction(Contract.Urc721SetApprovalForAllContract contract) {
+    return blockingStubFull.urc721SetApprovalForAll(contract);
   }
 
-  public Transaction createTransaction(Contract.TransferNftTokenContract contract) {
-    return blockingStubFull.transferNftToken(contract);
+  public Transaction createTransaction(Contract.Urc721TransferFromContract contract) {
+    return blockingStubFull.urc721TransferFrom(contract);
   }
 
   public Transaction createTransaction(Contract.ExchangeTokenContract contract) {
