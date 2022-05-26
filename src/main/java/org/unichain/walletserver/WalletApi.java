@@ -604,6 +604,17 @@ public class WalletApi {
     return processTransaction(transaction);
   }
 
+  public boolean createUrc40Contract(byte[] owner, String symbol, String name, long decimals, long maxSupply, long totalSupply,
+                                     long startTime, long endTime, String url, long fee, long extraFeeRate, long feePool, long lot,
+                                     boolean enableExch, long exchUnwNum, long exchTokenNum, long createAccFee) throws CipherException, IOException, CancelException {
+    if (owner == null) {
+      owner = getAddress();
+    }
+    var contract = createCreateUrc40Contract(owner, symbol, name, decimals, maxSupply, totalSupply, startTime, endTime, url, fee, extraFeeRate, feePool, lot, enableExch, exchUnwNum, exchTokenNum, createAccFee);
+    Transaction transaction = rpcCli.createTransaction(contract);
+    return processTransaction(transaction);
+  }
+
   public boolean createUrc721CtxContract(byte[] owner, String symbol, String name, long totalSupply, byte[] minter) throws CipherException, IOException, CancelException {
     if (owner == null) {
       owner = getAddress();
@@ -767,6 +778,15 @@ public class WalletApi {
     return processTransaction(transaction);
   }
 
+  public boolean contributeUrc40PoolFee(byte[] owner, byte[] address, long amount) throws CipherException, IOException, CancelException {
+    if (owner == null) {
+      owner = getAddress();
+    }
+    var contract = createContributeUrc40PoolFee(owner, address, amount);
+    Transaction transaction = rpcCli.createTransaction(contract);
+    return processTransaction(transaction);
+  }
+
   public boolean updateTokenParams(byte[] owner, String tokenName, long totalSupply, long feePool, long fee, long extraFeeRate, long lot, String url, String description, long exchUnwNum, long exchTokenNum, long createAccFee) throws CipherException, IOException, CancelException {
     if(owner == null) {
       owner = getAddress();
@@ -776,12 +796,33 @@ public class WalletApi {
     Transaction transaction = rpcCli.createTransaction(contract);
     return processTransaction(transaction);
   }
+
+  public boolean urc40UpdateTokenParams(byte[] owner, byte[] address, long totalSupply, long feePool,
+                                        long fee, long extraFeeRate, long lot, String url, long exchUnwNum,
+                                        long exchTokenNum, long createAccFee) throws CipherException, IOException, CancelException {
+    if(owner == null) {
+      owner = getAddress();
+    }
+
+    var contract = createUrc40UpdateTokenParams(owner, address, totalSupply, feePool, fee, extraFeeRate, lot, url, exchUnwNum, exchTokenNum, createAccFee);
+    var transaction = rpcCli.createTransaction(contract);
+    return processTransaction(transaction);
+  }
   
   public boolean mineToken(byte[] owner, String tokenName, long amount) throws CipherException, IOException, CancelException {
     if (owner == null) {
       owner = getAddress();
     }
     Contract.MineTokenContract contract = createMineToken(owner, tokenName, amount);
+    Transaction transaction = rpcCli.createTransaction(contract);
+    return processTransaction(transaction);
+  }
+
+  public boolean urc40Mint(byte[] owner, byte[] address, long amount) throws CipherException, IOException, CancelException {
+    if (owner == null) {
+      owner = getAddress();
+    }
+    var contract = createUrc40Mint(owner, address, amount);
     Transaction transaction = rpcCli.createTransaction(contract);
     return processTransaction(transaction);
   }
@@ -796,11 +837,30 @@ public class WalletApi {
   }
 
 
+  public boolean burnUrc40(byte[] owner, byte[] address, long amount) throws CipherException, IOException, CancelException {
+    if (owner == null) {
+      owner = getAddress();
+    }
+    var contract = createBurnUrc40(owner, address, amount);
+    Transaction transaction = rpcCli.createTransaction(contract);
+    return processTransaction(transaction);
+  }
+
+
   public boolean transferToken(byte[] owner, byte[] toAddress, String tokenName, long amount, long availableTime) throws CipherException, IOException, CancelException {
     if (owner == null) {
       owner = getAddress();
     }
     Contract.TransferTokenContract contract = createTransferToken(owner, toAddress, tokenName, amount, availableTime);
+    Transaction transaction = rpcCli.createTransaction(contract);
+    return processTransaction(transaction);
+  }
+
+  public boolean urc40TransferFrom(byte[] owner, byte[] toAddress,  byte[] contractAddr, long amount, long availableTime) throws CipherException, IOException, CancelException {
+    if (owner == null) {
+      owner = getAddress();
+    }
+    var contract = createUrc40TransferFrom(owner, toAddress, contractAddr, amount, availableTime);
     Transaction transaction = rpcCli.createTransaction(contract);
     return processTransaction(transaction);
   }
@@ -1086,6 +1146,33 @@ public class WalletApi {
     return builder.build();
   }
 
+  public static Contract.Urc40CreateContract createCreateUrc40Contract(byte[] owner, String symbol, String name, long decimals, long maxSupply, long totalSupply,
+                                                                       long startTime, long endTime, String url, long fee, long extraFeeRate, long feePool, long lot,
+                                                                       boolean enableExch, long exchUnwNum, long exchTokenNum, long createAccFee) {
+    var builder = Contract.Urc40CreateContract.newBuilder()
+            .setOwnerAddress(ByteString.copyFrom(owner))
+            .setSymbol(symbol)
+            .setName(name)
+            .setDecimals(decimals)
+            .setMaxSupply(maxSupply)
+            .setTotalSupply(totalSupply)
+            .setUrl(url)
+            .setFee(fee)
+            .setExtraFeeRate(extraFeeRate)
+            .setFeePool(feePool)
+            .setLot(lot)
+            .setExchEnable(enableExch)
+            .setExchUnxNum(exchUnwNum)
+            .setExchNum(exchTokenNum)
+            .setCreateAccFee(createAccFee);
+    if(startTime != -1L)
+      builder.setStartTime(startTime);
+    if(endTime != -1L)
+      builder.setEndTime(endTime);
+
+    return builder.build();
+  }
+
   public static Contract.Urc721CreateContract createUrc721Contract(byte[] owner, String symbol, String name, long totalSupply, byte[] minter) {
     Contract.Urc721CreateContract.Builder builder = Contract.Urc721CreateContract.newBuilder()
             .setOwnerAddress(ByteString.copyFrom(owner))
@@ -1283,9 +1370,17 @@ public class WalletApi {
   }
 
   public static Contract.ContributeTokenPoolFeeContract createContributeTokenPoolFee(byte[] owner, String tokenName, long amount) {
-   return Contract.ContributeTokenPoolFeeContract.newBuilder()
+     return Contract.ContributeTokenPoolFeeContract.newBuilder()
+              .setOwnerAddress(ByteString.copyFrom(owner))
+              .setTokenName(tokenName)
+              .setAmount(amount)
+              .build();
+  }
+
+  public static Contract.Urc40ContributePoolFeeContract createContributeUrc40PoolFee(byte[] owner, byte[] address , long amount) {
+    return Contract.Urc40ContributePoolFeeContract.newBuilder()
             .setOwnerAddress(ByteString.copyFrom(owner))
-            .setTokenName(tokenName)
+            .setAddress(ByteString.copyFrom(address))
             .setAmount(amount)
             .build();
   }
@@ -1318,10 +1413,46 @@ public class WalletApi {
     return builder.build();
   }
 
+  public static Contract.Urc40UpdateParamsContract createUrc40UpdateTokenParams(byte[] owner, byte[] address, long totalSupply, long feePool,
+                                                                                long fee, long extraFeeRate, long lot, String url, long exchUnwNum,
+                                                                                long exchTokenNum, long createAccFee) {
+    var builder =  Contract.Urc40UpdateParamsContract.newBuilder()
+            .setOwnerAddress(ByteString.copyFrom(owner))
+            .setAddress(ByteString.copyFrom(address));
+    if(totalSupply != -1)
+      builder.setTotalSupply(totalSupply);
+    if(feePool != -1)
+      builder.setFeePool(feePool);
+    if(fee != -1)
+      builder.setFee(fee);
+    if(extraFeeRate != -1)
+      builder.setExtraFeeRate(extraFeeRate);
+    if(lot != -1)
+      builder.setLot(lot);
+    if(!"-".equals(url))
+      builder.setUrl(url);
+    if(exchUnwNum != -1)
+      builder.setExchUnxNum(exchUnwNum);
+    if(exchTokenNum != -1)
+      builder.setExchNum(exchTokenNum);
+    if(createAccFee != -1)
+      builder.setCreateAccFee(createAccFee);
+
+    return builder.build();
+  }
+
   public static Contract.MineTokenContract createMineToken(byte[] owner, String tokenName, long amount) {
     return Contract.MineTokenContract.newBuilder()
             .setOwnerAddress(ByteString.copyFrom(owner))
             .setTokenName(tokenName)
+            .setAmount(amount)
+            .build();
+  }
+
+  public static Contract.Urc40MintContract createUrc40Mint(byte[] owner, byte[] address, long amount) {
+    return Contract.Urc40MintContract.newBuilder()
+            .setOwnerAddress(ByteString.copyFrom(owner))
+            .setAddress(ByteString.copyFrom(address))
             .setAmount(amount)
             .build();
   }
@@ -1331,6 +1462,16 @@ public class WalletApi {
             .setOwnerAddress(ByteString.copyFrom(owner))
             .setToAddress(ByteString.copyFrom(toAddress))
             .setTokenName(tokenName)
+            .setAmount(amount)
+            .setAvailableTime(availableTime)
+            .build();
+  }
+
+  public static Contract.Urc40TransferFromContract createUrc40TransferFrom(byte[] owner, byte[] toAddress, byte[] contractAddr, long amount, long availableTime) {
+    return Contract.Urc40TransferFromContract.newBuilder()
+            .setOwnerAddress(ByteString.copyFrom(owner))
+            .setTo(ByteString.copyFrom(toAddress))
+            .setAddress(ByteString.copyFrom(contractAddr))
             .setAmount(amount)
             .setAvailableTime(availableTime)
             .build();
@@ -1360,6 +1501,16 @@ public class WalletApi {
             .setAmount(amount)
             .build();
   }
+
+
+  public static Contract.Urc40BurnContract createBurnUrc40(byte[] owner, byte[] address, long amount) {
+    return Contract.Urc40BurnContract.newBuilder()
+            .setOwnerAddress(ByteString.copyFrom(owner))
+            .setAddress(ByteString.copyFrom(address))
+            .setAmount(amount)
+            .build();
+  }
+
 
   public static Contract.FutureTransferContract createFutureTransferContract(byte[] to, byte[] owner, long amount, long expireTime) {
     var builder = Contract.FutureTransferContract.newBuilder()

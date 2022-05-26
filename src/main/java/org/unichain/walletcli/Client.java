@@ -49,263 +49,149 @@ public class Client {
   private static int retryTime = 3;
 
   private static String[] commandHelp = {
-        "AddTransactionSign",
-        "ApproveProposal",
-        "AssetIssue",
-        "BackupWallet",
-        "BackupWallet2Base64",
-        "BroadcastTransaction",
-        "ChangePassword",
-        "ClearContractABI",
-        "Create2",
-        "CreateAccount",
-        "CreateProposal",
-        "CreateWitness",
-        "DeleteProposal",
-        "DeployContract contractName ABI byteCode constructor params isHex fee_limit consume_user_resource_percent origin_energy_limit value token_value token_id <library:address,library:address,...> <lib_compiler_version(e.g:v5)>",
-        "ExchangeCreate",
-        "ExchangeInject",
-        "ExchangeTransaction",
-        "ExchangeWithdraw",
-        "FreezeBalance",
-        "GenerateAddress",
-        "GenerateShieldedAddress",
-        "GetAccount",
-        "GetAccountNet",
-        "GetAccountResource",
-        "GetAddress",
-        "GetAssetIssueByAccount",
-        "GetAssetIssueById",
-        "GetAssetIssueByName",
-        "GetAssetIssueListByName",
-        "GetBalance",
-        "GetBlock",
-        "GetBlockById",
-        "GetBlockByLatestNum",
-        "GetBlockByLimitNext",
-        "GetChainParameters",
-        "GetContract contractAddress",
-        "GetDelegatedResource",
-        "GetDelegatedResourceAccountIndex",
-        "GetDiversifier",
-        "GetExchange",
-        "GetNextMaintenanceTime",
-        "GetProposal",
-        "GetReward",
-        "GetTotalTransaction",
-        "GetTransactionApprovedList",
-        "GetTransactionById",
-        "GetTransactionCountByBlockNum",
-        "GetTransactionInfoById",
-        "GetTransactionsFromThis",
-        "GetTransactionsToThis",
-        "GetTransactionSignWeight",
-        "ImportShieldedAddress",
-        "ImportWallet",
-        "ImportWalletByBase64",
-        "ListAssetIssue",
-        "ListAssetIssuePaginated",
-        "ListExchanges",
-        "ListExchangesPaginated",
-        "ListNodes",
-        "ListProposals",
-        "ListProposalsPaginated",
-        "ListWitnesses",
-        "Login",
-        "Logout",
-        "ParticipateAssetIssue",
-        "RegisterWallet",
-        "SendCoin",
-        "SendFuture",
-        "WithdrawFuture",
-        "GetFutureTransfer",
-        "CreateToken",
-        "TransferTokenOwner",
-        "ExchangeToken",
-        "ContributeTokenPoolFee",
-        "UpdateTokenParams",
-        "MineToken",
-        "BurnToken",
-        "TransferToken",
-        "WithdrawFutureToken",
-        "ListTokenPool",
-        "GetTokenFuture",
-        "GetPosBridgeConfig",
-        "GetPosBridgeTokenMap",
-        "SendShieldedCoin",
-        "SendShieldedCoinWithoutAsk",
-        "SetAccountId",
-        "TransferAsset",
-        "TriggerContract contractAddress method args isHex fee_limit value",
-        "TriggerConstantContract contractAddress method args isHex",
-        "UnfreezeAsset",
-        "UnfreezeBalance",
-        "UpdateAccount",
-        "UpdateAsset",
-        "UpdateEnergyLimit contract_address energy_limit",
-        "UpdateSetting contract_address consume_user_resource_percent",
-        "UpdateWitness",
-        "UpdateAccountPermission",
-        "UpdateBrokerage",
-        "VoteWitness",
-        "WithdrawBalance",
-        "UpdateBrokerage",
-        "GetReward",
-        "GetBrokerage",
+          "AddTransactionSign",
+          "ApproveProposal",
+          "AssetIssue",
+          "BackupWallet",
+          "BackupWallet2Base64",
+          "BroadcastTransaction",
+          "ChangePassword",
+          "ClearContractABI",
+          "Create2",
+          "CreateAccount",
+          "CreateProposal",
+          "CreateWitness",
+          "DeleteProposal",
+          "DeployContract contractName ABI byteCode constructor params isHex fee_limit consume_user_resource_percent origin_energy_limit value token_value token_id <library:address,library:address,...> <lib_compiler_version(e.g:v5)>",
+          "ExchangeCreate",
+          "ExchangeInject",
+          "ExchangeTransaction",
+          "ExchangeWithdraw",
+          "FreezeBalance",
+          "GenerateAddress",
+          "GenerateShieldedAddress",
+          "GetAccount",
+          "GetAccountNet",
+          "GetAccountResource",
+          "GetAddress",
+          "GetAssetIssueByAccount",
+          "GetAssetIssueById",
+          "GetAssetIssueByName",
+          "GetAssetIssueListByName",
+          "GetBalance",
+          "GetBlock",
+          "GetBlockById",
+          "GetBlockByLatestNum",
+          "GetBlockByLimitNext",
+          "GetChainParameters",
+          "GetContract contractAddress",
+          "GetDelegatedResource",
+          "GetDelegatedResourceAccountIndex",
+          "GetDiversifier",
+          "GetExchange",
+          "GetNextMaintenanceTime",
+          "GetProposal",
+          "GetReward",
+          "GetTotalTransaction",
+          "GetTransactionApprovedList",
+          "GetTransactionById",
+          "GetTransactionCountByBlockNum",
+          "GetTransactionInfoById",
+          "GetTransactionsFromThis",
+          "GetTransactionsToThis",
+          "GetTransactionSignWeight",
+          "ImportShieldedAddress",
+          "ImportWallet",
+          "ImportWalletByBase64",
+          "ListAssetIssue",
+          "ListAssetIssuePaginated",
+          "ListExchanges",
+          "ListExchangesPaginated",
+          "ListNodes",
+          "ListProposals",
+          "ListProposalsPaginated",
+          "ListWitnesses",
+          "Login",
+          "Logout",
+          "ParticipateAssetIssue",
+          "RegisterWallet",
+          "SendCoin",
+          "SendFuture",
+          "WithdrawFuture",
+          "GetFutureTransfer",
 
-        "Urc721CreateContract",
-        "Urc721Mint",
-        "Urc721RemoveMinter",
-        "Urc721AddMinter",
-        "Urc721RenounceMinter",
-        "Urc721Burn",
-        "Urc721Approve",
-        "Urc721SetApproveForAll",
-        "Urc721TransferFrom",
-        "Urc721ContractList",
-        "Urc721TokenList",
-        "Urc721ContractGet",
-        "Urc721TokenGet",
-        "Urc721BalanceOf",
-        "Urc721IsApprovedForAll",
+          //urc30
+          "CreateToken",
+          "TransferTokenOwner",
+          "ExchangeToken",
+          "ContributeTokenPoolFee",
+          "UpdateTokenParams",
+          "MineToken",
+          "BurnToken",
+          "TransferToken",
+          "WithdrawFutureToken",
+          "ListTokenPool",
+          "GetTokenFuture",
 
-        "Urc721GetName",
-        "Urc721GetSymbol",
-        "Urc721GetTotalSupply",
-        "Urc721GetTokenUri",
-        "Urc721GetOwnerOf",
-        "Urc721GetApproved",
+          //urc40
+          "Urc40CreateContract",
+          "Urc40ContributePoolFee",
+          "Urc40UpdateParams",
+          "Urc40Mint",
+          "Urc40Burn",
+          "Urc40TransferFrom",
+          "Urc40WithdrawFuture",
+          "Urc40TransferOwner",
+          "Urc40Exchange",
+          "Urc40Approve",
 
-          "PosBridgeSetup",
-        "PosBridgeMapToken",
-        "PosBridgeCleanMapToken",
-        "PosBridgeDeposit",
-        "PosBridgeDepositExec",
-        "PosBridgeWithdraw",
-        "PosBridgeWithdrawExec"
-  };
+          "Urc40Allowance",
+          "Urc40GetOwner",
+          "Urc40BalanceOf",
+          "Urc40TotalSupply",
+          "Urc40Decimals",
+          "Urc40Symbol",
+          "Urc40Name",
+          "Urc40ContractList",
+          "Urc40FutureGet",
 
-  private static String[] commandList = {
-      "AddTransactionSign",
-      "ApproveProposal",
-      "AssetIssue",
-      "BackupWallet",
-      "BackupWallet2Base64",
-      "BroadcastTransaction",
-      "ChangePassword",
-      "ClearContractABI",
-      "Create2",
-      "CreateAccount",
-      "CreateProposal",
-      "CreateWitness",
-      "DeleteProposal",
-      "DeployContract",
-      "DeployContractFile",
-      "ExchangeCreate",
-      "ExchangeInject",
-      "ExchangeTransaction",
-      "ExchangeWithdraw",
-      "FreezeBalance",
-      "GenerateAddress",
-      "GetAccount",
-      "GetAccountNet",
-      "GetAccountResource",
-      "GetAddress",
-      "GetAssetIssueByAccount",
-      "GetAssetIssueById",
-      "GetAssetIssueByName",
-      "GetAssetIssueListByName",
-      "GetBalance",
-      "GetBlock",
-      "GetBlockById",
-      "GetBlockByLatestNum",
-      "GetBlockByLimitNext",
-      "GetBrokerage",
-      "GetChainParameters",
-      "GetContract",
-      "GetDelegatedResource",
-      "GetDelegatedResourceAccountIndex",
-      "GetDiversifier",
-      "GetExchange",
-      "GetNextMaintenanceTime",
-      "GetProposal",
-      "GetReward",
-      "GetTotalTransaction",
-      "GetTransactionApprovedList",
-      "GetTransactionById",
-      "GetTransactionCountByBlockNum",
-      "GetTransactionInfoById",
-      "GetTransactionsFromThis",
-      "GetTransactionsToThis",
-      "GetTransactionSignWeight",
-      "Help",
-      "ImportShieldedAddress",
-      "ImportWallet",
-      "ImportWalletByBase64",
-      "ListAssetIssue",
-      "ListAssetIssuePaginated",
-      "ListExchanges",
-      "ListExchangesPaginated",
-      "ListNodes",
-      "ListProposals",
-      "ListProposalsPaginated",
-      "ListWitnesses",
-      "Login",
-      "Logout",
-      "ParticipateAssetIssue",
-      "RegisterWallet",
-      "SendCoin",
-      "SendFuture",
-      "WithdrawFuture",
-      "GetFutureTransfer",
-      "CreateToken",
-      "TransferTokenOwner",
-      "ExchangeToken",
-      "ContributeTokenPoolFee",
-      "UpdateTokenParams",
-      "MineToken",
-      "BurnToken",
-      "TransferToken",
-      "WithdrawFutureToken",
-      "ListTokenPool",
-      "GetTokenFuture",
-      "GetPosBridgeConfig",
-      "GetPosBridgeTokenMap",
-      "SendShieldedCoin",
-      "SendShieldedCoinWithoutAsk",
-      "SetAccountId",
-      "TransferAsset",
-      "TriggerContract",
-      "TriggerConstantContract",
-      "UnfreezeAsset",
-      "UnfreezeBalance",
-      "UpdateAccount",
-      "UpdateAsset",
-      "UpdateEnergyLimit",
-      "UpdateSetting",
-      "UpdateWitness",
-      "UpdateAccountPermission",
-      "UpdateBrokerage",
-      "VoteWitness",
-      "WithdrawBalance",
-      "UpdateBrokerage",
-      "GetReward",
-      "GetBrokerage",
-      "Urc721CreateContract",
-      "Urc721Mint",
-      "Urc721RemoveMinter",
-      "Urc721AddMinter",
-      "Urc721RenounceMinter",
-      "Urc721Burn",
-      "Urc721Approve",
-      "Urc721SetApproveForAll",
-      "Urc721TransferFrom",
-      "Urc721ContractList",
-      "Urc721TokenList",
-      "Urc721ContractGet",
-      "Urc721TokenGet",
-      "Urc721BalanceOf",
-      "Urc721IsApprovedForAll",
+          "SendShieldedCoin",
+          "SendShieldedCoinWithoutAsk",
+          "SetAccountId",
+          "TransferAsset",
+          "TriggerContract contractAddress method args isHex fee_limit value",
+          "TriggerConstantContract contractAddress method args isHex",
+          "UnfreezeAsset",
+          "UnfreezeBalance",
+          "UpdateAccount",
+          "UpdateAsset",
+          "UpdateEnergyLimit contract_address energy_limit",
+          "UpdateSetting contract_address consume_user_resource_percent",
+          "UpdateWitness",
+          "UpdateAccountPermission",
+          "UpdateBrokerage",
+          "VoteWitness",
+          "WithdrawBalance",
+          "UpdateBrokerage",
+          "GetReward",
+          "GetBrokerage",
+
+          //urc721
+          "Urc721CreateContract",
+          "Urc721Mint",
+          "Urc721RemoveMinter",
+          "Urc721AddMinter",
+          "Urc721RenounceMinter",
+          "Urc721Burn",
+          "Urc721Approve",
+          "Urc721SetApproveForAll",
+          "Urc721TransferFrom",
+          "Urc721ContractList",
+          "Urc721TokenList",
+          "Urc721ContractGet",
+          "Urc721TokenGet",
+          "Urc721BalanceOf",
+          "Urc721IsApprovedForAll",
 
           "Urc721GetName",
           "Urc721GetSymbol",
@@ -314,13 +200,182 @@ public class Client {
           "Urc721GetOwnerOf",
           "Urc721GetApproved",
 
-      "PosBridgeSetup",
-      "PosBridgeMapToken",
-      "PosBridgeCleanMapToken",
-      "PosBridgeDeposit",
-      "PosBridgeDepositExec",
-      "PosBridgeWithdraw",
-      "PosBridgeWithdrawExec"
+           //posbridge
+          "GetPosBridgeConfig",
+          "GetPosBridgeTokenMap",
+          "PosBridgeSetup",
+          "PosBridgeMapToken",
+          "PosBridgeCleanMapToken",
+          "PosBridgeDeposit",
+          "PosBridgeDepositExec",
+          "PosBridgeWithdraw",
+          "PosBridgeWithdrawExec"
+  };
+
+  private static String[] commandList = {
+          "AddTransactionSign",
+          "ApproveProposal",
+          "AssetIssue",
+          "BackupWallet",
+          "BackupWallet2Base64",
+          "BroadcastTransaction",
+          "ChangePassword",
+          "ClearContractABI",
+          "Create2",
+          "CreateAccount",
+          "CreateProposal",
+          "CreateWitness",
+          "DeleteProposal",
+          "DeployContract",
+          "DeployContractFile",
+          "ExchangeCreate",
+          "ExchangeInject",
+          "ExchangeTransaction",
+          "ExchangeWithdraw",
+          "FreezeBalance",
+          "GenerateAddress",
+          "GetAccount",
+          "GetAccountNet",
+          "GetAccountResource",
+          "GetAddress",
+          "GetAssetIssueByAccount",
+          "GetAssetIssueById",
+          "GetAssetIssueByName",
+          "GetAssetIssueListByName",
+          "GetBalance",
+          "GetBlock",
+          "GetBlockById",
+          "GetBlockByLatestNum",
+          "GetBlockByLimitNext",
+          "GetBrokerage",
+          "GetChainParameters",
+          "GetContract",
+          "GetDelegatedResource",
+          "GetDelegatedResourceAccountIndex",
+          "GetDiversifier",
+          "GetExchange",
+          "GetNextMaintenanceTime",
+          "GetProposal",
+          "GetReward",
+          "GetTotalTransaction",
+          "GetTransactionApprovedList",
+          "GetTransactionById",
+          "GetTransactionCountByBlockNum",
+          "GetTransactionInfoById",
+          "GetTransactionsFromThis",
+          "GetTransactionsToThis",
+          "GetTransactionSignWeight",
+          "Help",
+          "ImportShieldedAddress",
+          "ImportWallet",
+          "ImportWalletByBase64",
+          "ListAssetIssue",
+          "ListAssetIssuePaginated",
+          "ListExchanges",
+          "ListExchangesPaginated",
+          "ListNodes",
+          "ListProposals",
+          "ListProposalsPaginated",
+          "ListWitnesses",
+          "Login",
+          "Logout",
+          "ParticipateAssetIssue",
+          "RegisterWallet",
+          "SendCoin",
+          "SendFuture",
+          "WithdrawFuture",
+          "GetFutureTransfer",
+
+          //urc30
+          "CreateToken",
+          "TransferTokenOwner",
+          "ExchangeToken",
+          "ContributeTokenPoolFee",
+          "UpdateTokenParams",
+          "MineToken",
+          "BurnToken",
+          "TransferToken",
+          "WithdrawFutureToken",
+          "ListTokenPool",
+          "GetTokenFuture",
+
+          //urc40
+          "Urc40CreateContract",
+          "Urc40ContributePoolFee",
+          "Urc40UpdateParams",
+          "Urc40Mint",
+          "Urc40Burn",
+          "Urc40TransferFrom",
+          "Urc40WithdrawFuture",
+          "Urc40TransferOwner",
+          "Urc40Exchange",
+          "Urc40Approve",
+
+          "Urc40Allowance",
+          "Urc40GetOwner",
+          "Urc40BalanceOf",
+          "Urc40TotalSupply",
+          "Urc40Decimals",
+          "Urc40Symbol",
+          "Urc40Name",
+          "Urc40ContractList",
+          "Urc40FutureGet",
+
+          "SendShieldedCoin",
+          "SendShieldedCoinWithoutAsk",
+          "SetAccountId",
+          "TransferAsset",
+          "TriggerContract",
+          "TriggerConstantContract",
+          "UnfreezeAsset",
+          "UnfreezeBalance",
+          "UpdateAccount",
+          "UpdateAsset",
+          "UpdateEnergyLimit",
+          "UpdateSetting",
+          "UpdateWitness",
+          "UpdateAccountPermission",
+          "UpdateBrokerage",
+          "VoteWitness",
+          "WithdrawBalance",
+          "UpdateBrokerage",
+          "GetReward",
+          "GetBrokerage",
+
+          //urc721
+          "Urc721CreateContract",
+          "Urc721Mint",
+          "Urc721RemoveMinter",
+          "Urc721AddMinter",
+          "Urc721RenounceMinter",
+          "Urc721Burn",
+          "Urc721Approve",
+          "Urc721SetApproveForAll",
+          "Urc721TransferFrom",
+          "Urc721ContractList",
+          "Urc721TokenList",
+          "Urc721ContractGet",
+          "Urc721TokenGet",
+          "Urc721BalanceOf",
+          "Urc721IsApprovedForAll",
+
+          "Urc721GetName",
+          "Urc721GetSymbol",
+          "Urc721GetTotalSupply",
+          "Urc721GetTokenUri",
+          "Urc721GetOwnerOf",
+          "Urc721GetApproved",
+
+          //posbridge
+          "PosBridgeSetup",
+          "PosBridgeMapToken",
+          "PosBridgeCleanMapToken",
+          "PosBridgeDeposit",
+          "PosBridgeDepositExec",
+          "PosBridgeWithdraw",
+          "PosBridgeWithdrawExec",
+          "GetPosBridgeConfig",
+          "GetPosBridgeTokenMap"
   };
 
   private byte[] inputPrivateKey() throws IOException {
@@ -3311,6 +3366,87 @@ public class Client {
               break;
             }
 
+            /**
+             * urc40
+             */
+            case "urc40createcontract": {
+              urc40CreateContract(parameters);
+              break;
+            }
+            case "urc40contributepoolfee": {
+              urc40ContributePoolFee(parameters);
+              break;
+            }
+            case "urc40updateparams": {
+              urc40UpdateParams(parameters);
+              break;
+            }
+            case "urc40mint": {
+              urc40Mint(parameters);
+              break;
+            }
+            case "urc40burn": {
+              urc40Burn(parameters);
+              break;
+            }
+            case "urc40transferfrom": {
+              urc40TransferFrom(parameters);
+              break;
+            }
+            case "urc40withdrawfuture": {
+              urc40withdrawfuture(parameters);
+              break;
+            }
+            case "urc40transferowner": {
+              urc40transferowner(parameters);
+              break;
+            }
+            case "urc40exchange": {
+              urc40exchange(parameters);
+              break;
+            }
+            case "urc40approve": {
+              urc40approve(parameters);
+              break;
+            }
+            case "urc40allowance": {
+              urc40allowance(parameters);
+              break;
+            }
+            case "urc40getowner": {
+              urc40getowner(parameters);
+              break;
+            }
+            case "urc40balanceof": {
+              urc40balanceof(parameters);
+              break;
+            }
+            case "urc40totalsupply": {
+              urc40totalsupply(parameters);
+              break;
+            }
+            case "urc40decimals": {
+              urc40decimals(parameters);
+              break;
+            }
+            case "urc40symbol": {
+              urc40symbol(parameters);
+              break;
+            }
+            case "urc40name": {
+              urc40name(parameters);
+              break;
+            }
+            case "urc40contractlist": {
+              urc40contractlist(parameters);
+              break;
+            }
+            case "urc40futureget": {
+              urc40futureget(parameters);
+              break;
+            }
+
+
             case "transferasset": {
               transferAsset(parameters);
               break;
@@ -3622,6 +3758,321 @@ public class Client {
     } catch (IOException e) {
       System.out.println("\nBye.");
       return;
+    }
+  }
+
+  private void urc40futureget(String[] parameters) throws IOException, CipherException, CancelException{
+  }
+
+  private void urc40contractlist(String[] parameters) throws IOException, CipherException, CancelException{
+  }
+
+  private void urc40name(String[] parameters) throws IOException, CipherException, CancelException{
+  }
+
+  private void urc40symbol(String[] parameters) throws IOException, CipherException, CancelException{
+  }
+
+  private void urc40decimals(String[] parameters) throws IOException, CipherException, CancelException{
+  }
+
+  private void urc40totalsupply(String[] parameters)throws IOException, CipherException, CancelException {
+  }
+
+  private void urc40balanceof(String[] parameters) throws IOException, CipherException, CancelException{
+  }
+
+  private void urc40getowner(String[] parameters) throws IOException, CipherException, CancelException {
+  }
+
+  private void urc40allowance(String[] parameters) throws IOException, CipherException, CancelException{
+  }
+
+  private void urc40approve(String[] parameters) throws IOException, CipherException, CancelException{
+
+  }
+
+  private void urc40exchange(String[] parameters) throws IOException, CipherException, CancelException{
+
+  }
+
+  private void urc40transferowner(String[] parameters) throws IOException, CipherException, CancelException{
+
+  }
+
+  private void urc40withdrawfuture(String[] parameters) throws IOException, CipherException, CancelException{
+
+  }
+
+  private void urc40TransferFrom(String[] parameters) throws IOException, CipherException, CancelException{
+    if (parameters == null || (parameters.length != 4 && parameters.length != 5)) {
+      System.out.println("urc40TransferFrom needs 5 parameters like following: ");
+      System.out.println("urc40TransferFrom [OwnerAddress] to_address token_name amount available_time(- for default now or 2021-01-01 or 2021-01-01 01:00:01)");
+      return;
+    }
+
+    int index = 0;
+    byte[] ownerAddress = null;
+    if (parameters.length == 5) {
+      ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+      if (ownerAddress == null) {
+        System.out.println("Invalid OwnerAddress.");
+        return;
+      }
+    }
+
+    byte[] toAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+
+    byte[] contractAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (contractAddress == null) {
+      System.out.println("Invalid contractAddress.");
+      return;
+    }
+
+    long amount = new Long(parameters[index++]);
+
+    long availableTime;
+    String availableTimeStr = parameters[index++];
+    if("-".equals(availableTimeStr))
+      availableTime = 0;
+    else
+    {
+      Date availableDate = Utils.strToDateLong(availableTimeStr);
+      if (availableDate == null) {
+        System.out.println("The available_time format should look like 2018-03-01 OR 2018-03-01 00:01:02");
+        System.out.println("transferToken " + contractAddress + " failed !!");
+        return;
+      }
+      availableTime = availableDate.getTime();
+    }
+
+    boolean result = walletApiWrapper.urc40TransferFrom(ownerAddress, toAddress, contractAddress, amount, availableTime);
+    String walletOwnerAddress = walletApiWrapper.getAddress();
+    if (result) {
+      System.out.println("urc40TransferFrom of " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " successful !!");
+    } else {
+      System.out.println("urc40TransferFrom " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " failed !!");
+    }
+  }
+
+  private void urc40Burn(String[] parameters) throws IOException, CipherException, CancelException{
+    if (parameters == null || (parameters.length != 2 && parameters.length != 3)) {
+      System.out.println("urc40Burn needs 2 parameters like following: ");
+      System.out.println("urc40Burn [ownerAddress] contractAddress amount");
+      return;
+    }
+
+    int index = 0;
+    byte[] ownerAddress = null;
+    if (parameters.length == 3) {
+      ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+      if (ownerAddress == null) {
+        System.out.println("Invalid OwnerAddress.");
+        return;
+      }
+    }
+
+    byte[] contractAddress =  WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (contractAddress == null) {
+      System.out.println("Invalid contractAddress.");
+      return;
+    }
+
+    long amount = new Long(parameters[index++]);
+
+    boolean result = walletApiWrapper.burnUrc40(ownerAddress, contractAddress, amount);
+    String walletOwnerAddress = walletApiWrapper.getAddress();
+    if (result) {
+      System.out.println("burnToken of " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " successful !!");
+    } else {
+      System.out.println("burnToken " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " failed !!");
+    }
+  }
+
+
+  private void urc40Mint(String[] parameters) throws IOException, CipherException, CancelException{
+    if (parameters == null || (parameters.length != 2 && parameters.length != 3)) {
+      System.out.println("urc40Mint needs 2 parameters like following: ");
+      System.out.println("urc40Mint [ownerAddress] contract_address amount");
+      return;
+    }
+
+    int index = 0;
+    byte[] ownerAddress = null;
+    if (parameters.length == 3) {
+      ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+      if (ownerAddress == null) {
+        System.out.println("Invalid OwnerAddress.");
+        return;
+      }
+    }
+
+    byte[] contractAddress = null;
+    contractAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (contractAddress == null) {
+      System.out.println("Invalid contractAddress.");
+      return;
+    }
+
+    long amount = new Long(parameters[index++]);
+
+    boolean result = walletApiWrapper.urc40Mint(ownerAddress, contractAddress, amount);
+    String walletOwnerAddress = walletApiWrapper.getAddress();
+    if (result) {
+      System.out.println("urc40Mint of " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " successful !!");
+    } else {
+      System.out.println("urc40Mint " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " failed !!");
+    }
+  }
+
+  private void urc40UpdateParams(String[] parameters) throws IOException, CipherException, CancelException{
+      if (parameters == null || (parameters.length != 11 && parameters.length != 12)) {
+        System.out.println("urc40UpdateParams needs 11 parameters like following: ");
+        System.out.println("urc40UpdateParams [ownerAddress] contract_addr total_supply[-1 if not set] fee_pool[-1 if not set] fee[-1 if not set] extra_fee_rate[-1 if not set] lot[-1 if not set]  url[- if not set] exch_unw_num[-1 if not set] exch_token_num[-1 if not set] create_acc_fee[-1 if not set]");
+        return;
+      }
+
+      int index = 0;
+      byte[] ownerAddress = null;
+      if (parameters.length == 12) {
+        ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+        if (ownerAddress == null) {
+          System.out.println("Invalid OwnerAddress.");
+          return;
+        }
+      }
+
+      byte[] address = WalletApi.decodeFromBase58Check(parameters[index++]);
+      if (address == null) {
+        System.out.println("Invalid contract address.");
+        return;
+      }
+
+      long total_supply = new Long(parameters[index++]);
+      long fee_pool = new Long(parameters[index++]);
+      long fee = new Long(parameters[index++]);
+      long extraFeeRate = new Long(parameters[index++]);
+      long lot = new Long(parameters[index++]);
+      String url = parameters[index++].trim();
+      long exchUnwNum = new Long(parameters[index++]);
+      long exchTokenNum = new Long(parameters[index++]);
+      long createAccFee = new Long(parameters[index++]);
+
+      boolean result = walletApiWrapper.urc40UpdateTokenParams(ownerAddress, address, total_supply, fee_pool, fee, extraFeeRate, lot, url, exchUnwNum, exchTokenNum, createAccFee);
+      String walletOwnerAddress = walletApiWrapper.getAddress();
+      if (result) {
+        System.out.println("urc40UpdateParams of " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " successful !!");
+      } else {
+        System.out.println("urc40UpdateParams " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " failed !!");
+      }
+  }
+
+  private void urc40ContributePoolFee(String[] parameters) throws IOException, CipherException, CancelException{
+        if (parameters == null || (parameters.length != 2 && parameters.length != 3)) {
+          System.out.println("urc40ContributePoolFee needs 2 parameters like following: ");
+          System.out.println("urc40ContributePoolFee [ownerAddress] contractAddress amount");
+          return;
+        }
+
+        int index = 0;
+        byte[] ownerAddress = null;
+        if (parameters.length == 3) {
+          ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+          if (ownerAddress == null) {
+            System.out.println("Invalid OwnerAddress.");
+            return;
+          }
+        }
+
+        byte[] contractAddress = null;
+        contractAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+        if (contractAddress == null) {
+          System.out.println("Invalid contractAddress.");
+          return;
+        }
+
+        long amount = new Long(parameters[index++]);
+
+        boolean result = walletApiWrapper.contributeUrc40FeePool(ownerAddress, contractAddress, amount);
+        String walletOwnerAddress = walletApiWrapper.getAddress();
+        if (result) {
+          System.out.println("urc40ContributePoolFee of " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " successful !!");
+        } else {
+          System.out.println("urc40ContributePoolFee " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " failed !!");
+        }
+  }
+
+  private void urc40CreateContract(String[] parameters) throws IOException, CipherException, CancelException {
+    if (parameters == null || (parameters.length != 16 && parameters.length != 17)) {
+      System.out.println("urc40CreateContract needs 15 parameters like following: ");
+      System.out.println("urc40CreateContract [OwnerAddress] symbol name decimals max_supply total_supply start_time(- if default) end_time(- if default)  url fee extra_fee_rate fee_pool lot enable_exch exch_unw_num exch_token_num create_acc_fee");
+      return;
+    }
+
+    int index = 0;
+    byte[] ownerAddress = null;
+    if (parameters.length == 17) {
+      ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+      if (ownerAddress == null) {
+        System.out.println("Invalid OwnerAddress.");
+        return;
+      }
+    }
+
+    String symbol = parameters[index++];
+    String name = parameters[index++];
+    long decimals = new Long(parameters[index++]);
+    long maxSupply = new Long(parameters[index++]);
+    long totalSupply = new Long(parameters[index++]);
+    String startDateStr = parameters[index++];
+    String endDateStr = parameters[index++];
+
+    long startTime;
+    if("-".equals(startDateStr)){
+      startTime = -1;
+    }
+    else {
+      Date startDate = Utils.strToDateLong(startDateStr);
+      if(startDate == null)
+      {
+        System.out.println("The StartDate and EndDate format should look like (now OR yyyy-MM-dd HH:mm:ss OR yyyy-MM-dd");
+        System.out.println("urc40CreateContract " + symbol + " failed !!");
+        return;
+      }
+      else
+        startTime = startDate.getTime();
+    }
+
+    long endTime;
+    if("-".equals(endDateStr)){
+      endTime = -1;
+    }
+    else{
+      Date endDate = Utils.strToDateLong(endDateStr);
+      if (endDate == null) {
+        System.out.println("The StartDate and EndDate format should look like yyyy-MM-dd HH:mm:ss or yyyy-MM-dd");
+        System.out.println("urc40CreateContract " + symbol + " failed !!");
+        return;
+      }
+      else
+        endTime = endDate.getTime();
+    }
+
+    String url = parameters[index++];
+    long fee = new Long(parameters[index++]);
+    long extra_fee_rate = new Long(parameters[index++]);
+    long poolFee = new Long(parameters[index++]);
+    long lot = new Long(parameters[index++]);
+    boolean enableExch = new Boolean(parameters[index++]);
+    long exchUnwNum = new Long(parameters[index++]);
+    long exchTokenNum = new Long(parameters[index++]);
+    long createAccFee = new Long(parameters[index++]);
+
+    boolean result = walletApiWrapper.createUrc40Contract(ownerAddress, symbol, name, decimals, maxSupply, totalSupply, startTime, endTime, url, fee, extra_fee_rate, poolFee , lot, enableExch, exchUnwNum, exchTokenNum, createAccFee);
+    if (result) {
+      System.out.println("urc40CreateContract with token name: " + symbol + ", abbr: " + name + ", max supply: " + maxSupply + ", total supply:" + totalSupply + " successful !!");
+    } else {
+      System.out.println("urc40CreateContract with token name: " + symbol + ", abbr: " + name + ", max supply: " + maxSupply + ", total supply:" + totalSupply + " failed !!");
     }
   }
 

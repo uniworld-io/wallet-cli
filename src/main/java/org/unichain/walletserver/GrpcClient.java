@@ -441,25 +441,52 @@ public class GrpcClient {
     return blockingStubFull.createToken(contract);
   }
 
+  public Transaction createTransaction(Contract.Urc40CreateContract contract) {
+    return blockingStubFull.urc40ContractCreate(contract);
+  }
+
   public Transaction createTransaction(Contract.ContributeTokenPoolFeeContract contract) {
     return blockingStubFull.contributeTokenFee(contract);
+  }
+
+  public Transaction createTransaction(Contract.Urc40ContributePoolFeeContract contract) {
+    return blockingStubFull.urc40ContributePoolFee(contract);
   }
 
   public Transaction createTransaction(Contract.UpdateTokenParamsContract contract) {
     return blockingStubFull.updateTokenParams(contract);
   }
 
+  public Transaction createTransaction(Contract.Urc40UpdateParamsContract contract) {
+    return blockingStubFull.urc40UpdateParams(contract);
+  }
+
   public Transaction createTransaction(Contract.MineTokenContract contract) {
     return blockingStubFull.mineToken(contract);
   }
+
+  public Transaction createTransaction(Contract.Urc40MintContract contract) {
+    return blockingStubFull.urc40Mint(contract);
+  }
+
 
   public Transaction createTransaction(Contract.BurnTokenContract contract) {
     return blockingStubFull.burnToken(contract);
   }
 
+  public Transaction createTransaction(Contract.Urc40BurnContract contract) {
+    return blockingStubFull.urc40Burn(contract);
+  }
+
+
   public Transaction createTransaction(Contract.TransferTokenContract contract) {
     return blockingStubFull.transferToken(contract);
   }
+
+  public Transaction createTransaction(Contract.Urc40TransferFromContract contract) {
+    return blockingStubFull.urc40TransferFrom(contract);
+  }
+
 
   public Transaction createTransaction(Contract.WithdrawFutureTokenContract contract) {
     return blockingStubFull.withdrawTokenFuture(contract);
