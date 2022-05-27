@@ -3446,7 +3446,6 @@ public class Client {
               break;
             }
 
-
             case "transferasset": {
               transferAsset(parameters);
               break;
@@ -3788,7 +3787,29 @@ public class Client {
   }
 
   private void urc40contractlist(String[] parameters) throws IOException, CipherException, CancelException{
+    if (parameters == null || parameters.length != 4) {
+      System.out.println(
+              "Using Urc40ContractList needs 4 parameters, like Urc40ContractList address symbol pageSize(-1 if not set) pageIndex(-1 if not set)");
+      return;
+    }
 
+    int index = 0;
+
+    byte[] address = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (address == null) {
+      System.out.println("Urc40ContractList: invalid address!");
+      return;
+    }
+
+    String symbol = parameters[index++];
+    int pageSize = Integer.parseInt(parameters[index++]);
+    int pageIndex = Integer.parseInt(parameters[index++]);
+    var result = WalletApi.urc40ContractList(address, symbol, pageIndex, pageSize);
+    if (result == null) {
+      System.out.println("Urc40ContractList failed !!!");
+    } else {
+      System.out.println(Utils.formatMessageString(result));
+    }
   }
 
   private void urc40name(String[] parameters) throws IOException, CipherException, CancelException{

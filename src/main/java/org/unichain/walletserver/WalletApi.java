@@ -869,6 +869,10 @@ public class WalletApi {
     return rpcCli.urc40FutureGet(address, pageSize, pageIndex);
   }
 
+  public static Urc40ContractPage urc40ContractList(byte[] address, String symbol, int pageIndex, int pageSize) {
+    return rpcCli.urc40ContractList(address, symbol, pageIndex, pageSize);
+  }
+
   public boolean transferTokenOwner(byte[] owner, byte[] toAddress, String tokenName) throws CipherException, IOException, CancelException {
     if (owner == null) {
       owner = getAddress();

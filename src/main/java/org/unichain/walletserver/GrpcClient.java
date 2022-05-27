@@ -1108,6 +1108,20 @@ public class GrpcClient {
     }
   }
 
+  public Contract.Urc40ContractPage urc40ContractList(byte[] address, String symbol, int pageIndex, int pageSize) {
+    var builder = Urc40ContractQuery.newBuilder()
+            .setAddress(ByteString.copyFrom(address))
+            .setSymbol(symbol);
+    if (pageIndex != -1) builder.setPageIndex(pageIndex);
+    if (pageSize != -1) builder.setPageSize(pageSize);
+
+    if (blockingStubSolidity != null) {
+      return blockingStubSolidity.urc40ContractList(builder.build());
+    } else {
+      return blockingStubFull.urc40ContractList(builder.build());
+    }
+  }
+
   public TransactionExtention updateSetting(Contract.UpdateSettingContract request) {
     return blockingStubFull.updateSetting(request);
   }
