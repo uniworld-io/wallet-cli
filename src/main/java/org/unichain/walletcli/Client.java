@@ -3838,7 +3838,7 @@ public class Client {
   private void urc40symbol(String[] parameters) throws IOException, CipherException, CancelException{
     if (parameters == null || parameters.length != 1) {
       System.out.println(
-              "Using Urc40Symbol needs 1 parameters, like Urc40Name address");
+              "Using Urc40Symbol needs 1 parameters, like Urc40Symbol address");
       return;
     }
 
