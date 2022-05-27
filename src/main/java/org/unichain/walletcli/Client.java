@@ -3764,7 +3764,7 @@ public class Client {
   private void urc40futureget(String[] parameters) throws IOException, CipherException, CancelException{
     if (parameters == null || parameters.length != 3) {
       System.out.println(
-              "Using Urc40FutureGet needs 3 parameters, like Urc40FutureGet address pageSize pageIndex");
+              "Using Urc40FutureGet needs 3 parameters, like Urc40FutureGet address pageSize(-1 if not set) pageIndex(-1 if not set)");
       return;
     }
 
@@ -3788,6 +3788,7 @@ public class Client {
   }
 
   private void urc40contractlist(String[] parameters) throws IOException, CipherException, CancelException{
+
   }
 
   private void urc40name(String[] parameters) throws IOException, CipherException, CancelException{

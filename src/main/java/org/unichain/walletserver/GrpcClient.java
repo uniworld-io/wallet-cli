@@ -1095,16 +1095,16 @@ public class GrpcClient {
   }
 
   public Urc40FutureTokenPack urc40FutureGet(byte[] address, int pageSize, int pageIndex) {
-    var request = Urc40FutureTokenQuery
+    var builder = Urc40FutureTokenQuery
             .newBuilder()
-            .setAddress(ByteString.copyFrom(address))
-            .setPageSize(pageSize)
-            .setPageIndex(pageIndex)
-            .build();
+            .setAddress(ByteString.copyFrom(address));
+    if (pageSize != -1) builder.setPageSize(pageSize);
+    if (pageIndex != -1) builder.setPageIndex(pageIndex);
+
     if (blockingStubSolidity != null) {
-      return blockingStubSolidity.urc40FutureGet(request);
+      return blockingStubSolidity.urc40FutureGet(builder.build());
     } else {
-      return blockingStubFull.urc40FutureGet(request);
+      return blockingStubFull.urc40FutureGet(builder.build());
     }
   }
 
