@@ -3762,6 +3762,29 @@ public class Client {
   }
 
   private void urc40futureget(String[] parameters) throws IOException, CipherException, CancelException{
+    if (parameters == null || parameters.length != 3) {
+      System.out.println(
+              "Using Urc40FutureGet needs 3 parameters, like Urc40FutureGet address pageSize pageIndex");
+      return;
+    }
+
+    int index = 0;
+
+    byte[] address = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (address == null) {
+      System.out.println("Urc40FutureGet: invalid address!");
+      return;
+    }
+
+    int pageSize = Integer.parseInt(parameters[index++]);
+    int pageIndex = Integer.parseInt(parameters[index++]);
+
+    var result = WalletApi.urc40FutureGet(address, pageSize, pageIndex);
+    if (result == null) {
+      System.out.println("Urc40FutureGet failed !!!");
+    } else {
+      System.out.println(Utils.formatMessageString(result));
+    }
   }
 
   private void urc40contractlist(String[] parameters) throws IOException, CipherException, CancelException{

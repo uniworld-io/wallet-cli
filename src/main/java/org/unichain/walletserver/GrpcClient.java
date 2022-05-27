@@ -487,7 +487,6 @@ public class GrpcClient {
     return blockingStubFull.urc40TransferFrom(contract);
   }
 
-
   public Transaction createTransaction(Contract.WithdrawFutureTokenContract contract) {
     return blockingStubFull.withdrawTokenFuture(contract);
   }
@@ -1093,6 +1092,20 @@ public class GrpcClient {
     NumberMessage numberMessage = NumberMessage.newBuilder().setNum(num).build();
     BlockListExtention blockList = blockingStubFull.getBlockByLatestNum2(numberMessage);
     return Optional.ofNullable(blockList);
+  }
+
+  public Urc40FutureTokenPack urc40FutureGet(byte[] address, int pageSize, int pageIndex) {
+    var request = Urc40FutureTokenQuery
+            .newBuilder()
+            .setAddress(ByteString.copyFrom(address))
+            .setPageSize(pageSize)
+            .setPageIndex(pageIndex)
+            .build();
+    if (blockingStubSolidity != null) {
+      return blockingStubSolidity.urc40FutureGet(request);
+    } else {
+      return blockingStubFull.urc40FutureGet(request);
+    }
   }
 
   public TransactionExtention updateSetting(Contract.UpdateSettingContract request) {
