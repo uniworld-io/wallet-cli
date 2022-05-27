@@ -3897,6 +3897,24 @@ public class Client {
   }
 
   private void urc40balanceof(String[] parameters) throws IOException, CipherException, CancelException{
+    if (parameters == null || parameters.length != 1) {
+      System.out.println(
+              "Using Urc40BalanceOf needs 1 parameters, like Urc40BalanceOf address");
+      return;
+    }
+
+    byte[] address = WalletApi.decodeFromBase58Check(parameters[0]);
+    if (address == null) {
+      System.out.println("Urc40BalanceOf: invalid address!");
+      return;
+    }
+
+    var result = WalletApi.urc40BalanceOf(address);
+    if (result == null) {
+      System.out.println("Urc40BalanceOf failed !!!");
+    } else {
+      System.out.println(Utils.formatMessageString(result));
+    }
   }
 
   private void urc40getowner(String[] parameters) throws IOException, CipherException, CancelException {
