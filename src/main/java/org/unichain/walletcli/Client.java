@@ -3819,9 +3819,7 @@ public class Client {
       return;
     }
 
-    int index = 0;
-
-    byte[] address = WalletApi.decodeFromBase58Check(parameters[index++]);
+    byte[] address = WalletApi.decodeFromBase58Check(parameters[0]);
     if (address == null) {
       System.out.println("Urc40Name: invalid address!");
       return;
@@ -3842,9 +3840,7 @@ public class Client {
       return;
     }
 
-    int index = 0;
-
-    byte[] address = WalletApi.decodeFromBase58Check(parameters[index++]);
+    byte[] address = WalletApi.decodeFromBase58Check(parameters[0]);
     if (address == null) {
       System.out.println("Urc40Symbol: invalid address!");
       return;
@@ -3865,9 +3861,7 @@ public class Client {
       return;
     }
 
-    int index = 0;
-
-    byte[] address = WalletApi.decodeFromBase58Check(parameters[index++]);
+    byte[] address = WalletApi.decodeFromBase58Check(parameters[0]);
     if (address == null) {
       System.out.println("Urc40Decimals: invalid address!");
       return;
@@ -3882,6 +3876,24 @@ public class Client {
   }
 
   private void urc40totalsupply(String[] parameters)throws IOException, CipherException, CancelException {
+    if (parameters == null || parameters.length != 1) {
+      System.out.println(
+              "Using Urc40TotalSupply needs 1 parameters, like Urc40TotalSupply address");
+      return;
+    }
+
+    byte[] address = WalletApi.decodeFromBase58Check(parameters[0]);
+    if (address == null) {
+      System.out.println("Urc40TotalSupply: invalid address!");
+      return;
+    }
+
+    var result = WalletApi.urc40TotalSupply(address);
+    if (result == null) {
+      System.out.println("Urc40TotalSupply failed !!!");
+    } else {
+      System.out.println(Utils.formatMessageString(result));
+    }
   }
 
   private void urc40balanceof(String[] parameters) throws IOException, CipherException, CancelException{
