@@ -1134,6 +1134,19 @@ public class GrpcClient {
     }
   }
 
+  public NumberMessage urc40Decimals(byte[] address) {
+    var request = AddressMessage
+            .newBuilder()
+            .setAddress(ByteString.copyFrom(address))
+            .build();
+
+    if (blockingStubSolidity != null) {
+      return blockingStubSolidity.urc40Decimals(request);
+    } else {
+      return blockingStubFull.urc40Decimals(request);
+    }
+  }
+
   public Contract.Urc40ContractPage urc40ContractList(byte[] address, String symbol, int pageIndex, int pageSize) {
     var builder = Urc40ContractQuery.newBuilder()
             .setAddress(ByteString.copyFrom(address))

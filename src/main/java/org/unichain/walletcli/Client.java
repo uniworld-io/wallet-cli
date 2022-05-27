@@ -3856,10 +3856,29 @@ public class Client {
     } else {
       System.out.println(Utils.formatMessageString(result));
     }
-
   }
 
   private void urc40decimals(String[] parameters) throws IOException, CipherException, CancelException{
+    if (parameters == null || parameters.length != 1) {
+      System.out.println(
+              "Using Urc40Decimals needs 1 parameters, like Urc40Decimals address");
+      return;
+    }
+
+    int index = 0;
+
+    byte[] address = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (address == null) {
+      System.out.println("Urc40Decimals: invalid address!");
+      return;
+    }
+
+    var result = WalletApi.urc40Decimals(address);
+    if (result == null) {
+      System.out.println("Urc40Decimals failed !!!");
+    } else {
+      System.out.println(Utils.formatMessageString(result));
+    }
   }
 
   private void urc40totalsupply(String[] parameters)throws IOException, CipherException, CancelException {
