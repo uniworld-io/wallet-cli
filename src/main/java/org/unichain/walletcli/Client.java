@@ -3813,6 +3813,26 @@ public class Client {
   }
 
   private void urc40name(String[] parameters) throws IOException, CipherException, CancelException{
+    if (parameters == null || parameters.length != 1) {
+      System.out.println(
+              "Using Urc40Name needs 1 parameters, like Urc40Name address");
+      return;
+    }
+
+    int index = 0;
+
+    byte[] address = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (address == null) {
+      System.out.println("Urc40Name: invalid address!");
+      return;
+    }
+
+    var result = WalletApi.urc40Name(address);
+    if (result == null) {
+      System.out.println("Urc40Name failed !!!");
+    } else {
+      System.out.println(Utils.formatMessageString(result));
+    }
   }
 
   private void urc40symbol(String[] parameters) throws IOException, CipherException, CancelException{
