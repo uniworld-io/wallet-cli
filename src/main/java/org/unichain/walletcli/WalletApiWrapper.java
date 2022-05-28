@@ -260,6 +260,16 @@ public class WalletApiWrapper {
     return wallet.urc721TransferFrom(ownerAddress, toAddr, contractAddr, tokenId);
   }
 
+  public boolean urc40Approve(byte[] ownerAddress, byte[] address, String spender, long amount)
+      throws CipherException, IOException, CancelException {
+    if (wallet == null || !wallet.isLoginState()) {
+      System.out.println("Warning: Urc40Approve failed, Please login first !!");
+      return false;
+    }
+
+    return wallet.urc40Approve(ownerAddress, address, spender, amount);
+  }
+
   public boolean posBridgeSetup(byte[] ownerAddress, byte[] newOwner, long minValidator, String validators, int consensusRate, String nativePredicate, String tokenPredicate, String nftPredicate) throws CipherException, IOException, CancelException {
     if (wallet == null || !wallet.isLoginState()) {
       System.out.println("Warning: posBridgeSetup failed,  Please login first !!");
@@ -871,7 +881,6 @@ public class WalletApiWrapper {
       return Optional.empty();
     }
   }
-
 
   public boolean approveProposal(byte[] ownerAddress, long id, boolean is_add_approval)
       throws CipherException, IOException, CancelException {

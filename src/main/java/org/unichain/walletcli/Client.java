@@ -3970,7 +3970,36 @@ public class Client {
   }
 
   private void urc40approve(String[] parameters) throws IOException, CipherException, CancelException{
+    if (parameters == null || (parameters.length != 3 && parameters.length != 4)) {
+      System.out.println("Use Urc40Approve command with below syntax: ");
+      System.out.println("Urc40Approve [OwnerAddress] address spender amount");
+      return;
+    }
 
+    int index = 0;
+    byte[] ownerAddress = null;
+    if (parameters.length == 4) {
+      ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+      if (ownerAddress == null) {
+        System.out.println("Invalid OwnerAddress.");
+        return;
+      }
+    }
+
+    byte[] address = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (address == null) {
+      System.out.println("Urc40Approve: invalid address!");
+      return;
+    }
+
+    String spender = parameters[index++];
+    long amount = Long.parseLong(parameters[index]);
+    boolean result = walletApiWrapper.urc40Approve(ownerAddress, address, spender, amount);
+    if (result) {
+      System.out.println("Urc40Approve successful !!!");
+    } else {
+      System.out.println("Urc40Approve failed !!!");
+    }
   }
 
   private void urc40exchange(String[] parameters) throws IOException, CipherException, CancelException{
