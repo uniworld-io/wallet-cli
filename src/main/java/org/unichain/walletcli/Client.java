@@ -4003,6 +4003,35 @@ public class Client {
   }
 
   private void urc40exchange(String[] parameters) throws IOException, CipherException, CancelException{
+    if (parameters == null || (parameters.length != 2 && parameters.length != 3)) {
+      System.out.println("Use Urc40Exchange command with below syntax: ");
+      System.out.println("Urc40Exchange [OwnerAddress] address amount");
+      return;
+    }
+
+    int index = 0;
+    byte[] ownerAddress = null;
+    if (parameters.length == 3) {
+      ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+      if (ownerAddress == null) {
+        System.out.println("Invalid OwnerAddress.");
+        return;
+      }
+    }
+
+    byte[] address = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (address == null) {
+      System.out.println("Urc40Exchange: invalid address!");
+      return;
+    }
+
+    long amount = Long.parseLong(parameters[index]);
+    boolean result = walletApiWrapper.urc40Exchange(ownerAddress, address, amount);
+    if (result) {
+      System.out.println("Urc40Exchange successful !!!");
+    } else {
+      System.out.println("Urc40Exchange failed !!!");
+    }
 
   }
 

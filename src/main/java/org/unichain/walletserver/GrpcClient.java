@@ -491,6 +491,10 @@ public class GrpcClient {
     return blockingStubFull.urc40Approve(contract);
   }
 
+  public Transaction createTransaction(Contract.Urc40ExchangeContract contract) {
+    return blockingStubFull.urc40Exchange(contract);
+  }
+
   public Transaction createTransaction(Contract.WithdrawFutureTokenContract contract) {
     return blockingStubFull.withdrawTokenFuture(contract);
   }
