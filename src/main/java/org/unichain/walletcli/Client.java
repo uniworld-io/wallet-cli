@@ -4073,7 +4073,34 @@ public class Client {
   }
 
   private void urc40withdrawfuture(String[] parameters) throws IOException, CipherException, CancelException{
+    if (parameters == null || (parameters.length != 1 && parameters.length != 2)) {
+      System.out.println("Use Urc40WithdrawFuture command with below syntax: ");
+      System.out.println("Urc40WithdrawFuture [OwnerAddress] address");
+      return;
+    }
 
+    int index = 0;
+    byte[] ownerAddress = null;
+    if (parameters.length == 2) {
+      ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+      if (ownerAddress == null) {
+        System.out.println("Invalid OwnerAddress.");
+        return;
+      }
+    }
+
+    byte[] address = WalletApi.decodeFromBase58Check(parameters[index]);
+    if (address == null) {
+      System.out.println("Urc40WithdrawFuture: invalid address!");
+      return;
+    }
+
+    boolean result = walletApiWrapper.urc40WithdrawFuture(ownerAddress, address);
+    if (result) {
+      System.out.println("Urc40WithdrawFuture successful !!!");
+    } else {
+      System.out.println("Urc40WithdrawFuture failed !!!");
+    }
   }
 
   private void urc40TransferFrom(String[] parameters) throws IOException, CipherException, CancelException{
