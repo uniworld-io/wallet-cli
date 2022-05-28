@@ -3918,6 +3918,24 @@ public class Client {
   }
 
   private void urc40getowner(String[] parameters) throws IOException, CipherException, CancelException {
+    if (parameters == null || parameters.length != 1) {
+      System.out.println(
+          "Using Urc40GetOwner needs 1 parameters, like Urc40GetOwner address");
+      return;
+    }
+
+    byte[] address = WalletApi.decodeFromBase58Check(parameters[0]);
+    if (address == null) {
+      System.out.println("Urc40GetOwner: invalid address!");
+      return;
+    }
+
+    var result = WalletApi.urc40GetOwner(address);
+    if (result == null) {
+      System.out.println("Urc40GetOwner failed !!!");
+    } else {
+      System.out.println(Utils.formatMessageString(result));
+    }
   }
 
   private void urc40allowance(String[] parameters) throws IOException, CipherException, CancelException{
