@@ -1186,6 +1186,21 @@ public class GrpcClient {
     }
   }
 
+  public NumberMessage urc40Allowance(byte[] owner, byte[] address, String spender) {
+    var request = Urc40AllowanceQuery
+        .newBuilder()
+        .setOwner(ByteString.copyFrom(owner))
+        .setAddress(ByteString.copyFrom(address))
+        .setSpender(ByteString.copyFromUtf8(spender))
+        .build();
+
+    if (blockingStubSolidity != null) {
+      return blockingStubSolidity.urc40Allowance(request);
+    } else {
+      return blockingStubFull.urc40Allowance(request);
+    }
+  }
+
   public Contract.Urc40ContractPage urc40ContractList(byte[] address, String symbol, int pageIndex, int pageSize) {
     var builder = Urc40ContractQuery.newBuilder()
             .setAddress(ByteString.copyFrom(address))

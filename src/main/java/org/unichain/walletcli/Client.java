@@ -3939,6 +3939,34 @@ public class Client {
   }
 
   private void urc40allowance(String[] parameters) throws IOException, CipherException, CancelException{
+    if (parameters == null || parameters.length != 3) {
+      System.out.println("Urc40Allowance needs 3 parameters like following: ");
+      System.out.println("Urc40Allowance owner address spender");
+      return;
+    }
+
+    int index = 0;
+
+    byte[] ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (ownerAddress == null) {
+      System.out.println("Invalid owner.");
+      return;
+    }
+
+    byte[] address = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (address == null) {
+      System.out.println("Urc40Allowance: invalid address!");
+      return;
+    }
+
+    String spender = parameters[index++];
+
+    var result = WalletApi.urc40Allowance(ownerAddress, address, spender);
+    if (result == null) {
+      System.out.println("Urc40Allowance failed !!!");
+    } else {
+      System.out.println(Utils.formatMessageString(result));
+    }
   }
 
   private void urc40approve(String[] parameters) throws IOException, CipherException, CancelException{
