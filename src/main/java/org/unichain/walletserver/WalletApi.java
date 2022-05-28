@@ -887,6 +887,17 @@ public class WalletApi {
     return processTransaction(transaction);
   }
 
+  public boolean urc40TransferOwner(byte[] ownerAddress, byte[] toAddress, byte[] address)
+      throws CipherException, IOException, CancelException {
+    if (ownerAddress == null) {
+      ownerAddress = getAddress();
+    }
+
+    var contract = createUrc40TransferOwner(ownerAddress, toAddress, address);
+    Transaction transaction = rpcCli.createTransaction(contract);
+    return processTransaction(transaction);
+  }
+
   public static Urc40FutureTokenPack urc40FutureGet(byte[] address, int pageSize, int pageIndex) throws CipherException, IOException, CancelException {
     return rpcCli.urc40FutureGet(address, pageSize, pageIndex);
   }
@@ -1553,6 +1564,16 @@ public class WalletApi {
         .setOwnerAddress(ByteString.copyFrom(ownerAddress))
         .setAddress(ByteString.copyFrom(address))
         .setAmount(amount)
+        .build();
+  }
+
+  public static Contract.Urc40TransferOwnerContract createUrc40TransferOwner(byte[] ownerAddress,
+      byte[] toAddress, byte[] address) {
+    return Contract.Urc40TransferOwnerContract
+        .newBuilder()
+        .setOwnerAddress(ByteString.copyFrom(ownerAddress))
+        .setToAddress(ByteString.copyFrom(toAddress))
+        .setAddress(ByteString.copyFrom(address))
         .build();
   }
 

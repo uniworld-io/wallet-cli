@@ -4032,10 +4032,43 @@ public class Client {
     } else {
       System.out.println("Urc40Exchange failed !!!");
     }
-
   }
 
   private void urc40transferowner(String[] parameters) throws IOException, CipherException, CancelException{
+    if (parameters == null || (parameters.length != 2 && parameters.length != 3)) {
+      System.out.println("Use Urc40TransferOwner command with below syntax: ");
+      System.out.println("Urc40TransferOwner [OwnerAddress] toAddress address");
+      return;
+    }
+
+    int index = 0;
+    byte[] ownerAddress = null;
+    if (parameters.length == 3) {
+      ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+      if (ownerAddress == null) {
+        System.out.println("Invalid OwnerAddress.");
+        return;
+      }
+    }
+
+    byte[] toAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (toAddress == null) {
+      System.out.println("Urc40TransferOwner: invalid toAddress!");
+      return;
+    }
+
+    byte[] address = WalletApi.decodeFromBase58Check(parameters[index]);
+    if (address == null) {
+      System.out.println("Urc40TransferOwner: invalid address!");
+      return;
+    }
+
+    boolean result = walletApiWrapper.urc40TransferOwner(ownerAddress, toAddress, address);
+    if (result) {
+      System.out.println("Urc40TransferOwner successful !!!");
+    } else {
+      System.out.println("Urc40TransferOwner failed !!!");
+    }
 
   }
 

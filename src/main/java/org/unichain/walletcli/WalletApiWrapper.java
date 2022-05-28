@@ -280,6 +280,16 @@ public class WalletApiWrapper {
     return wallet.urc40Exchange(ownerAddress, address, amount);
   }
 
+  public boolean urc40TransferOwner(byte[] ownerAddress, byte[] toAddress, byte[] address)
+      throws CipherException, IOException, CancelException {
+    if (wallet == null || !wallet.isLoginState()) {
+      System.out.println("Warning: urc40Exchange failed, Please login first !!");
+      return false;
+    }
+
+    return wallet.urc40TransferOwner(ownerAddress, toAddress, address);
+  }
+
   public boolean posBridgeSetup(byte[] ownerAddress, byte[] newOwner, long minValidator, String validators, int consensusRate, String nativePredicate, String tokenPredicate, String nftPredicate) throws CipherException, IOException, CancelException {
     if (wallet == null || !wallet.isLoginState()) {
       System.out.println("Warning: posBridgeSetup failed,  Please login first !!");
