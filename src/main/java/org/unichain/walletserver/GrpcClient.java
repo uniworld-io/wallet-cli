@@ -94,9 +94,10 @@ public class GrpcClient {
     }
   }
 
-  public Urc721TokenPage urc721TokenList(byte[] ownerAddress, Optional<byte[]> contractAddr, int pageIndex, int pageSize) {
+  public Urc721TokenPage urc721TokenList(byte[] ownerAddress, Optional<byte[]> contractAddr, String ownerType, int pageIndex, int pageSize) {
     var request = Urc721TokenQuery.newBuilder();
     request.setOwnerAddress(ByteString.copyFrom(ownerAddress));
+    request.setOwnerType(ownerType);
     contractAddr.ifPresent(v -> request.setAddress(ByteString.copyFrom(v)));
 
     if(pageIndex != -1)

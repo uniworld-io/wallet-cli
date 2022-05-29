@@ -313,8 +313,8 @@ public class WalletApi {
     return rpcCli.urc721ContractList(ownerAddress, pageIndex, pageSize, ownerOrMinter);
   }
 
-  public static Urc721TokenPage urc721TokenList(byte[] ownerAddress, Optional<byte[]> contractAddr, int pageIndex, int pageSize) {
-    return rpcCli.urc721TokenList(ownerAddress, contractAddr, pageIndex, pageSize);//call rpc
+  public static Urc721TokenPage urc721TokenList(byte[] ownerAddress, Optional<byte[]> contractAddr, String ownerType, int pageIndex, int pageSize) {
+    return rpcCli.urc721TokenList(ownerAddress, contractAddr, ownerType, pageIndex, pageSize);//call rpc
   }
 
   public static Urc721Contract urc721ContractGet(byte[] addr) {
