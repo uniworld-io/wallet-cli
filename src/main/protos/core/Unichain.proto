@@ -204,6 +204,18 @@ message Urc40FutureToken {
   bytes next_tick = 4;
 }
 
+message Urc40SpenderQuota{
+    bytes owner = 1;
+    int64 limit = 2;
+    int64 spent = 3;
+    int64 avail = 4;
+}
+message Urc40Spender {
+  bytes spender = 1;
+  bytes contract = 2;
+  map<string, Urc40SpenderQuota> quotas = 3; //owner --> spend quota
+}
+
 /**
   used for both token urc40 & nft indexing
  */

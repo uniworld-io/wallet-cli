@@ -141,6 +141,7 @@ public class Client {
           "Urc40Mint",
           "Urc40Burn",
           "Urc40TransferFrom",
+          "Urc40Transfer",
           "Urc40WithdrawFuture",
           "Urc40TransferOwner",
           "Urc40Exchange",
@@ -307,6 +308,7 @@ public class Client {
           "Urc40Mint",
           "Urc40Burn",
           "Urc40TransferFrom",
+          "Urc40Transfer",
           "Urc40WithdrawFuture",
           "Urc40TransferOwner",
           "Urc40Exchange",
@@ -3394,6 +3396,10 @@ public class Client {
               urc40TransferFrom(parameters);
               break;
             }
+            case "urc40transfer": {
+              urc40Transfer(parameters);
+              break;
+            }
             case "urc40withdrawfuture": {
               urc40withdrawfuture(parameters);
               break;
@@ -4152,6 +4158,60 @@ public class Client {
       System.out.println("urc40TransferFrom of " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " successful !!");
     } else {
       System.out.println("urc40TransferFrom " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " failed !!");
+    }
+  }
+
+  private void urc40Transfer(String[] parameters) throws IOException, CipherException, CancelException{
+    if (parameters == null || (parameters.length != 4 && parameters.length != 5)) {
+      System.out.println("Urc40Transfer needs 5 parameters like following: ");
+      System.out.println("Urc40Transfer [ownerAddress] address to amount available_time(- for default now or 2021-01-01 or 2021-01-01 01:00:01)");
+      return;
+    }
+
+    int index = 0;
+    byte[] ownerAddress = null;
+    if (parameters.length == 5) {
+      ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+      if (ownerAddress == null) {
+        System.out.println("Invalid OwnerAddress.");
+        return;
+      }
+    }
+
+    byte[] contractAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (contractAddress == null) {
+      System.out.println("Invalid contractAddress.");
+      return;
+    }
+
+    byte[] toAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (toAddress == null) {
+      System.out.println("Invalid toAddress.");
+      return;
+    }
+
+    long amount = new Long(parameters[index++]);
+
+    long availableTime;
+    String availableTimeStr = parameters[index];
+    if("-".equals(availableTimeStr))
+      availableTime = 0;
+    else {
+      Date availableDate = Utils.strToDateLong(availableTimeStr);
+      if (availableDate == null) {
+        System.out.println("The available_time format should look like 2018-03-01 OR 2018-03-01 00:01:02");
+        System.out.println("Urc40Transfer " + contractAddress + " failed !!");
+        return;
+      }
+      availableTime = availableDate.getTime();
+    }
+
+    boolean result = walletApiWrapper.urc40Transfer(ownerAddress, contractAddress, toAddress, amount, availableTime);
+    String walletOwnerAddress = walletApiWrapper.getAddress();
+    if (result) {
+      System.out.println("Urc40Transfer of " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " successful !!");
+    } else {
+      System.out.println("Urc40Transfer " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " failed !!");
     }
   }
 

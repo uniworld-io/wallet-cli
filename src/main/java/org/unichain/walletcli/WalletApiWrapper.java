@@ -448,7 +448,6 @@ public class WalletApiWrapper {
     return wallet.transferToken(ownerAddress, toAddress, tokenName, amount, availableTime);
   }
 
-
   public boolean urc40TransferFrom(byte[] ownerAddress, byte[] toAddress,  byte[] contractAddr, long amount, long availableTime) throws CipherException, IOException, CancelException {
     if (wallet == null || !wallet.isLoginState()) {
       System.out.println("Warning: urc40TransferFrom failed,  Please login first !!");
@@ -456,6 +455,15 @@ public class WalletApiWrapper {
     }
 
     return wallet.urc40TransferFrom(ownerAddress, toAddress, contractAddr, amount, availableTime);
+  }
+
+  public boolean urc40Transfer(byte[] ownerAddress, byte[] contractAddr, byte[] toAddress, long amount, long availableTime) throws CipherException, IOException, CancelException {
+    if (wallet == null || !wallet.isLoginState()) {
+      System.out.println("Warning: urc40Transfer failed,  Please login first !!");
+      return false;
+    }
+
+    return wallet.urc40Transfer(ownerAddress, contractAddr, toAddress, amount, availableTime);
   }
 
   public boolean transferTokenOwner(byte[] ownerAddress, byte[] toAddress, String tokenName) throws CipherException, IOException, CancelException {
