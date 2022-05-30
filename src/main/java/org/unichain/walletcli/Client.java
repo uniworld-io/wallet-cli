@@ -4111,15 +4111,15 @@ public class Client {
   }
 
   private void urc40TransferFrom(String[] parameters) throws IOException, CipherException, CancelException{
-    if (parameters == null || (parameters.length != 4 && parameters.length != 5)) {
+    if (parameters == null || (parameters.length != 5 && parameters.length != 6)) {
       System.out.println("urc40TransferFrom needs 5 parameters like following: ");
-      System.out.println("urc40TransferFrom [OwnerAddress] to_address token_name amount available_time(- for default now or 2021-01-01 or 2021-01-01 01:00:01)");
+      System.out.println("urc40TransferFrom [OwnerAddress] fromAddress toAddress contractAddress amount available_time(- for default now or 2021-01-01 or 2021-01-01 01:00:01)");
       return;
     }
 
     int index = 0;
     byte[] ownerAddress = null;
-    if (parameters.length == 5) {
+    if (parameters.length == 6) {
       ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
       if (ownerAddress == null) {
         System.out.println("Invalid OwnerAddress.");
@@ -4127,7 +4127,17 @@ public class Client {
       }
     }
 
+    byte[] fromAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (fromAddress == null) {
+      System.out.println("Invalid OwnerAddress.");
+      return;
+    }
+
     byte[] toAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (toAddress == null) {
+      System.out.println("Invalid OwnerAddress.");
+      return;
+    }
 
     byte[] contractAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
     if (contractAddress == null) {
@@ -4138,11 +4148,10 @@ public class Client {
     long amount = new Long(parameters[index++]);
 
     long availableTime;
-    String availableTimeStr = parameters[index++];
+    String availableTimeStr = parameters[index];
     if("-".equals(availableTimeStr))
       availableTime = 0;
-    else
-    {
+    else {
       Date availableDate = Utils.strToDateLong(availableTimeStr);
       if (availableDate == null) {
         System.out.println("The available_time format should look like 2018-03-01 OR 2018-03-01 00:01:02");
@@ -4152,7 +4161,7 @@ public class Client {
       availableTime = availableDate.getTime();
     }
 
-    boolean result = walletApiWrapper.urc40TransferFrom(ownerAddress, toAddress, contractAddress, amount, availableTime);
+    boolean result = walletApiWrapper.urc40TransferFrom(ownerAddress, fromAddress, toAddress, contractAddress, amount, availableTime);
     String walletOwnerAddress = walletApiWrapper.getAddress();
     if (result) {
       System.out.println("urc40TransferFrom of " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " successful !!");

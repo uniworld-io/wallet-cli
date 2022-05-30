@@ -856,11 +856,11 @@ public class WalletApi {
     return processTransaction(transaction);
   }
 
-  public boolean urc40TransferFrom(byte[] owner, byte[] toAddress,  byte[] contractAddr, long amount, long availableTime) throws CipherException, IOException, CancelException {
+  public boolean urc40TransferFrom(byte[] owner, byte[] fromAddress, byte[] toAddress,  byte[] contractAddr, long amount, long availableTime) throws CipherException, IOException, CancelException {
     if (owner == null) {
       owner = getAddress();
     }
-    var contract = createUrc40TransferFrom(owner, toAddress, contractAddr, amount, availableTime);
+    var contract = createUrc40TransferFrom(owner, fromAddress, toAddress, contractAddr, amount, availableTime);
     Transaction transaction = rpcCli.createTransaction(contract);
     return processTransaction(transaction);
   }
@@ -1556,9 +1556,10 @@ public class WalletApi {
             .build();
   }
 
-  public static Contract.Urc40TransferFromContract createUrc40TransferFrom(byte[] owner, byte[] toAddress, byte[] contractAddr, long amount, long availableTime) {
+  public static Contract.Urc40TransferFromContract createUrc40TransferFrom(byte[] owner, byte[] fromAddress, byte[] toAddress, byte[] contractAddr, long amount, long availableTime) {
     return Contract.Urc40TransferFromContract.newBuilder()
             .setOwnerAddress(ByteString.copyFrom(owner))
+            .setFrom(ByteString.copyFrom(fromAddress))
             .setTo(ByteString.copyFrom(toAddress))
             .setAddress(ByteString.copyFrom(contractAddr))
             .setAmount(amount)

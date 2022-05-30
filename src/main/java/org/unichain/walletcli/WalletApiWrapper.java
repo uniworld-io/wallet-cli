@@ -448,13 +448,13 @@ public class WalletApiWrapper {
     return wallet.transferToken(ownerAddress, toAddress, tokenName, amount, availableTime);
   }
 
-  public boolean urc40TransferFrom(byte[] ownerAddress, byte[] toAddress,  byte[] contractAddr, long amount, long availableTime) throws CipherException, IOException, CancelException {
+  public boolean urc40TransferFrom(byte[] ownerAddress, byte[] fromAddress, byte[] toAddress,  byte[] contractAddr, long amount, long availableTime) throws CipherException, IOException, CancelException {
     if (wallet == null || !wallet.isLoginState()) {
       System.out.println("Warning: urc40TransferFrom failed,  Please login first !!");
       return false;
     }
 
-    return wallet.urc40TransferFrom(ownerAddress, toAddress, contractAddr, amount, availableTime);
+    return wallet.urc40TransferFrom(ownerAddress, fromAddress, toAddress, contractAddr, amount, availableTime);
   }
 
   public boolean urc40Transfer(byte[] ownerAddress, byte[] contractAddr, byte[] toAddress, long amount, long availableTime) throws CipherException, IOException, CancelException {
