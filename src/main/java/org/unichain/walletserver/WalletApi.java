@@ -1007,7 +1007,7 @@ public class WalletApi {
     if (owner == null) {
       owner = getAddress();
     }
-    var contract = createFutureLockedTransferContract(owner, to, expireTime);
+    var contract = createFutureDealTransferTransaction(owner, to, expireTime);
     Transaction transaction = rpcCli.createTransaction(contract);
     return processTransaction(transaction);
   }
@@ -1670,11 +1670,11 @@ public class WalletApi {
     return builder.build();
   }
 
-  public static Contract.FutureLockedTransferContract createFutureLockedTransferContract(byte[] owner, byte[] to, long expireTime) {
-    return Contract.FutureLockedTransferContract.newBuilder()
+  public static Contract.FutureDealTransferContract createFutureDealTransferTransaction(byte[] owner, byte[] to, long expireTime) {
+    return Contract.FutureDealTransferContract.newBuilder()
             .setOwnerAddress(ByteString.copyFrom(owner))
             .setToAddress(ByteString.copyFrom(to))
-            .setExpireTime(expireTime)
+            .setDealId(expireTime)
             .build();
   }
 

@@ -68,10 +68,10 @@ message FutureTransferContract {
   int64 expire_time = 4;
 }
 
-message FutureLockedTransferContract {
+message FutureDealTransferContract {
   bytes owner_address = 1;
   bytes to_address = 2;
-  int64 expire_time = 4;
+  int64 deal_id = 4;
 }
 
 message TransferAssetContract {
