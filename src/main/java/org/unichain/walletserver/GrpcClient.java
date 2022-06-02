@@ -540,6 +540,10 @@ public class GrpcClient {
     return blockingStubFull.createFutureTransferTransaction(contract);
   }
 
+  public Transaction createTransaction(Contract.FutureLockedTransferContract contract) {
+    return blockingStubFull.createFutureLockedTransferTransaction(contract);
+  }
+
   public Transaction createTransaction(Contract.FutureWithdrawContract contract) {
     return blockingStubFull.withdrawFutureTransaction(contract);
   }

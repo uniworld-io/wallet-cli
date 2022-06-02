@@ -118,6 +118,7 @@ public class Client {
           "RegisterWallet",
           "SendCoin",
           "SendFuture",
+          "SendFutureLocked",
           "WithdrawFuture",
           "GetFutureTransfer",
 
@@ -285,6 +286,7 @@ public class Client {
           "RegisterWallet",
           "SendCoin",
           "SendFuture",
+          "SendFutureLocked",
           "WithdrawFuture",
           "GetFutureTransfer",
 
@@ -834,7 +836,7 @@ public class Client {
   private void sendFuture(String[] parameters) throws IOException, CipherException, CancelException {
     if (parameters == null || (parameters.length != 2 && parameters.length != 3 )) {
       System.out.println("SendFuture needs 2 parameters like following: ");
-      System.out.println("SendFuture  [ToAddress] Amount ExpireTime");
+      System.out.println("SendFuture [ToAddress] Amount ExpireTime");
       return;
     }
 
@@ -869,6 +871,47 @@ public class Client {
       System.out.println("SendFuture " + amount + " with expireDate " + expireDate + " Ginza to " + (selfLock ? "itself" : base58ToAddress) + " successful !!");
     } else {
       System.out.println("SendFuture " + amount + " with expireDate " + expireDate + " Ginza to " + (selfLock ? "itself" : base58ToAddress) + " failed !!");
+    }
+  }
+
+  private void sendFutureLocked(String[] parameters) throws IOException, CipherException, CancelException {
+    if (parameters == null || (parameters.length != 2 && parameters.length != 3 )) {
+      System.out.println("SendFutureLocked needs 3 parameters like following: ");
+      System.out.println("SendFutureLocked [OwnerAddress] ToAddress ExpireTime");
+      return;
+    }
+
+    int index = 0;
+
+    byte[] ownerAddress = null;
+    if (parameters.length == 3) {
+      ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+      if (ownerAddress == null) {
+        System.out.println("Invalid ownerAddress.");
+        return;
+      }
+    }
+
+    String base58ToAddress = parameters[index++];
+    byte[] toAddress = WalletApi.decodeFromBase58Check(base58ToAddress);
+    if (toAddress == null) {
+      System.out.println("Invalid toAddress.");
+      return;
+    }
+
+    Date expireDate = Utils.strToDateLong(parameters[index]);
+
+    if (expireDate == null) {
+      System.out.println("The ExpiredDate format should look like yyyy-MM-dd HH:mm:ss or yyyy-MM-dd");
+      System.out.println("SendFutureLocked failed due to invalid expire date!!");
+      return;
+    }
+
+    boolean result = walletApiWrapper.sendFutureLocked(ownerAddress, toAddress, expireDate.getTime());
+    if (result) {
+      System.out.println("SendFutureLocked with expireDate " + expireDate + " Ginza to " + base58ToAddress + " successful !!");
+    } else {
+      System.out.println("SendFutureLocked with expireDate " + expireDate + " Ginza to " + base58ToAddress + " failed !!");
     }
   }
 
@@ -3144,6 +3187,11 @@ public class Client {
 
             case "sendfuture": {
               sendFuture(parameters);
+              break;
+            }
+
+            case "sendfuturelocked": {
+              sendFutureLocked(parameters);
               break;
             }
 

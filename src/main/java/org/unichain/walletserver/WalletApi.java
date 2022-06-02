@@ -994,12 +994,20 @@ public class WalletApi {
     return processTransaction(transaction);
   }
 
-
   public boolean sendFuture(byte[] owner, byte[] to, long amount, long expireTime) throws CipherException, IOException, CancelException {
     if (owner == null) {
       owner = getAddress();
     }
     Contract.FutureTransferContract contract = createFutureTransferContract(to, owner, amount, expireTime);
+    Transaction transaction = rpcCli.createTransaction(contract);
+    return processTransaction(transaction);
+  }
+
+  public boolean sendFutureLocked(byte[] owner, byte[] to, long expireTime) throws CipherException, IOException, CancelException {
+    if (owner == null) {
+      owner = getAddress();
+    }
+    var contract = createFutureLockedTransferContract(owner, to, expireTime);
     Transaction transaction = rpcCli.createTransaction(contract);
     return processTransaction(transaction);
   }
@@ -1650,7 +1658,6 @@ public class WalletApi {
             .build();
   }
 
-
   public static Contract.FutureTransferContract createFutureTransferContract(byte[] to, byte[] owner, long amount, long expireTime) {
     var builder = Contract.FutureTransferContract.newBuilder()
             .setOwnerAddress(ByteString.copyFrom(owner))
@@ -1661,6 +1668,14 @@ public class WalletApi {
       builder.setToAddress(ByteString.copyFrom(to));
 
     return builder.build();
+  }
+
+  public static Contract.FutureLockedTransferContract createFutureLockedTransferContract(byte[] owner, byte[] to, long expireTime) {
+    return Contract.FutureLockedTransferContract.newBuilder()
+            .setOwnerAddress(ByteString.copyFrom(owner))
+            .setToAddress(ByteString.copyFrom(to))
+            .setExpireTime(expireTime)
+            .build();
   }
 
   public static Contract.FutureWithdrawContract createFutureWithdrawContract(byte[] owner) {
