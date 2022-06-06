@@ -421,6 +421,10 @@ public class Utils {
             FutureTransferContract futureTransferContract = contract.getParameter().unpack(FutureTransferContract.class);
             contractJson = JSONObject.parseObject(JsonFormat.printToString(futureTransferContract, selfType));
             break;
+          case FutureDealTransferContract:
+            FutureDealTransferContract futureDealTransferContract = contract.getParameter().unpack(FutureDealTransferContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(futureDealTransferContract, selfType));
+            break;
           case FutureWithdrawContract:
             FutureWithdrawContract futureWithdrawContract = contract.getParameter().unpack(FutureWithdrawContract.class);
             contractJson = JSONObject.parseObject(JsonFormat.printToString(futureWithdrawContract, selfType));
