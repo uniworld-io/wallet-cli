@@ -160,7 +160,7 @@ public class WalletApiWrapper {
 
   public boolean sendFutureLocked(byte[] ownerAddress, byte[] toAddress, long expireTime) throws CipherException, IOException, CancelException {
     if (wallet == null || !wallet.isLoginState()) {
-      System.out.println("Warning: SendFuture failed,  Please login first !!");
+      System.out.println("Warning: SendFutureLocked failed,  Please login first !!");
       return false;
     }
 
