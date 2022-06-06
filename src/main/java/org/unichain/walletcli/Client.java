@@ -3980,9 +3980,9 @@ public class Client {
       return;
     }
 
-    byte[] contractAddr = WalletApi.decodeFromBase58Check(parameters[0]);
+    byte[] contractAddr = WalletApi.decodeFromBase58Check(parameters[1]);
     if (contractAddr == null) {
-      System.out.println("urc20BalanceOf: invalid address!");
+      System.out.println("urc20BalanceOf: invalid contractAddress!");
       return;
     }
 
