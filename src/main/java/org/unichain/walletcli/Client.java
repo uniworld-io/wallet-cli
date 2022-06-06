@@ -3449,55 +3449,55 @@ public class Client {
               break;
             }
             case "urc40withdrawfuture": {
-              urc40withdrawfuture(parameters);
+              urc40WithdrawFuture(parameters);
               break;
             }
             case "urc40transferowner": {
-              urc40transferowner(parameters);
+              urc40TransferOwner(parameters);
               break;
             }
             case "urc40exchange": {
-              urc40exchange(parameters);
+              urc40Exchange(parameters);
               break;
             }
             case "urc40approve": {
-              urc40approve(parameters);
+              urc40Approve(parameters);
               break;
             }
             case "urc40allowance": {
-              urc40allowance(parameters);
+              urc40Allowance(parameters);
               break;
             }
             case "urc40getowner": {
-              urc40getowner(parameters);
+              urc40GetOwner(parameters);
               break;
             }
             case "urc40balanceof": {
-              urc40balanceof(parameters);
+              urc40BalanceOf(parameters);
               break;
             }
             case "urc40totalsupply": {
-              urc40totalsupply(parameters);
+              urc40TotalSupply(parameters);
               break;
             }
             case "urc40decimals": {
-              urc40decimals(parameters);
+              urc40Decimals(parameters);
               break;
             }
             case "urc40symbol": {
-              urc40symbol(parameters);
+              urc40Symbol(parameters);
               break;
             }
             case "urc40name": {
-              urc40name(parameters);
+              urc40Name(parameters);
               break;
             }
             case "urc40contractlist": {
-              urc40contractlist(parameters);
+              urc40ContractList(parameters);
               break;
             }
             case "urc40futureget": {
-              urc40futureget(parameters);
+              urc40FutureGet(parameters);
               break;
             }
 
@@ -3815,188 +3815,209 @@ public class Client {
     }
   }
 
-  private void urc40futureget(String[] parameters) throws IOException, CipherException, CancelException{
-    if (parameters == null || parameters.length != 3) {
-      System.out.println(
-              "Using Urc40FutureGet needs 3 parameters, like Urc40FutureGet address pageSize(-1 if not set) pageIndex(-1 if not set)");
-      return;
-    }
-
-    int index = 0;
-
-    byte[] address = WalletApi.decodeFromBase58Check(parameters[index++]);
-    if (address == null) {
-      System.out.println("Urc40FutureGet: invalid address!");
-      return;
-    }
-
-    int pageSize = Integer.parseInt(parameters[index++]);
-    int pageIndex = Integer.parseInt(parameters[index++]);
-
-    var result = WalletApi.urc40FutureGet(address, pageSize, pageIndex);
-    if (result == null) {
-      System.out.println("Urc40FutureGet failed !!!");
-    } else {
-      System.out.println(Utils.formatMessageString(result));
-    }
-  }
-
-  private void urc40contractlist(String[] parameters) throws IOException, CipherException, CancelException{
+  private void urc40FutureGet(String[] parameters) throws IOException, CipherException, CancelException{
     if (parameters == null || parameters.length != 4) {
-      System.out.println(
-              "Using Urc40ContractList needs 4 parameters, like Urc40ContractList address symbol pageSize(-1 if not set) pageIndex(-1 if not set)");
+      System.out.println("Using urc40FutureGet needs 3 parameters, like: ownerAddress contractAddress pageSize(-1 if not set) pageIndex(-1 if not set)");
       return;
     }
 
     int index = 0;
 
+    byte[] ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (ownerAddress == null) {
+      System.out.println("urc40FutureGet: invalid ownerAddress!");
+      return;
+    }
+
     byte[] address = WalletApi.decodeFromBase58Check(parameters[index++]);
     if (address == null) {
-      System.out.println("Urc40ContractList: invalid address!");
+      System.out.println("urc40FutureGet: invalid address!");
       return;
     }
 
-    String symbol = parameters[index++];
     int pageSize = Integer.parseInt(parameters[index++]);
     int pageIndex = Integer.parseInt(parameters[index++]);
-    var result = WalletApi.urc40ContractList(address, symbol, pageIndex, pageSize);
+
+    var result = WalletApi.urc40FutureGet(ownerAddress, address, pageSize, pageIndex);
     if (result == null) {
-      System.out.println("Urc40ContractList failed !!!");
+      System.out.println("urc40FutureGet failed !!!");
     } else {
       System.out.println(Utils.formatMessageString(result));
     }
   }
 
-  private void urc40name(String[] parameters) throws IOException, CipherException, CancelException{
-    if (parameters == null || parameters.length != 1) {
-      System.out.println(
-              "Using Urc40Name needs 1 parameters, like Urc40Name address");
+  private void urc40ContractList(String[] parameters) throws IOException, CipherException, CancelException{
+    if (parameters == null || parameters.length != 4) {
+      System.out.println("Using urc40ContractList needs 4 parameters, like: contractAddress(- if not set) symbol(- if not set) pageSize(-1 if not set) pageIndex(-1 if not set)");
       return;
     }
 
-    byte[] address = WalletApi.decodeFromBase58Check(parameters[0]);
-    if (address == null) {
-      System.out.println("Urc40Name: invalid address!");
-      return;
+    int index = 0;
+    String addrStr = parameters[index++];
+    Optional<byte[]> addrOpt;
+    if("-".equals(addrStr)){
+      addrOpt = Optional.empty();
+    }
+    else
+    {
+      byte[] address = WalletApi.decodeFromBase58Check(parameters[index++]);
+      if (address == null) {
+        System.out.println("urc40ContractList: invalid contractAddress!");
+        return;
+      }
+      addrOpt = Optional.of(address);
     }
 
-    var result = WalletApi.urc40Name(address);
+    Optional<String> symbolOpt;
+    String symbol = parameters[index++];
+    if("-".equals(symbol)){
+      symbolOpt = Optional.empty();
+    }
+    else
+    {
+      symbolOpt = Optional.of(symbol);
+    }
+
+    int pageSize = Integer.parseInt(parameters[index++]);
+    int pageIndex = Integer.parseInt(parameters[index++]);
+    var result = WalletApi.urc40ContractList(addrOpt, symbolOpt, pageIndex, pageSize);
     if (result == null) {
-      System.out.println("Urc40Name failed !!!");
+      System.out.println("urc40ContractList failed !!!");
     } else {
       System.out.println(Utils.formatMessageString(result));
     }
   }
 
-  private void urc40symbol(String[] parameters) throws IOException, CipherException, CancelException{
+  private void urc40Name(String[] parameters) throws IOException, CipherException, CancelException{
     if (parameters == null || parameters.length != 1) {
-      System.out.println(
-              "Using Urc40Symbol needs 1 parameters, like Urc40Symbol address");
+      System.out.println("Using urc40Name needs 1 parameters, like contractAddress");
+      return;
+    }
+
+    byte[] contractAddr = WalletApi.decodeFromBase58Check(parameters[0]);
+    if (contractAddr == null) {
+      System.out.println("urc40Name: invalid address!");
+      return;
+    }
+
+    var result = WalletApi.urc40Name(contractAddr);
+    if (result == null) {
+      System.out.println("urc40Name failed !!!");
+    } else {
+      System.out.println(Utils.formatMessageString(result));
+    }
+  }
+
+  private void urc40Symbol(String[] parameters) throws IOException, CipherException, CancelException{
+    if (parameters == null || parameters.length != 1) {
+      System.out.println("Using urc40Symbol needs 1 parameters: address");
       return;
     }
 
     byte[] address = WalletApi.decodeFromBase58Check(parameters[0]);
     if (address == null) {
-      System.out.println("Urc40Symbol: invalid address!");
+      System.out.println("urc40Symbol: invalid address!");
       return;
     }
 
     var result = WalletApi.urc40Symbol(address);
     if (result == null) {
-      System.out.println("Urc40Symbol failed !!!");
+      System.out.println("urc40Symbol failed !!!");
     } else {
       System.out.println(Utils.formatMessageString(result));
     }
   }
 
-  private void urc40decimals(String[] parameters) throws IOException, CipherException, CancelException{
+  private void urc40Decimals(String[] parameters) throws IOException, CipherException, CancelException{
     if (parameters == null || parameters.length != 1) {
-      System.out.println(
-              "Using Urc40Decimals needs 1 parameters, like Urc40Decimals address");
+      System.out.println("Using urc40Decimals needs 1 parameters, like Urc40Decimals address");
       return;
     }
 
     byte[] address = WalletApi.decodeFromBase58Check(parameters[0]);
     if (address == null) {
-      System.out.println("Urc40Decimals: invalid address!");
+      System.out.println("urc40Decimals: invalid address!");
       return;
     }
 
     var result = WalletApi.urc40Decimals(address);
     if (result == null) {
-      System.out.println("Urc40Decimals failed !!!");
+      System.out.println("urc40Decimals failed !!!");
     } else {
       System.out.println(Utils.formatMessageString(result));
     }
   }
 
-  private void urc40totalsupply(String[] parameters)throws IOException, CipherException, CancelException {
+  private void urc40TotalSupply(String[] parameters)throws IOException, CipherException, CancelException {
     if (parameters == null || parameters.length != 1) {
-      System.out.println(
-              "Using Urc40TotalSupply needs 1 parameters, like Urc40TotalSupply address");
+      System.out.println("Using urc40TotalSupply needs 1 parameters, like Urc40TotalSupply address");
       return;
     }
 
     byte[] address = WalletApi.decodeFromBase58Check(parameters[0]);
     if (address == null) {
-      System.out.println("Urc40TotalSupply: invalid address!");
+      System.out.println("urc40TotalSupply: invalid address!");
       return;
     }
 
     var result = WalletApi.urc40TotalSupply(address);
     if (result == null) {
-      System.out.println("Urc40TotalSupply failed !!!");
+      System.out.println("urc40TotalSupply failed !!!");
     } else {
       System.out.println(Utils.formatMessageString(result));
     }
   }
 
-  private void urc40balanceof(String[] parameters) throws IOException, CipherException, CancelException{
-    if (parameters == null || parameters.length != 1) {
-      System.out.println(
-              "Using Urc40BalanceOf needs 1 parameters, like Urc40BalanceOf address");
+  private void urc40BalanceOf(String[] parameters) throws IOException, CipherException, CancelException{
+    if (parameters == null || parameters.length != 2) {
+      System.out.println("Using urc40BalanceOf needs 1 parameters, like ownerAddress contractAddress");
       return;
     }
 
-    byte[] address = WalletApi.decodeFromBase58Check(parameters[0]);
-    if (address == null) {
-      System.out.println("Urc40BalanceOf: invalid address!");
+    byte[] ownerAddr = WalletApi.decodeFromBase58Check(parameters[0]);
+    if (ownerAddr == null) {
+      System.out.println("urc40BalanceOf: invalid ownerAddress!");
       return;
     }
 
-    var result = WalletApi.urc40BalanceOf(address);
+    byte[] contractAddr = WalletApi.decodeFromBase58Check(parameters[0]);
+    if (contractAddr == null) {
+      System.out.println("urc40BalanceOf: invalid address!");
+      return;
+    }
+
+    var result = WalletApi.urc40BalanceOf(ownerAddr, contractAddr);
     if (result == null) {
-      System.out.println("Urc40BalanceOf failed !!!");
+      System.out.println("urc40BalanceOf failed !!!");
     } else {
       System.out.println(Utils.formatMessageString(result));
     }
   }
 
-  private void urc40getowner(String[] parameters) throws IOException, CipherException, CancelException {
+  private void urc40GetOwner(String[] parameters) throws IOException, CipherException, CancelException {
     if (parameters == null || parameters.length != 1) {
-      System.out.println(
-          "Using Urc40GetOwner needs 1 parameters, like Urc40GetOwner address");
+      System.out.println("Using urc40GetOwner needs 1 parameters, like contractAddress");
       return;
     }
 
-    byte[] address = WalletApi.decodeFromBase58Check(parameters[0]);
-    if (address == null) {
-      System.out.println("Urc40GetOwner: invalid address!");
+    byte[] contractAddr = WalletApi.decodeFromBase58Check(parameters[0]);
+    if (contractAddr == null) {
+      System.out.println("urc40GetOwner: invalid contractAddress!");
       return;
     }
 
-    var result = WalletApi.urc40GetOwner(address);
+    var result = WalletApi.urc40GetOwner(contractAddr);
     if (result == null) {
-      System.out.println("Urc40GetOwner failed !!!");
+      System.out.println("urc40GetOwner failed !!!");
     } else {
       System.out.println(Utils.formatMessageString(result));
     }
   }
 
-  private void urc40allowance(String[] parameters) throws IOException, CipherException, CancelException{
+  private void urc40Allowance(String[] parameters) throws IOException, CipherException, CancelException{
     if (parameters == null || parameters.length != 3) {
-      System.out.println("Urc40Allowance needs 3 parameters like following: ");
-      System.out.println("Urc40Allowance owner address spender");
+      System.out.println("urc40Allowance needs 3 parameters like following: ");
+      System.out.println("urc40Allowance ownerAddress contractAddress spenderAddress");
       return;
     }
 
@@ -4008,26 +4029,30 @@ public class Client {
       return;
     }
 
-    byte[] address = WalletApi.decodeFromBase58Check(parameters[index++]);
-    if (address == null) {
-      System.out.println("Urc40Allowance: invalid address!");
+    byte[] contractAddr = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (contractAddr == null) {
+      System.out.println("urc40Allowance: invalid contractAddress!");
       return;
     }
 
-    String spender = parameters[index++];
+    byte[] spenderAddr = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (spenderAddr == null) {
+      System.out.println("urc40Allowance: invalid spenderAddress!");
+      return;
+    }
 
-    var result = WalletApi.urc40Allowance(ownerAddress, address, spender);
+    var result = WalletApi.urc40Allowance(ownerAddress, contractAddr, spenderAddr);
     if (result == null) {
-      System.out.println("Urc40Allowance failed !!!");
+      System.out.println("urc40Allowance failed !!!");
     } else {
       System.out.println(Utils.formatMessageString(result));
     }
   }
 
-  private void urc40approve(String[] parameters) throws IOException, CipherException, CancelException{
+  private void urc40Approve(String[] parameters) throws IOException, CipherException, CancelException{
     if (parameters == null || (parameters.length != 3 && parameters.length != 4)) {
-      System.out.println("Use Urc40Approve command with below syntax: ");
-      System.out.println("Urc40Approve [OwnerAddress] address spender amount");
+      System.out.println("Use urc40Approve command with below syntax: ");
+      System.out.println("urc40Approve [ownerAddress] contractAddress spenderAddress amount");
       return;
     }
 
@@ -4041,26 +4066,30 @@ public class Client {
       }
     }
 
-    byte[] address = WalletApi.decodeFromBase58Check(parameters[index++]);
-    if (address == null) {
-      System.out.println("Urc40Approve: invalid address!");
+    byte[] contractAddr = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (contractAddr == null) {
+      System.out.println("urc40Approve: invalid contractAddress!");
       return;
     }
 
-    String spender = parameters[index++];
+    byte[] spenderAddr = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (spenderAddr == null) {
+      System.out.println("urc40Approve: invalid spenderAddress!");
+      return;
+    }
     long amount = Long.parseLong(parameters[index]);
-    boolean result = walletApiWrapper.urc40Approve(ownerAddress, address, spender, amount);
+    boolean result = walletApiWrapper.urc40Approve(ownerAddress, contractAddr, spenderAddr, amount);
     if (result) {
-      System.out.println("Urc40Approve successful !!!");
+      System.out.println("urc40Approve successful !!!");
     } else {
-      System.out.println("Urc40Approve failed !!!");
+      System.out.println("urc40Approve failed !!!");
     }
   }
 
-  private void urc40exchange(String[] parameters) throws IOException, CipherException, CancelException{
+  private void urc40Exchange(String[] parameters) throws IOException, CipherException, CancelException{
     if (parameters == null || (parameters.length != 2 && parameters.length != 3)) {
-      System.out.println("Use Urc40Exchange command with below syntax: ");
-      System.out.println("Urc40Exchange [OwnerAddress] address amount");
+      System.out.println("Use urc40Exchange command with below syntax: ");
+      System.out.println("urc40Exchange [OwnerAddress] contractAddress amount");
       return;
     }
 
@@ -4074,25 +4103,25 @@ public class Client {
       }
     }
 
-    byte[] address = WalletApi.decodeFromBase58Check(parameters[index++]);
-    if (address == null) {
-      System.out.println("Urc40Exchange: invalid address!");
+    byte[] contractAddr = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (contractAddr == null) {
+      System.out.println("urc40Exchange: invalid address!");
       return;
     }
 
     long amount = Long.parseLong(parameters[index]);
-    boolean result = walletApiWrapper.urc40Exchange(ownerAddress, address, amount);
+    boolean result = walletApiWrapper.urc40Exchange(ownerAddress, contractAddr, amount);
     if (result) {
-      System.out.println("Urc40Exchange successful !!!");
+      System.out.println("urc40Exchange successful !!!");
     } else {
-      System.out.println("Urc40Exchange failed !!!");
+      System.out.println("urc40Exchange failed !!!");
     }
   }
 
-  private void urc40transferowner(String[] parameters) throws IOException, CipherException, CancelException{
+  private void urc40TransferOwner(String[] parameters) throws IOException, CipherException, CancelException{
     if (parameters == null || (parameters.length != 2 && parameters.length != 3)) {
-      System.out.println("Use Urc40TransferOwner command with below syntax: ");
-      System.out.println("Urc40TransferOwner [OwnerAddress] toAddress address");
+      System.out.println("Use urc40TransferOwner command with below syntax: ");
+      System.out.println("urc40TransferOwner [OwnerAddress] toAddress contractAddress");
       return;
     }
 
@@ -4108,29 +4137,28 @@ public class Client {
 
     byte[] toAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
     if (toAddress == null) {
-      System.out.println("Urc40TransferOwner: invalid toAddress!");
+      System.out.println("urc40TransferOwner: invalid toAddress!");
       return;
     }
 
-    byte[] address = WalletApi.decodeFromBase58Check(parameters[index]);
-    if (address == null) {
-      System.out.println("Urc40TransferOwner: invalid address!");
+    byte[] contractAddr = WalletApi.decodeFromBase58Check(parameters[index]);
+    if (contractAddr == null) {
+      System.out.println("urc40TransferOwner: invalid contractAddress!");
       return;
     }
 
-    boolean result = walletApiWrapper.urc40TransferOwner(ownerAddress, toAddress, address);
+    boolean result = walletApiWrapper.urc40TransferOwner(ownerAddress, toAddress, contractAddr);
     if (result) {
-      System.out.println("Urc40TransferOwner successful !!!");
+      System.out.println("urc40TransferOwner successful !!!");
     } else {
-      System.out.println("Urc40TransferOwner failed !!!");
+      System.out.println("urc40TransferOwner failed !!!");
     }
-
   }
 
-  private void urc40withdrawfuture(String[] parameters) throws IOException, CipherException, CancelException{
+  private void urc40WithdrawFuture(String[] parameters) throws IOException, CipherException, CancelException{
     if (parameters == null || (parameters.length != 1 && parameters.length != 2)) {
-      System.out.println("Use Urc40WithdrawFuture command with below syntax: ");
-      System.out.println("Urc40WithdrawFuture [OwnerAddress] address");
+      System.out.println("Use urc40WithdrawFuture command with below syntax: ");
+      System.out.println("urc40WithdrawFuture [OwnerAddress] contractAddress");
       return;
     }
 
@@ -4144,17 +4172,17 @@ public class Client {
       }
     }
 
-    byte[] address = WalletApi.decodeFromBase58Check(parameters[index]);
-    if (address == null) {
-      System.out.println("Urc40WithdrawFuture: invalid address!");
+    byte[] contractAddr = WalletApi.decodeFromBase58Check(parameters[index]);
+    if (contractAddr == null) {
+      System.out.println("urc40WithdrawFuture: invalid address!");
       return;
     }
 
-    boolean result = walletApiWrapper.urc40WithdrawFuture(ownerAddress, address);
+    boolean result = walletApiWrapper.urc40WithdrawFuture(ownerAddress, contractAddr);
     if (result) {
-      System.out.println("Urc40WithdrawFuture successful !!!");
+      System.out.println("urc40WithdrawFuture successful !!!");
     } else {
-      System.out.println("Urc40WithdrawFuture failed !!!");
+      System.out.println("urc40WithdrawFuture failed !!!");
     }
   }
 
@@ -4198,12 +4226,14 @@ public class Client {
     long availableTime;
     String availableTimeStr = parameters[index];
     if("-".equals(availableTimeStr))
+    {
       availableTime = 0;
+    }
     else {
       Date availableDate = Utils.strToDateLong(availableTimeStr);
       if (availableDate == null) {
         System.out.println("The available_time format should look like 2018-03-01 OR 2018-03-01 00:01:02");
-        System.out.println("transferToken " + contractAddress + " failed !!");
+        System.out.println("urc40TransferFrom " + contractAddress + " failed !!");
         return;
       }
       availableTime = availableDate.getTime();
@@ -4220,8 +4250,8 @@ public class Client {
 
   private void urc40Transfer(String[] parameters) throws IOException, CipherException, CancelException{
     if (parameters == null || (parameters.length != 4 && parameters.length != 5)) {
-      System.out.println("Urc40Transfer needs 5 parameters like following: ");
-      System.out.println("Urc40Transfer [ownerAddress] address to amount available_time(- for default now or 2021-01-01 or 2021-01-01 01:00:01)");
+      System.out.println("urc40Transfer needs 5 parameters like following: ");
+      System.out.println("urc40Transfer [ownerAddress] contractAddress toAddress amount available_time(- for default now or 2021-01-01 or 2021-01-01 01:00:01)");
       return;
     }
 
@@ -4257,18 +4287,18 @@ public class Client {
       Date availableDate = Utils.strToDateLong(availableTimeStr);
       if (availableDate == null) {
         System.out.println("The available_time format should look like 2018-03-01 OR 2018-03-01 00:01:02");
-        System.out.println("Urc40Transfer " + contractAddress + " failed !!");
+        System.out.println("urc40Transfer " + contractAddress + " failed !!");
         return;
       }
       availableTime = availableDate.getTime();
     }
 
-    boolean result = walletApiWrapper.urc40Transfer(ownerAddress, contractAddress, toAddress, amount, availableTime);
+    var result = walletApiWrapper.urc40Transfer(ownerAddress, contractAddress, toAddress, amount, availableTime);
     String walletOwnerAddress = walletApiWrapper.getAddress();
     if (result) {
-      System.out.println("Urc40Transfer of " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " successful !!");
+      System.out.println("urc40Transfer of " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " successful !!");
     } else {
-      System.out.println("Urc40Transfer " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " failed !!");
+      System.out.println("urc40Transfer of " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " failed !!");
     }
   }
 
@@ -4300,17 +4330,16 @@ public class Client {
     boolean result = walletApiWrapper.burnUrc40(ownerAddress, contractAddress, amount);
     String walletOwnerAddress = walletApiWrapper.getAddress();
     if (result) {
-      System.out.println("burnToken of " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " successful !!");
+      System.out.println("urc40Burn of " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " successful !!");
     } else {
-      System.out.println("burnToken " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " failed !!");
+      System.out.println("urc40Burn " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " failed !!");
     }
   }
-
 
   private void urc40Mint(String[] parameters) throws IOException, CipherException, CancelException{
     if (parameters == null || (parameters.length != 2 && parameters.length != 3)) {
       System.out.println("urc40Mint needs 2 parameters like following: ");
-      System.out.println("urc40Mint [ownerAddress] contract_address amount");
+      System.out.println("urc40Mint [ownerAddress] contractAddress amount");
       return;
     }
 
@@ -4324,8 +4353,7 @@ public class Client {
       }
     }
 
-    byte[] contractAddress = null;
-    contractAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+    byte[] contractAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
     if (contractAddress == null) {
       System.out.println("Invalid contractAddress.");
       return;
@@ -4493,6 +4521,7 @@ public class Client {
     }
   }
 
+  //PoSBridge
   private void posBridgeWithdrawExec(String[] parameters) throws Exception{
     if (parameters == null || (parameters.length != 2 && parameters.length != 3)) {
       System.out.println("posBridgeWithdrawExec needs 2 parameters like following: ");

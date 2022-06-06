@@ -1119,12 +1119,14 @@ public class GrpcClient {
     return Optional.ofNullable(blockList);
   }
 
-  public Urc40FutureTokenPack urc40FutureGet(byte[] address, int pageSize, int pageIndex) {
-    var builder = Urc40FutureTokenQuery
-            .newBuilder()
+  public Urc40FutureTokenPack urc40FutureGet(byte[] ownerAddr, byte[] address, int pageSize, int pageIndex) {
+    var builder = Urc40FutureTokenQuery.newBuilder()
+            .setOwnerAddress(ByteString.copyFrom(ownerAddr))
             .setAddress(ByteString.copyFrom(address));
-    if (pageSize != -1) builder.setPageSize(pageSize);
-    if (pageIndex != -1) builder.setPageIndex(pageIndex);
+    if (pageSize != -1)
+      builder.setPageSize(pageSize);
+    if (pageIndex != -1)
+      builder.setPageIndex(pageIndex);
 
     if (blockingStubSolidity != null) {
       return blockingStubSolidity.urc40FutureGet(builder.build());
@@ -1133,10 +1135,10 @@ public class GrpcClient {
     }
   }
 
-  public StringMessage urc40Name(byte[] address) {
+  public StringMessage urc40Name(byte[] contractAddr) {
     var request = AddressMessage
             .newBuilder()
-            .setAddress(ByteString.copyFrom(address))
+            .setAddress(ByteString.copyFrom(contractAddr))
             .build();
 
     if (blockingStubSolidity != null) {
@@ -1185,10 +1187,11 @@ public class GrpcClient {
     }
   }
 
-  public NumberMessage urc40BalanceOf(byte[] address) {
+  public NumberMessage urc40BalanceOf(byte[] ownerAddr, byte[] contractAddr) {
     var request = Urc40BalanceOfQuery
             .newBuilder()
-            .setAddress(ByteString.copyFrom(address))
+            .setOwnerAddress(ByteString.copyFrom(ownerAddr))
+            .setAddress(ByteString.copyFrom(contractAddr))
             .build();
 
     if (blockingStubSolidity != null) {
@@ -1198,10 +1201,10 @@ public class GrpcClient {
     }
   }
 
-  public AddressMessage urc40GetOwner(byte[] address) {
+  public AddressMessage urc40GetOwner(byte[] contractAddr) {
     var request = AddressMessage
             .newBuilder()
-            .setAddress(ByteString.copyFrom(address))
+            .setAddress(ByteString.copyFrom(contractAddr))
             .build();
 
     if (blockingStubSolidity != null) {
@@ -1211,12 +1214,12 @@ public class GrpcClient {
     }
   }
 
-  public NumberMessage urc40Allowance(byte[] owner, byte[] address, String spender) {
+  public NumberMessage urc40Allowance(byte[] owner, byte[] address, byte[] spender) {
     var request = Urc40AllowanceQuery
         .newBuilder()
         .setOwner(ByteString.copyFrom(owner))
         .setAddress(ByteString.copyFrom(address))
-        .setSpender(ByteString.copyFromUtf8(spender))
+        .setSpender(ByteString.copyFrom(spender))
         .build();
 
     if (blockingStubSolidity != null) {
@@ -1226,10 +1229,18 @@ public class GrpcClient {
     }
   }
 
-  public Contract.Urc40ContractPage urc40ContractList(byte[] address, String symbol, int pageIndex, int pageSize) {
-    var builder = Urc40ContractQuery.newBuilder()
-            .setAddress(ByteString.copyFrom(address))
-            .setSymbol(symbol);
+  public Contract.Urc40ContractPage urc40ContractList(Optional<byte[]> address, Optional<String> symbol, int pageIndex, int pageSize) {
+    var builder = Urc40ContractQuery.newBuilder();
+    if(address.isPresent())
+      builder.setAddress(ByteString.copyFrom(address.get()));
+    else
+      builder.clearAddress();
+
+    if(symbol.isPresent())
+      builder.setSymbol(symbol.get());
+    else
+      builder.clearSymbol();
+
     if (pageIndex != -1) builder.setPageIndex(pageIndex);
     if (pageSize != -1) builder.setPageSize(pageSize);
 

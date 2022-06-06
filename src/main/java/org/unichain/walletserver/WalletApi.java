@@ -874,8 +874,7 @@ public class WalletApi {
     return processTransaction(transaction);
   }
 
-  public boolean urc40Approve(byte[] ownerAddress, byte[] address, String spender, long amount)
-      throws CipherException, IOException, CancelException {
+  public boolean urc40Approve(byte[] ownerAddress, byte[] address, byte[] spender, long amount) throws CipherException, IOException, CancelException {
     if (ownerAddress == null) {
       ownerAddress = getAddress();
     }
@@ -907,27 +906,26 @@ public class WalletApi {
     return processTransaction(transaction);
   }
 
-  public boolean urc40WithdrawFuture(byte[] ownerAddress, byte[] address)
-      throws CipherException, IOException, CancelException {
+  public boolean urc40WithdrawFuture(byte[] ownerAddress, byte[] contractAddr) throws CipherException, IOException, CancelException {
     if (ownerAddress == null) {
       ownerAddress = getAddress();
     }
 
-    var contract = createUrc40TransferOwner(ownerAddress, address);
+    var contract = createUrc40TransferOwner(ownerAddress, contractAddr);
     Transaction transaction = rpcCli.createTransaction(contract);
     return processTransaction(transaction);
   }
 
-  public static Urc40FutureTokenPack urc40FutureGet(byte[] address, int pageSize, int pageIndex) throws CipherException, IOException, CancelException {
-    return rpcCli.urc40FutureGet(address, pageSize, pageIndex);
+  public static Urc40FutureTokenPack urc40FutureGet(byte[] ownerAddress, byte[] address, int pageSize, int pageIndex) throws CipherException, IOException, CancelException {
+    return rpcCli.urc40FutureGet(ownerAddress, address, pageSize, pageIndex);
   }
 
-  public static Urc40ContractPage urc40ContractList(byte[] address, String symbol, int pageIndex, int pageSize) {
+  public static Urc40ContractPage urc40ContractList(Optional<byte[]> address, Optional<String> symbol, int pageIndex, int pageSize) {
     return rpcCli.urc40ContractList(address, symbol, pageIndex, pageSize);
   }
 
-  public static StringMessage urc40Name(byte[] address) {
-    return rpcCli.urc40Name(address);
+  public static StringMessage urc40Name(byte[] contractAddr) {
+    return rpcCli.urc40Name(contractAddr);
   }
 
   public static StringMessage urc40Symbol(byte[] address) {
@@ -942,15 +940,15 @@ public class WalletApi {
     return rpcCli.urc40TotalSupply(address);
   }
 
-  public static NumberMessage urc40BalanceOf(byte[] address) {
-    return rpcCli.urc40BalanceOf(address);
+  public static NumberMessage urc40BalanceOf(byte[] ownerAddr, byte[] contractAddr) {
+    return rpcCli.urc40BalanceOf(ownerAddr, contractAddr);
   }
 
-  public static AddressMessage urc40GetOwner(byte[] address) {
-    return rpcCli.urc40GetOwner(address);
+  public static AddressMessage urc40GetOwner(byte[] contractAddr) {
+    return rpcCli.urc40GetOwner(contractAddr);
   }
 
-  public static NumberMessage urc40Allowance(byte[] owner, byte[] address, String spender) {
+  public static NumberMessage urc40Allowance(byte[] owner, byte[] address, byte[] spender) {
     return rpcCli.urc40Allowance(owner, address, spender);
   }
 
@@ -1585,13 +1583,12 @@ public class WalletApi {
             .build();
   }
 
-  public static Contract.Urc40ApproveContract createUrc40ApproveContract(byte[] ownerAddress,
-      byte[] address, String spender, long amount) {
+  public static Contract.Urc40ApproveContract createUrc40ApproveContract(byte[] ownerAddress, byte[] address, byte[] spender, long amount) {
     return Contract.Urc40ApproveContract
         .newBuilder()
         .setOwnerAddress(ByteString.copyFrom(ownerAddress))
         .setAddress(ByteString.copyFrom(address))
-        .setSpender(ByteString.copyFromUtf8(spender))
+        .setSpender(ByteString.copyFrom(spender))
         .setAmount(amount)
         .build();
   }
@@ -1616,11 +1613,11 @@ public class WalletApi {
         .build();
   }
 
-  public static Contract.Urc40WithdrawFutureContract createUrc40TransferOwner(byte[] ownerAddress, byte[] address) {
+  public static Contract.Urc40WithdrawFutureContract createUrc40TransferOwner(byte[] ownerAddress, byte[] contractAddr) {
     return Contract.Urc40WithdrawFutureContract
         .newBuilder()
         .setOwnerAddress(ByteString.copyFrom(ownerAddress))
-        .setAddress(ByteString.copyFrom(address))
+        .setAddress(ByteString.copyFrom(contractAddr))
         .build();
   }
 
