@@ -3970,7 +3970,7 @@ public class Client {
 
   private void urc20BalanceOf(String[] parameters) throws IOException, CipherException, CancelException{
     if (parameters == null || parameters.length != 2) {
-      System.out.println("Using urc20BalanceOf needs 1 parameters, like ownerAddress contractAddress");
+      System.out.println("Using urc20BalanceOf needs 2 parameters, like ownerAddress contractAddress");
       return;
     }
 
