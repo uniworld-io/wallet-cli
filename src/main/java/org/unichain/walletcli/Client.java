@@ -4391,7 +4391,7 @@ public class Client {
   }
 
   private void urc20UpdateParams(String[] parameters) throws IOException, CipherException, CancelException{
-      if (parameters == null || (parameters.length != 11 && parameters.length != 12)) {
+      if (parameters == null || (parameters.length != 10 && parameters.length != 11)) {
         System.out.println("urc20UpdateParams needs 11 parameters like following: ");
         System.out.println("urc20UpdateParams [ownerAddress] contract_addr total_supply[-1 if not set] fee_pool[-1 if not set] fee[-1 if not set] extra_fee_rate[-1 if not set] lot[-1 if not set]  url[- if not set] exch_unw_num[-1 if not set] exch_token_num[-1 if not set] create_acc_fee[-1 if not set]");
         return;
@@ -4399,7 +4399,7 @@ public class Client {
 
       int index = 0;
       byte[] ownerAddress = null;
-      if (parameters.length == 12) {
+      if (parameters.length == 11) {
         ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
         if (ownerAddress == null) {
           System.out.println("Invalid OwnerAddress.");
