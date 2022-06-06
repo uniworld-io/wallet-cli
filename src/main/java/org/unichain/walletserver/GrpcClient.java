@@ -442,32 +442,32 @@ public class GrpcClient {
     return blockingStubFull.createToken(contract);
   }
 
-  public Transaction createTransaction(Contract.Urc40CreateContract contract) {
-    return blockingStubFull.urc40ContractCreate(contract);
+  public Transaction createTransaction(Contract.Uc20CreateContract contract) {
+    return blockingStubFull.uc20ContractCreate(contract);
   }
 
   public Transaction createTransaction(Contract.ContributeTokenPoolFeeContract contract) {
     return blockingStubFull.contributeTokenFee(contract);
   }
 
-  public Transaction createTransaction(Contract.Urc40ContributePoolFeeContract contract) {
-    return blockingStubFull.urc40ContributePoolFee(contract);
+  public Transaction createTransaction(Contract.Uc20ContributePoolFeeContract contract) {
+    return blockingStubFull.uc20ContributePoolFee(contract);
   }
 
   public Transaction createTransaction(Contract.UpdateTokenParamsContract contract) {
     return blockingStubFull.updateTokenParams(contract);
   }
 
-  public Transaction createTransaction(Contract.Urc40UpdateParamsContract contract) {
-    return blockingStubFull.urc40UpdateParams(contract);
+  public Transaction createTransaction(Contract.Uc20UpdateParamsContract contract) {
+    return blockingStubFull.uc20UpdateParams(contract);
   }
 
   public Transaction createTransaction(Contract.MineTokenContract contract) {
     return blockingStubFull.mineToken(contract);
   }
 
-  public Transaction createTransaction(Contract.Urc40MintContract contract) {
-    return blockingStubFull.urc40Mint(contract);
+  public Transaction createTransaction(Contract.Uc20MintContract contract) {
+    return blockingStubFull.uc20Mint(contract);
   }
 
 
@@ -475,8 +475,8 @@ public class GrpcClient {
     return blockingStubFull.burnToken(contract);
   }
 
-  public Transaction createTransaction(Contract.Urc40BurnContract contract) {
-    return blockingStubFull.urc40Burn(contract);
+  public Transaction createTransaction(Contract.Uc20BurnContract contract) {
+    return blockingStubFull.uc20Burn(contract);
   }
 
 
@@ -484,28 +484,28 @@ public class GrpcClient {
     return blockingStubFull.transferToken(contract);
   }
 
-  public Transaction createTransaction(Contract.Urc40TransferFromContract contract) {
-    return blockingStubFull.urc40TransferFrom(contract);
+  public Transaction createTransaction(Contract.Uc20TransferFromContract contract) {
+    return blockingStubFull.uc20TransferFrom(contract);
   }
 
-  public Transaction createTransaction(Contract.Urc40TransferContract contract) {
-    return blockingStubFull.urc40Transfer(contract);
+  public Transaction createTransaction(Contract.Uc20TransferContract contract) {
+    return blockingStubFull.uc20Transfer(contract);
   }
 
-  public Transaction createTransaction(Contract.Urc40ApproveContract contract) {
-    return blockingStubFull.urc40Approve(contract);
+  public Transaction createTransaction(Contract.Uc20ApproveContract contract) {
+    return blockingStubFull.uc20Approve(contract);
   }
 
-  public Transaction createTransaction(Contract.Urc40ExchangeContract contract) {
-    return blockingStubFull.urc40Exchange(contract);
+  public Transaction createTransaction(Contract.Uc20ExchangeContract contract) {
+    return blockingStubFull.uc20Exchange(contract);
   }
 
-  public Transaction createTransaction(Contract.Urc40TransferOwnerContract contract) {
-    return blockingStubFull.urc40TransferOwner(contract);
+  public Transaction createTransaction(Contract.Uc20TransferOwnerContract contract) {
+    return blockingStubFull.uc20TransferOwner(contract);
   }
 
-  public Transaction createTransaction(Contract.Urc40WithdrawFutureContract contract) {
-    return blockingStubFull.urc40WithdrawFuture(contract);
+  public Transaction createTransaction(Contract.Uc20WithdrawFutureContract contract) {
+    return blockingStubFull.uc20WithdrawFuture(contract);
   }
 
   public Transaction createTransaction(Contract.WithdrawFutureTokenContract contract) {
@@ -1119,8 +1119,8 @@ public class GrpcClient {
     return Optional.ofNullable(blockList);
   }
 
-  public Urc40FutureTokenPack urc40FutureGet(byte[] ownerAddr, byte[] address, int pageSize, int pageIndex) {
-    var builder = Urc40FutureTokenQuery.newBuilder()
+  public Uc20FutureTokenPack uc20FutureGet(byte[] ownerAddr, byte[] address, int pageSize, int pageIndex) {
+    var builder = Uc20FutureTokenQuery.newBuilder()
             .setOwnerAddress(ByteString.copyFrom(ownerAddr))
             .setAddress(ByteString.copyFrom(address));
     if (pageSize != -1)
@@ -1129,93 +1129,93 @@ public class GrpcClient {
       builder.setPageIndex(pageIndex);
 
     if (blockingStubSolidity != null) {
-      return blockingStubSolidity.urc40FutureGet(builder.build());
+      return blockingStubSolidity.uc20FutureGet(builder.build());
     } else {
-      return blockingStubFull.urc40FutureGet(builder.build());
+      return blockingStubFull.uc20FutureGet(builder.build());
     }
   }
 
-  public StringMessage urc40Name(byte[] contractAddr) {
+  public StringMessage uc20Name(byte[] contractAddr) {
     var request = AddressMessage
             .newBuilder()
             .setAddress(ByteString.copyFrom(contractAddr))
             .build();
 
     if (blockingStubSolidity != null) {
-      return blockingStubSolidity.urc40Name(request);
+      return blockingStubSolidity.uc20Name(request);
     } else {
-      return blockingStubFull.urc40Name(request);
+      return blockingStubFull.uc20Name(request);
     }
   }
 
-  public StringMessage urc40Symbol(byte[] address) {
+  public StringMessage uc20Symbol(byte[] address) {
     var request = AddressMessage
             .newBuilder()
             .setAddress(ByteString.copyFrom(address))
             .build();
 
     if (blockingStubSolidity != null) {
-      return blockingStubSolidity.urc40Symbol(request);
+      return blockingStubSolidity.uc20Symbol(request);
     } else {
-      return blockingStubFull.urc40Symbol(request);
+      return blockingStubFull.uc20Symbol(request);
     }
   }
 
-  public NumberMessage urc40Decimals(byte[] address) {
+  public NumberMessage uc20Decimals(byte[] address) {
     var request = AddressMessage
             .newBuilder()
             .setAddress(ByteString.copyFrom(address))
             .build();
 
     if (blockingStubSolidity != null) {
-      return blockingStubSolidity.urc40Decimals(request);
+      return blockingStubSolidity.uc20Decimals(request);
     } else {
-      return blockingStubFull.urc40Decimals(request);
+      return blockingStubFull.uc20Decimals(request);
     }
   }
 
-  public NumberMessage urc40TotalSupply(byte[] address) {
+  public NumberMessage uc20TotalSupply(byte[] address) {
     var request = AddressMessage
             .newBuilder()
             .setAddress(ByteString.copyFrom(address))
             .build();
 
     if (blockingStubSolidity != null) {
-      return blockingStubSolidity.urc40TotalSupply(request);
+      return blockingStubSolidity.uc20TotalSupply(request);
     } else {
-      return blockingStubFull.urc40TotalSupply(request);
+      return blockingStubFull.uc20TotalSupply(request);
     }
   }
 
-  public NumberMessage urc40BalanceOf(byte[] ownerAddr, byte[] contractAddr) {
-    var request = Urc40BalanceOfQuery
+  public NumberMessage uc20BalanceOf(byte[] ownerAddr, byte[] contractAddr) {
+    var request = Uc20BalanceOfQuery
             .newBuilder()
             .setOwnerAddress(ByteString.copyFrom(ownerAddr))
             .setAddress(ByteString.copyFrom(contractAddr))
             .build();
 
     if (blockingStubSolidity != null) {
-      return blockingStubSolidity.urc40BalanceOf(request);
+      return blockingStubSolidity.uc20BalanceOf(request);
     } else {
-      return blockingStubFull.urc40BalanceOf(request);
+      return blockingStubFull.uc20BalanceOf(request);
     }
   }
 
-  public AddressMessage urc40GetOwner(byte[] contractAddr) {
+  public AddressMessage uc20GetOwner(byte[] contractAddr) {
     var request = AddressMessage
             .newBuilder()
             .setAddress(ByteString.copyFrom(contractAddr))
             .build();
 
     if (blockingStubSolidity != null) {
-      return blockingStubSolidity.urc40GetOwner(request);
+      return blockingStubSolidity.uc20GetOwner(request);
     } else {
-      return blockingStubFull.urc40GetOwner(request);
+      return blockingStubFull.uc20GetOwner(request);
     }
   }
 
-  public NumberMessage urc40Allowance(byte[] owner, byte[] address, byte[] spender) {
-    var request = Urc40AllowanceQuery
+  public NumberMessage uc20Allowance(byte[] owner, byte[] address, byte[] spender) {
+    var request = Uc20AllowanceQuery
         .newBuilder()
         .setOwner(ByteString.copyFrom(owner))
         .setAddress(ByteString.copyFrom(address))
@@ -1223,14 +1223,14 @@ public class GrpcClient {
         .build();
 
     if (blockingStubSolidity != null) {
-      return blockingStubSolidity.urc40Allowance(request);
+      return blockingStubSolidity.uc20Allowance(request);
     } else {
-      return blockingStubFull.urc40Allowance(request);
+      return blockingStubFull.uc20Allowance(request);
     }
   }
 
-  public Contract.Urc40ContractPage urc40ContractList(Optional<byte[]> address, Optional<String> symbol, int pageIndex, int pageSize) {
-    var builder = Urc40ContractQuery.newBuilder();
+  public Contract.Uc20ContractPage uc20ContractList(Optional<byte[]> address, Optional<String> symbol, int pageIndex, int pageSize) {
+    var builder = Uc20ContractQuery.newBuilder();
     if(address.isPresent())
       builder.setAddress(ByteString.copyFrom(address.get()));
     else
@@ -1245,9 +1245,9 @@ public class GrpcClient {
     if (pageSize != -1) builder.setPageSize(pageSize);
 
     if (blockingStubSolidity != null) {
-      return blockingStubSolidity.urc40ContractList(builder.build());
+      return blockingStubSolidity.uc20ContractList(builder.build());
     } else {
-      return blockingStubFull.urc40ContractList(builder.build());
+      return blockingStubFull.uc20ContractList(builder.build());
     }
   }
 

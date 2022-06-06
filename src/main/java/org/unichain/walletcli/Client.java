@@ -135,28 +135,28 @@ public class Client {
           "ListTokenPool",
           "GetTokenFuture",
 
-          //urc40
-          "Urc40CreateContract",
-          "Urc40ContributePoolFee",
-          "Urc40UpdateParams",
-          "Urc40Mint",
-          "Urc40Burn",
-          "Urc40TransferFrom",
-          "Urc40Transfer",
-          "Urc40WithdrawFuture",
-          "Urc40TransferOwner",
-          "Urc40Exchange",
-          "Urc40Approve",
+          //uc20
+          "Uc20CreateContract",
+          "Uc20ContributePoolFee",
+          "Uc20UpdateParams",
+          "Uc20Mint",
+          "Uc20Burn",
+          "Uc20TransferFrom",
+          "Uc20Transfer",
+          "Uc20WithdrawFuture",
+          "Uc20TransferOwner",
+          "Uc20Exchange",
+          "Uc20Approve",
 
-          "Urc40Allowance",
-          "Urc40GetOwner",
-          "Urc40BalanceOf",
-          "Urc40TotalSupply",
-          "Urc40Decimals",
-          "Urc40Symbol",
-          "Urc40Name",
-          "Urc40ContractList",
-          "Urc40FutureGet",
+          "Uc20Allowance",
+          "Uc20GetOwner",
+          "Uc20BalanceOf",
+          "Uc20TotalSupply",
+          "Uc20Decimals",
+          "Uc20Symbol",
+          "Uc20Name",
+          "Uc20ContractList",
+          "Uc20FutureGet",
 
           "SendShieldedCoin",
           "SendShieldedCoinWithoutAsk",
@@ -303,28 +303,28 @@ public class Client {
           "ListTokenPool",
           "GetTokenFuture",
 
-          //urc40
-          "Urc40CreateContract",
-          "Urc40ContributePoolFee",
-          "Urc40UpdateParams",
-          "Urc40Mint",
-          "Urc40Burn",
-          "Urc40TransferFrom",
-          "Urc40Transfer",
-          "Urc40WithdrawFuture",
-          "Urc40TransferOwner",
-          "Urc40Exchange",
-          "Urc40Approve",
+          //uc20
+          "Uc20CreateContract",
+          "Uc20ContributePoolFee",
+          "Uc20UpdateParams",
+          "Uc20Mint",
+          "Uc20Burn",
+          "Uc20TransferFrom",
+          "Uc20Transfer",
+          "Uc20WithdrawFuture",
+          "Uc20TransferOwner",
+          "Uc20Exchange",
+          "Uc20Approve",
 
-          "Urc40Allowance",
-          "Urc40GetOwner",
-          "Urc40BalanceOf",
-          "Urc40TotalSupply",
-          "Urc40Decimals",
-          "Urc40Symbol",
-          "Urc40Name",
-          "Urc40ContractList",
-          "Urc40FutureGet",
+          "Uc20Allowance",
+          "Uc20GetOwner",
+          "Uc20BalanceOf",
+          "Uc20TotalSupply",
+          "Uc20Decimals",
+          "Uc20Symbol",
+          "Uc20Name",
+          "Uc20ContractList",
+          "Uc20FutureGet",
 
           "SendShieldedCoin",
           "SendShieldedCoinWithoutAsk",
@@ -3418,86 +3418,86 @@ public class Client {
             }
 
             /**
-             * urc40
+             * uc20
              */
-            case "urc40createcontract": {
-              urc40CreateContract(parameters);
+            case "uc20createcontract": {
+              uc20CreateContract(parameters);
               break;
             }
-            case "urc40contributepoolfee": {
-              urc40ContributePoolFee(parameters);
+            case "uc20contributepoolfee": {
+              uc20ContributePoolFee(parameters);
               break;
             }
-            case "urc40updateparams": {
-              urc40UpdateParams(parameters);
+            case "uc20updateparams": {
+              uc20UpdateParams(parameters);
               break;
             }
-            case "urc40mint": {
-              urc40Mint(parameters);
+            case "uc20mint": {
+              uc20Mint(parameters);
               break;
             }
-            case "urc40burn": {
-              urc40Burn(parameters);
+            case "uc20burn": {
+              uc20Burn(parameters);
               break;
             }
-            case "urc40transferfrom": {
-              urc40TransferFrom(parameters);
+            case "uc20transferfrom": {
+              uc20TransferFrom(parameters);
               break;
             }
-            case "urc40transfer": {
-              urc40Transfer(parameters);
+            case "uc20transfer": {
+              uc20Transfer(parameters);
               break;
             }
-            case "urc40withdrawfuture": {
-              urc40WithdrawFuture(parameters);
+            case "uc20withdrawfuture": {
+              uc20WithdrawFuture(parameters);
               break;
             }
-            case "urc40transferowner": {
-              urc40TransferOwner(parameters);
+            case "uc20transferowner": {
+              uc20TransferOwner(parameters);
               break;
             }
-            case "urc40exchange": {
-              urc40Exchange(parameters);
+            case "uc20exchange": {
+              uc20Exchange(parameters);
               break;
             }
-            case "urc40approve": {
-              urc40Approve(parameters);
+            case "uc20approve": {
+              uc20Approve(parameters);
               break;
             }
-            case "urc40allowance": {
-              urc40Allowance(parameters);
+            case "uc20allowance": {
+              uc20Allowance(parameters);
               break;
             }
-            case "urc40getowner": {
-              urc40GetOwner(parameters);
+            case "uc20getowner": {
+              uc20GetOwner(parameters);
               break;
             }
-            case "urc40balanceof": {
-              urc40BalanceOf(parameters);
+            case "uc20balanceof": {
+              uc20BalanceOf(parameters);
               break;
             }
-            case "urc40totalsupply": {
-              urc40TotalSupply(parameters);
+            case "uc20totalsupply": {
+              uc20TotalSupply(parameters);
               break;
             }
-            case "urc40decimals": {
-              urc40Decimals(parameters);
+            case "uc20decimals": {
+              uc20Decimals(parameters);
               break;
             }
-            case "urc40symbol": {
-              urc40Symbol(parameters);
+            case "uc20symbol": {
+              uc20Symbol(parameters);
               break;
             }
-            case "urc40name": {
-              urc40Name(parameters);
+            case "uc20name": {
+              uc20Name(parameters);
               break;
             }
-            case "urc40contractlist": {
-              urc40ContractList(parameters);
+            case "uc20contractlist": {
+              uc20ContractList(parameters);
               break;
             }
-            case "urc40futureget": {
-              urc40FutureGet(parameters);
+            case "uc20futureget": {
+              uc20FutureGet(parameters);
               break;
             }
 
@@ -3815,9 +3815,9 @@ public class Client {
     }
   }
 
-  private void urc40FutureGet(String[] parameters) throws IOException, CipherException, CancelException{
+  private void uc20FutureGet(String[] parameters) throws IOException, CipherException, CancelException{
     if (parameters == null || parameters.length != 4) {
-      System.out.println("Using urc40FutureGet needs 3 parameters, like: ownerAddress contractAddress pageSize(-1 if not set) pageIndex(-1 if not set)");
+      System.out.println("Using uc20FutureGet needs 3 parameters, like: ownerAddress contractAddress pageSize(-1 if not set) pageIndex(-1 if not set)");
       return;
     }
 
@@ -3825,30 +3825,30 @@ public class Client {
 
     byte[] ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
     if (ownerAddress == null) {
-      System.out.println("urc40FutureGet: invalid ownerAddress!");
+      System.out.println("uc20FutureGet: invalid ownerAddress!");
       return;
     }
 
     byte[] address = WalletApi.decodeFromBase58Check(parameters[index++]);
     if (address == null) {
-      System.out.println("urc40FutureGet: invalid address!");
+      System.out.println("uc20FutureGet: invalid address!");
       return;
     }
 
     int pageSize = Integer.parseInt(parameters[index++]);
     int pageIndex = Integer.parseInt(parameters[index++]);
 
-    var result = WalletApi.urc40FutureGet(ownerAddress, address, pageSize, pageIndex);
+    var result = WalletApi.uc20FutureGet(ownerAddress, address, pageSize, pageIndex);
     if (result == null) {
-      System.out.println("urc40FutureGet failed !!!");
+      System.out.println("uc20FutureGet failed !!!");
     } else {
       System.out.println(Utils.formatMessageString(result));
     }
   }
 
-  private void urc40ContractList(String[] parameters) throws IOException, CipherException, CancelException{
+  private void uc20ContractList(String[] parameters) throws IOException, CipherException, CancelException{
     if (parameters == null || parameters.length != 4) {
-      System.out.println("Using urc40ContractList needs 4 parameters, like: contractAddress(- if not set) symbol(- if not set) pageSize(-1 if not set) pageIndex(-1 if not set)");
+      System.out.println("Using uc20ContractList needs 4 parameters, like: contractAddress(- if not set) symbol(- if not set) pageSize(-1 if not set) pageIndex(-1 if not set)");
       return;
     }
 
@@ -3862,7 +3862,7 @@ public class Client {
     {
       byte[] address = WalletApi.decodeFromBase58Check(parameters[index++]);
       if (address == null) {
-        System.out.println("urc40ContractList: invalid contractAddress!");
+        System.out.println("uc20ContractList: invalid contractAddress!");
         return;
       }
       addrOpt = Optional.of(address);
@@ -3880,144 +3880,144 @@ public class Client {
 
     int pageSize = Integer.parseInt(parameters[index++]);
     int pageIndex = Integer.parseInt(parameters[index++]);
-    var result = WalletApi.urc40ContractList(addrOpt, symbolOpt, pageIndex, pageSize);
+    var result = WalletApi.uc20ContractList(addrOpt, symbolOpt, pageIndex, pageSize);
     if (result == null) {
-      System.out.println("urc40ContractList failed !!!");
+      System.out.println("uc20ContractList failed !!!");
     } else {
       System.out.println(Utils.formatMessageString(result));
     }
   }
 
-  private void urc40Name(String[] parameters) throws IOException, CipherException, CancelException{
+  private void uc20Name(String[] parameters) throws IOException, CipherException, CancelException{
     if (parameters == null || parameters.length != 1) {
-      System.out.println("Using urc40Name needs 1 parameters, like contractAddress");
+      System.out.println("Using uc20Name needs 1 parameters, like contractAddress");
       return;
     }
 
     byte[] contractAddr = WalletApi.decodeFromBase58Check(parameters[0]);
     if (contractAddr == null) {
-      System.out.println("urc40Name: invalid address!");
+      System.out.println("uc20Name: invalid address!");
       return;
     }
 
-    var result = WalletApi.urc40Name(contractAddr);
+    var result = WalletApi.uc20Name(contractAddr);
     if (result == null) {
-      System.out.println("urc40Name failed !!!");
+      System.out.println("uc20Name failed !!!");
     } else {
       System.out.println(Utils.formatMessageString(result));
     }
   }
 
-  private void urc40Symbol(String[] parameters) throws IOException, CipherException, CancelException{
+  private void uc20Symbol(String[] parameters) throws IOException, CipherException, CancelException{
     if (parameters == null || parameters.length != 1) {
-      System.out.println("Using urc40Symbol needs 1 parameters: address");
+      System.out.println("Using uc20Symbol needs 1 parameters: address");
       return;
     }
 
     byte[] address = WalletApi.decodeFromBase58Check(parameters[0]);
     if (address == null) {
-      System.out.println("urc40Symbol: invalid address!");
+      System.out.println("uc20Symbol: invalid address!");
       return;
     }
 
-    var result = WalletApi.urc40Symbol(address);
+    var result = WalletApi.uc20Symbol(address);
     if (result == null) {
-      System.out.println("urc40Symbol failed !!!");
+      System.out.println("uc20Symbol failed !!!");
     } else {
       System.out.println(Utils.formatMessageString(result));
     }
   }
 
-  private void urc40Decimals(String[] parameters) throws IOException, CipherException, CancelException{
+  private void uc20Decimals(String[] parameters) throws IOException, CipherException, CancelException{
     if (parameters == null || parameters.length != 1) {
-      System.out.println("Using urc40Decimals needs 1 parameters, like Urc40Decimals address");
+      System.out.println("Using uc20Decimals needs 1 parameters, like Uc20Decimals address");
       return;
     }
 
     byte[] address = WalletApi.decodeFromBase58Check(parameters[0]);
     if (address == null) {
-      System.out.println("urc40Decimals: invalid address!");
+      System.out.println("uc20Decimals: invalid address!");
       return;
     }
 
-    var result = WalletApi.urc40Decimals(address);
+    var result = WalletApi.uc20Decimals(address);
     if (result == null) {
-      System.out.println("urc40Decimals failed !!!");
+      System.out.println("uc20Decimals failed !!!");
     } else {
       System.out.println(Utils.formatMessageString(result));
     }
   }
 
-  private void urc40TotalSupply(String[] parameters)throws IOException, CipherException, CancelException {
+  private void uc20TotalSupply(String[] parameters)throws IOException, CipherException, CancelException {
     if (parameters == null || parameters.length != 1) {
-      System.out.println("Using urc40TotalSupply needs 1 parameters, like Urc40TotalSupply address");
+      System.out.println("Using uc20TotalSupply needs 1 parameters, like Uc20TotalSupply address");
       return;
     }
 
     byte[] address = WalletApi.decodeFromBase58Check(parameters[0]);
     if (address == null) {
-      System.out.println("urc40TotalSupply: invalid address!");
+      System.out.println("uc20TotalSupply: invalid address!");
       return;
     }
 
-    var result = WalletApi.urc40TotalSupply(address);
+    var result = WalletApi.uc20TotalSupply(address);
     if (result == null) {
-      System.out.println("urc40TotalSupply failed !!!");
+      System.out.println("uc20TotalSupply failed !!!");
     } else {
       System.out.println(Utils.formatMessageString(result));
     }
   }
 
-  private void urc40BalanceOf(String[] parameters) throws IOException, CipherException, CancelException{
+  private void uc20BalanceOf(String[] parameters) throws IOException, CipherException, CancelException{
     if (parameters == null || parameters.length != 2) {
-      System.out.println("Using urc40BalanceOf needs 1 parameters, like ownerAddress contractAddress");
+      System.out.println("Using uc20BalanceOf needs 1 parameters, like ownerAddress contractAddress");
       return;
     }
 
     byte[] ownerAddr = WalletApi.decodeFromBase58Check(parameters[0]);
     if (ownerAddr == null) {
-      System.out.println("urc40BalanceOf: invalid ownerAddress!");
+      System.out.println("uc20BalanceOf: invalid ownerAddress!");
       return;
     }
 
     byte[] contractAddr = WalletApi.decodeFromBase58Check(parameters[0]);
     if (contractAddr == null) {
-      System.out.println("urc40BalanceOf: invalid address!");
+      System.out.println("uc20BalanceOf: invalid address!");
       return;
     }
 
-    var result = WalletApi.urc40BalanceOf(ownerAddr, contractAddr);
+    var result = WalletApi.uc20BalanceOf(ownerAddr, contractAddr);
     if (result == null) {
-      System.out.println("urc40BalanceOf failed !!!");
+      System.out.println("uc20BalanceOf failed !!!");
     } else {
       System.out.println(Utils.formatMessageString(result));
     }
   }
 
-  private void urc40GetOwner(String[] parameters) throws IOException, CipherException, CancelException {
+  private void uc20GetOwner(String[] parameters) throws IOException, CipherException, CancelException {
     if (parameters == null || parameters.length != 1) {
-      System.out.println("Using urc40GetOwner needs 1 parameters, like contractAddress");
+      System.out.println("Using uc20GetOwner needs 1 parameters, like contractAddress");
       return;
     }
 
     byte[] contractAddr = WalletApi.decodeFromBase58Check(parameters[0]);
     if (contractAddr == null) {
-      System.out.println("urc40GetOwner: invalid contractAddress!");
+      System.out.println("uc20GetOwner: invalid contractAddress!");
       return;
     }
 
-    var result = WalletApi.urc40GetOwner(contractAddr);
+    var result = WalletApi.uc20GetOwner(contractAddr);
     if (result == null) {
-      System.out.println("urc40GetOwner failed !!!");
+      System.out.println("uc20GetOwner failed !!!");
     } else {
       System.out.println(Utils.formatMessageString(result));
     }
   }
 
-  private void urc40Allowance(String[] parameters) throws IOException, CipherException, CancelException{
+  private void uc20Allowance(String[] parameters) throws IOException, CipherException, CancelException{
     if (parameters == null || parameters.length != 3) {
-      System.out.println("urc40Allowance needs 3 parameters like following: ");
-      System.out.println("urc40Allowance ownerAddress contractAddress spenderAddress");
+      System.out.println("uc20Allowance needs 3 parameters like following: ");
+      System.out.println("uc20Allowance ownerAddress contractAddress spenderAddress");
       return;
     }
 
@@ -4031,28 +4031,28 @@ public class Client {
 
     byte[] contractAddr = WalletApi.decodeFromBase58Check(parameters[index++]);
     if (contractAddr == null) {
-      System.out.println("urc40Allowance: invalid contractAddress!");
+      System.out.println("uc20Allowance: invalid contractAddress!");
       return;
     }
 
     byte[] spenderAddr = WalletApi.decodeFromBase58Check(parameters[index++]);
     if (spenderAddr == null) {
-      System.out.println("urc40Allowance: invalid spenderAddress!");
+      System.out.println("uc20Allowance: invalid spenderAddress!");
       return;
     }
 
-    var result = WalletApi.urc40Allowance(ownerAddress, contractAddr, spenderAddr);
+    var result = WalletApi.uc20Allowance(ownerAddress, contractAddr, spenderAddr);
     if (result == null) {
-      System.out.println("urc40Allowance failed !!!");
+      System.out.println("uc20Allowance failed !!!");
     } else {
       System.out.println(Utils.formatMessageString(result));
     }
   }
 
-  private void urc40Approve(String[] parameters) throws IOException, CipherException, CancelException{
+  private void uc20Approve(String[] parameters) throws IOException, CipherException, CancelException{
     if (parameters == null || (parameters.length != 3 && parameters.length != 4)) {
-      System.out.println("Use urc40Approve command with below syntax: ");
-      System.out.println("urc40Approve [ownerAddress] contractAddress spenderAddress amount");
+      System.out.println("Use uc20Approve command with below syntax: ");
+      System.out.println("uc20Approve [ownerAddress] contractAddress spenderAddress amount");
       return;
     }
 
@@ -4068,28 +4068,28 @@ public class Client {
 
     byte[] contractAddr = WalletApi.decodeFromBase58Check(parameters[index++]);
     if (contractAddr == null) {
-      System.out.println("urc40Approve: invalid contractAddress!");
+      System.out.println("uc20Approve: invalid contractAddress!");
       return;
     }
 
     byte[] spenderAddr = WalletApi.decodeFromBase58Check(parameters[index++]);
     if (spenderAddr == null) {
-      System.out.println("urc40Approve: invalid spenderAddress!");
+      System.out.println("uc20Approve: invalid spenderAddress!");
       return;
     }
     long amount = Long.parseLong(parameters[index]);
-    boolean result = walletApiWrapper.urc40Approve(ownerAddress, contractAddr, spenderAddr, amount);
+    boolean result = walletApiWrapper.uc20Approve(ownerAddress, contractAddr, spenderAddr, amount);
     if (result) {
-      System.out.println("urc40Approve successful !!!");
+      System.out.println("uc20Approve successful !!!");
     } else {
-      System.out.println("urc40Approve failed !!!");
+      System.out.println("uc20Approve failed !!!");
     }
   }
 
-  private void urc40Exchange(String[] parameters) throws IOException, CipherException, CancelException{
+  private void uc20Exchange(String[] parameters) throws IOException, CipherException, CancelException{
     if (parameters == null || (parameters.length != 2 && parameters.length != 3)) {
-      System.out.println("Use urc40Exchange command with below syntax: ");
-      System.out.println("urc40Exchange [OwnerAddress] contractAddress amount");
+      System.out.println("Use uc20Exchange command with below syntax: ");
+      System.out.println("uc20Exchange [OwnerAddress] contractAddress amount");
       return;
     }
 
@@ -4105,23 +4105,23 @@ public class Client {
 
     byte[] contractAddr = WalletApi.decodeFromBase58Check(parameters[index++]);
     if (contractAddr == null) {
-      System.out.println("urc40Exchange: invalid address!");
+      System.out.println("uc20Exchange: invalid address!");
       return;
     }
 
     long amount = Long.parseLong(parameters[index]);
-    boolean result = walletApiWrapper.urc40Exchange(ownerAddress, contractAddr, amount);
+    boolean result = walletApiWrapper.uc20Exchange(ownerAddress, contractAddr, amount);
     if (result) {
-      System.out.println("urc40Exchange successful !!!");
+      System.out.println("uc20Exchange successful !!!");
     } else {
-      System.out.println("urc40Exchange failed !!!");
+      System.out.println("uc20Exchange failed !!!");
     }
   }
 
-  private void urc40TransferOwner(String[] parameters) throws IOException, CipherException, CancelException{
+  private void uc20TransferOwner(String[] parameters) throws IOException, CipherException, CancelException{
     if (parameters == null || (parameters.length != 2 && parameters.length != 3)) {
-      System.out.println("Use urc40TransferOwner command with below syntax: ");
-      System.out.println("urc40TransferOwner [OwnerAddress] toAddress contractAddress");
+      System.out.println("Use uc20TransferOwner command with below syntax: ");
+      System.out.println("uc20TransferOwner [OwnerAddress] toAddress contractAddress");
       return;
     }
 
@@ -4137,28 +4137,28 @@ public class Client {
 
     byte[] toAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
     if (toAddress == null) {
-      System.out.println("urc40TransferOwner: invalid toAddress!");
+      System.out.println("uc20TransferOwner: invalid toAddress!");
       return;
     }
 
     byte[] contractAddr = WalletApi.decodeFromBase58Check(parameters[index]);
     if (contractAddr == null) {
-      System.out.println("urc40TransferOwner: invalid contractAddress!");
+      System.out.println("uc20TransferOwner: invalid contractAddress!");
       return;
     }
 
-    boolean result = walletApiWrapper.urc40TransferOwner(ownerAddress, toAddress, contractAddr);
+    boolean result = walletApiWrapper.uc20TransferOwner(ownerAddress, toAddress, contractAddr);
     if (result) {
-      System.out.println("urc40TransferOwner successful !!!");
+      System.out.println("uc20TransferOwner successful !!!");
     } else {
-      System.out.println("urc40TransferOwner failed !!!");
+      System.out.println("uc20TransferOwner failed !!!");
     }
   }
 
-  private void urc40WithdrawFuture(String[] parameters) throws IOException, CipherException, CancelException{
+  private void uc20WithdrawFuture(String[] parameters) throws IOException, CipherException, CancelException{
     if (parameters == null || (parameters.length != 1 && parameters.length != 2)) {
-      System.out.println("Use urc40WithdrawFuture command with below syntax: ");
-      System.out.println("urc40WithdrawFuture [OwnerAddress] contractAddress");
+      System.out.println("Use uc20WithdrawFuture command with below syntax: ");
+      System.out.println("uc20WithdrawFuture [OwnerAddress] contractAddress");
       return;
     }
 
@@ -4174,22 +4174,22 @@ public class Client {
 
     byte[] contractAddr = WalletApi.decodeFromBase58Check(parameters[index]);
     if (contractAddr == null) {
-      System.out.println("urc40WithdrawFuture: invalid address!");
+      System.out.println("uc20WithdrawFuture: invalid address!");
       return;
     }
 
-    boolean result = walletApiWrapper.urc40WithdrawFuture(ownerAddress, contractAddr);
+    boolean result = walletApiWrapper.uc20WithdrawFuture(ownerAddress, contractAddr);
     if (result) {
-      System.out.println("urc40WithdrawFuture successful !!!");
+      System.out.println("uc20WithdrawFuture successful !!!");
     } else {
-      System.out.println("urc40WithdrawFuture failed !!!");
+      System.out.println("uc20WithdrawFuture failed !!!");
     }
   }
 
-  private void urc40TransferFrom(String[] parameters) throws IOException, CipherException, CancelException{
+  private void uc20TransferFrom(String[] parameters) throws IOException, CipherException, CancelException{
     if (parameters == null || (parameters.length != 5 && parameters.length != 6)) {
-      System.out.println("urc40TransferFrom needs 5 parameters like following: ");
-      System.out.println("urc40TransferFrom [OwnerAddress] fromAddress toAddress contractAddress amount available_time(- for default now or 2021-01-01 or 2021-01-01 01:00:01)");
+      System.out.println("uc20TransferFrom needs 5 parameters like following: ");
+      System.out.println("uc20TransferFrom [OwnerAddress] fromAddress toAddress contractAddress amount available_time(- for default now or 2021-01-01 or 2021-01-01 01:00:01)");
       return;
     }
 
@@ -4233,25 +4233,25 @@ public class Client {
       Date availableDate = Utils.strToDateLong(availableTimeStr);
       if (availableDate == null) {
         System.out.println("The available_time format should look like 2018-03-01 OR 2018-03-01 00:01:02");
-        System.out.println("urc40TransferFrom " + contractAddress + " failed !!");
+        System.out.println("uc20TransferFrom " + contractAddress + " failed !!");
         return;
       }
       availableTime = availableDate.getTime();
     }
 
-    boolean result = walletApiWrapper.urc40TransferFrom(ownerAddress, fromAddress, toAddress, contractAddress, amount, availableTime);
+    boolean result = walletApiWrapper.uc20TransferFrom(ownerAddress, fromAddress, toAddress, contractAddress, amount, availableTime);
     String walletOwnerAddress = walletApiWrapper.getAddress();
     if (result) {
-      System.out.println("urc40TransferFrom of " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " successful !!");
+      System.out.println("uc20TransferFrom of " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " successful !!");
     } else {
-      System.out.println("urc40TransferFrom " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " failed !!");
+      System.out.println("uc20TransferFrom " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " failed !!");
     }
   }
 
-  private void urc40Transfer(String[] parameters) throws IOException, CipherException, CancelException{
+  private void uc20Transfer(String[] parameters) throws IOException, CipherException, CancelException{
     if (parameters == null || (parameters.length != 4 && parameters.length != 5)) {
-      System.out.println("urc40Transfer needs 5 parameters like following: ");
-      System.out.println("urc40Transfer [ownerAddress] contractAddress toAddress amount available_time(- for default now or 2021-01-01 or 2021-01-01 01:00:01)");
+      System.out.println("uc20Transfer needs 5 parameters like following: ");
+      System.out.println("uc20Transfer [ownerAddress] contractAddress toAddress amount available_time(- for default now or 2021-01-01 or 2021-01-01 01:00:01)");
       return;
     }
 
@@ -4287,25 +4287,25 @@ public class Client {
       Date availableDate = Utils.strToDateLong(availableTimeStr);
       if (availableDate == null) {
         System.out.println("The available_time format should look like 2018-03-01 OR 2018-03-01 00:01:02");
-        System.out.println("urc40Transfer " + contractAddress + " failed !!");
+        System.out.println("uc20Transfer " + contractAddress + " failed !!");
         return;
       }
       availableTime = availableDate.getTime();
     }
 
-    var result = walletApiWrapper.urc40Transfer(ownerAddress, contractAddress, toAddress, amount, availableTime);
+    var result = walletApiWrapper.uc20Transfer(ownerAddress, contractAddress, toAddress, amount, availableTime);
     String walletOwnerAddress = walletApiWrapper.getAddress();
     if (result) {
-      System.out.println("urc40Transfer of " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " successful !!");
+      System.out.println("uc20Transfer of " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " successful !!");
     } else {
-      System.out.println("urc40Transfer of " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " failed !!");
+      System.out.println("uc20Transfer of " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " failed !!");
     }
   }
 
-  private void urc40Burn(String[] parameters) throws IOException, CipherException, CancelException{
+  private void uc20Burn(String[] parameters) throws IOException, CipherException, CancelException{
     if (parameters == null || (parameters.length != 2 && parameters.length != 3)) {
-      System.out.println("urc40Burn needs 2 parameters like following: ");
-      System.out.println("urc40Burn [ownerAddress] contractAddress amount");
+      System.out.println("uc20Burn needs 2 parameters like following: ");
+      System.out.println("uc20Burn [ownerAddress] contractAddress amount");
       return;
     }
 
@@ -4327,19 +4327,19 @@ public class Client {
 
     long amount = new Long(parameters[index++]);
 
-    boolean result = walletApiWrapper.burnUrc40(ownerAddress, contractAddress, amount);
+    boolean result = walletApiWrapper.burnUc20(ownerAddress, contractAddress, amount);
     String walletOwnerAddress = walletApiWrapper.getAddress();
     if (result) {
-      System.out.println("urc40Burn of " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " successful !!");
+      System.out.println("uc20Burn of " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " successful !!");
     } else {
-      System.out.println("urc40Burn " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " failed !!");
+      System.out.println("uc20Burn " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " failed !!");
     }
   }
 
-  private void urc40Mint(String[] parameters) throws IOException, CipherException, CancelException{
+  private void uc20Mint(String[] parameters) throws IOException, CipherException, CancelException{
     if (parameters == null || (parameters.length != 2 && parameters.length != 3)) {
-      System.out.println("urc40Mint needs 2 parameters like following: ");
-      System.out.println("urc40Mint [ownerAddress] contractAddress amount");
+      System.out.println("uc20Mint needs 2 parameters like following: ");
+      System.out.println("uc20Mint [ownerAddress] contractAddress amount");
       return;
     }
 
@@ -4361,19 +4361,19 @@ public class Client {
 
     long amount = new Long(parameters[index++]);
 
-    boolean result = walletApiWrapper.urc40Mint(ownerAddress, contractAddress, amount);
+    boolean result = walletApiWrapper.uc20Mint(ownerAddress, contractAddress, amount);
     String walletOwnerAddress = walletApiWrapper.getAddress();
     if (result) {
-      System.out.println("urc40Mint of " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " successful !!");
+      System.out.println("uc20Mint of " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " successful !!");
     } else {
-      System.out.println("urc40Mint " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " failed !!");
+      System.out.println("uc20Mint " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " failed !!");
     }
   }
 
-  private void urc40UpdateParams(String[] parameters) throws IOException, CipherException, CancelException{
+  private void uc20UpdateParams(String[] parameters) throws IOException, CipherException, CancelException{
       if (parameters == null || (parameters.length != 11 && parameters.length != 12)) {
-        System.out.println("urc40UpdateParams needs 11 parameters like following: ");
-        System.out.println("urc40UpdateParams [ownerAddress] contract_addr total_supply[-1 if not set] fee_pool[-1 if not set] fee[-1 if not set] extra_fee_rate[-1 if not set] lot[-1 if not set]  url[- if not set] exch_unw_num[-1 if not set] exch_token_num[-1 if not set] create_acc_fee[-1 if not set]");
+        System.out.println("uc20UpdateParams needs 11 parameters like following: ");
+        System.out.println("uc20UpdateParams [ownerAddress] contract_addr total_supply[-1 if not set] fee_pool[-1 if not set] fee[-1 if not set] extra_fee_rate[-1 if not set] lot[-1 if not set]  url[- if not set] exch_unw_num[-1 if not set] exch_token_num[-1 if not set] create_acc_fee[-1 if not set]");
         return;
       }
 
@@ -4403,19 +4403,19 @@ public class Client {
       long exchTokenNum = new Long(parameters[index++]);
       long createAccFee = new Long(parameters[index++]);
 
-      boolean result = walletApiWrapper.urc40UpdateTokenParams(ownerAddress, address, total_supply, fee_pool, fee, extraFeeRate, lot, url, exchUnwNum, exchTokenNum, createAccFee);
+      boolean result = walletApiWrapper.uc20UpdateTokenParams(ownerAddress, address, total_supply, fee_pool, fee, extraFeeRate, lot, url, exchUnwNum, exchTokenNum, createAccFee);
       String walletOwnerAddress = walletApiWrapper.getAddress();
       if (result) {
-        System.out.println("urc40UpdateParams of " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " successful !!");
+        System.out.println("uc20UpdateParams of " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " successful !!");
       } else {
-        System.out.println("urc40UpdateParams " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " failed !!");
+        System.out.println("uc20UpdateParams " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " failed !!");
       }
   }
 
-  private void urc40ContributePoolFee(String[] parameters) throws IOException, CipherException, CancelException{
+  private void uc20ContributePoolFee(String[] parameters) throws IOException, CipherException, CancelException{
         if (parameters == null || (parameters.length != 2 && parameters.length != 3)) {
-          System.out.println("urc40ContributePoolFee needs 2 parameters like following: ");
-          System.out.println("urc40ContributePoolFee [ownerAddress] contractAddress amount");
+          System.out.println("uc20ContributePoolFee needs 2 parameters like following: ");
+          System.out.println("uc20ContributePoolFee [ownerAddress] contractAddress amount");
           return;
         }
 
@@ -4438,19 +4438,19 @@ public class Client {
 
         long amount = new Long(parameters[index++]);
 
-        boolean result = walletApiWrapper.contributeUrc40FeePool(ownerAddress, contractAddress, amount);
+        boolean result = walletApiWrapper.contributeUc20FeePool(ownerAddress, contractAddress, amount);
         String walletOwnerAddress = walletApiWrapper.getAddress();
         if (result) {
-          System.out.println("urc40ContributePoolFee of " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " successful !!");
+          System.out.println("uc20ContributePoolFee of " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " successful !!");
         } else {
-          System.out.println("urc40ContributePoolFee " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " failed !!");
+          System.out.println("uc20ContributePoolFee " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " failed !!");
         }
   }
 
-  private void urc40CreateContract(String[] parameters) throws IOException, CipherException, CancelException {
+  private void uc20CreateContract(String[] parameters) throws IOException, CipherException, CancelException {
     if (parameters == null || (parameters.length != 16 && parameters.length != 17)) {
-      System.out.println("urc40CreateContract needs 15 parameters like following: ");
-      System.out.println("urc40CreateContract [OwnerAddress] symbol name decimals max_supply total_supply start_time(- if default) end_time(- if default)  url fee extra_fee_rate fee_pool lot enable_exch exch_unw_num exch_token_num create_acc_fee");
+      System.out.println("uc20CreateContract needs 15 parameters like following: ");
+      System.out.println("uc20CreateContract [OwnerAddress] symbol name decimals max_supply total_supply start_time(- if default) end_time(- if default)  url fee extra_fee_rate fee_pool lot enable_exch exch_unw_num exch_token_num create_acc_fee");
       return;
     }
 
@@ -4481,7 +4481,7 @@ public class Client {
       if(startDate == null)
       {
         System.out.println("The StartDate and EndDate format should look like (now OR yyyy-MM-dd HH:mm:ss OR yyyy-MM-dd");
-        System.out.println("urc40CreateContract " + symbol + " failed !!");
+        System.out.println("uc20CreateContract " + symbol + " failed !!");
         return;
       }
       else
@@ -4496,7 +4496,7 @@ public class Client {
       Date endDate = Utils.strToDateLong(endDateStr);
       if (endDate == null) {
         System.out.println("The StartDate and EndDate format should look like yyyy-MM-dd HH:mm:ss or yyyy-MM-dd");
-        System.out.println("urc40CreateContract " + symbol + " failed !!");
+        System.out.println("uc20CreateContract " + symbol + " failed !!");
         return;
       }
       else
@@ -4513,11 +4513,11 @@ public class Client {
     long exchTokenNum = new Long(parameters[index++]);
     long createAccFee = new Long(parameters[index++]);
 
-    boolean result = walletApiWrapper.createUrc40Contract(ownerAddress, symbol, name, decimals, maxSupply, totalSupply, startTime, endTime, url, fee, extra_fee_rate, poolFee , lot, enableExch, exchUnwNum, exchTokenNum, createAccFee);
+    boolean result = walletApiWrapper.createUc20Contract(ownerAddress, symbol, name, decimals, maxSupply, totalSupply, startTime, endTime, url, fee, extra_fee_rate, poolFee , lot, enableExch, exchUnwNum, exchTokenNum, createAccFee);
     if (result) {
-      System.out.println("urc40CreateContract with token name: " + symbol + ", abbr: " + name + ", max supply: " + maxSupply + ", total supply:" + totalSupply + " successful !!");
+      System.out.println("uc20CreateContract with token name: " + symbol + ", abbr: " + name + ", max supply: " + maxSupply + ", total supply:" + totalSupply + " successful !!");
     } else {
-      System.out.println("urc40CreateContract with token name: " + symbol + ", abbr: " + name + ", max supply: " + maxSupply + ", total supply:" + totalSupply + " failed !!");
+      System.out.println("uc20CreateContract with token name: " + symbol + ", abbr: " + name + ", max supply: " + maxSupply + ", total supply:" + totalSupply + " failed !!");
     }
   }
 

@@ -47,92 +47,92 @@ service Wallet {
   /**
   URC40
  */
-  rpc Urc40FutureGet (Urc40FutureTokenQuery) returns (Urc40FutureTokenPack) {
+  rpc Uc20FutureGet (Uc20FutureTokenQuery) returns (Uc20FutureTokenPack) {
     option (google.api.http) = {
-      post: "/wallet/urc40futureget"
+      post: "/wallet/uc20futureget"
       body: "*"
       additional_bindings {
-        get: "/wallet/urc40futureget"
+        get: "/wallet/uc20futureget"
       }
     };
   };
 
-  rpc Urc40ContractList (Urc40ContractQuery) returns (Urc40ContractPage) {
+  rpc Uc20ContractList (Uc20ContractQuery) returns (Uc20ContractPage) {
     option (google.api.http) = {
-      post: "/wallet/urc40contractlist"
+      post: "/wallet/uc20contractlist"
       body: "*"
       additional_bindings {
-        get: "/wallet/urc40contractlist"
+        get: "/wallet/uc20contractlist"
       }
     };
   };
 
-  rpc Urc40Name (AddressMessage) returns (StringMessage) {
+  rpc Uc20Name (AddressMessage) returns (StringMessage) {
     option (google.api.http) = {
-      post: "/wallet/urc40name"
+      post: "/wallet/uc20name"
       body: "*"
       additional_bindings {
-        get: "/wallet/urc40name"
+        get: "/wallet/uc20name"
       }
     };
   };
 
-  rpc Urc40Symbol (AddressMessage) returns (StringMessage) {
+  rpc Uc20Symbol (AddressMessage) returns (StringMessage) {
     option (google.api.http) = {
-      post: "/wallet/urc40symbol"
+      post: "/wallet/uc20symbol"
       body: "*"
       additional_bindings {
-        get: "/wallet/urc40symbol"
+        get: "/wallet/uc20symbol"
       }
     };
   };
 
-  rpc Urc40Decimals (AddressMessage) returns (NumberMessage) {
+  rpc Uc20Decimals (AddressMessage) returns (NumberMessage) {
     option (google.api.http) = {
-      post: "/wallet/urc40decimals"
+      post: "/wallet/uc20decimals"
       body: "*"
       additional_bindings {
-        get: "/wallet/urc40decimals"
+        get: "/wallet/uc20decimals"
       }
     };
   };
 
-  rpc Urc40TotalSupply (AddressMessage) returns (NumberMessage) {
+  rpc Uc20TotalSupply (AddressMessage) returns (NumberMessage) {
     option (google.api.http) = {
-      post: "/wallet/urc40totalsupply"
+      post: "/wallet/uc20totalsupply"
       body: "*"
       additional_bindings {
-        get: "/wallet/urc40totalsupply"
+        get: "/wallet/uc20totalsupply"
       }
     };
   };
 
-  rpc Urc40BalanceOf (Urc40BalanceOfQuery) returns (NumberMessage) {
+  rpc Uc20BalanceOf (Uc20BalanceOfQuery) returns (NumberMessage) {
     option (google.api.http) = {
-      post: "/wallet/urc40balanceof"
+      post: "/wallet/uc20balanceof"
       body: "*"
       additional_bindings {
-        get: "/wallet/urc40balanceof"
+        get: "/wallet/uc20balanceof"
       }
     };
   };
 
-  rpc Urc40GetOwner (AddressMessage) returns (AddressMessage) {
+  rpc Uc20GetOwner (AddressMessage) returns (AddressMessage) {
     option (google.api.http) = {
-      post: "/wallet/urc40getowner"
+      post: "/wallet/uc20getowner"
       body: "*"
       additional_bindings {
-        get: "/wallet/urc40getowner"
+        get: "/wallet/uc20getowner"
       }
     };
   };
 
-  rpc Urc40Allowance (Urc40AllowanceQuery) returns (NumberMessage) {
+  rpc Uc20Allowance (Uc20AllowanceQuery) returns (NumberMessage) {
     option (google.api.http) = {
-      post: "/wallet/urc40allowance"
+      post: "/wallet/uc20allowance"
       body: "*"
       additional_bindings {
-        get: "/wallet/urc40allowance"
+        get: "/wallet/uc20allowance"
       }
     };
   };
@@ -581,113 +581,113 @@ service Wallet {
   /**
     URC40
  */
-  rpc Urc40ContractCreate (Urc40CreateContract) returns (Transaction) {
+  rpc Uc20ContractCreate (Uc20CreateContract) returns (Transaction) {
     option (google.api.http) = {
-      post: "/wallet/urc40createcontract"
+      post: "/wallet/uc20createcontract"
       body: "*"
       additional_bindings {
-        get: "/wallet/urc40createcontract"
+        get: "/wallet/uc20createcontract"
       }
     };
   };
 
-  rpc Urc40ContributePoolFee (Urc40ContributePoolFeeContract) returns (Transaction) {
+  rpc Uc20ContributePoolFee (Uc20ContributePoolFeeContract) returns (Transaction) {
     option (google.api.http) = {
-      post: "/wallet/urc40contributepoolfee"
+      post: "/wallet/uc20contributepoolfee"
       body: "*"
       additional_bindings {
-        get: "/wallet/urc40contributepoolfee"
+        get: "/wallet/uc20contributepoolfee"
       }
     };
   };
 
-  rpc Urc40UpdateParams (Urc40UpdateParamsContract) returns (Transaction) {
+  rpc Uc20UpdateParams (Uc20UpdateParamsContract) returns (Transaction) {
     option (google.api.http) = {
-      post: "/wallet/urc40updateparams"
+      post: "/wallet/uc20updateparams"
       body: "*"
       additional_bindings {
-        get: "/wallet/urc40updateparams"
+        get: "/wallet/uc20updateparams"
       }
     };
   }
 
-  rpc Urc40Mint (Urc40MintContract) returns (Transaction) {
+  rpc Uc20Mint (Uc20MintContract) returns (Transaction) {
     option (google.api.http) = {
-      post: "/wallet/urc40mint"
+      post: "/wallet/uc20mint"
       body: "*"
       additional_bindings {
-        get: "/wallet/urc40mint"
+        get: "/wallet/uc20mint"
       }
     };
   }
 
-  rpc Urc40Burn (Urc40BurnContract) returns (Transaction) {
+  rpc Uc20Burn (Uc20BurnContract) returns (Transaction) {
     option (google.api.http) = {
-      post: "/wallet/urc40burn"
+      post: "/wallet/uc20burn"
       body: "*"
       additional_bindings {
-        get: "/wallet/urc40burn"
+        get: "/wallet/uc20burn"
       }
     };
   }
 
-  rpc Urc40WithdrawFuture (Urc40WithdrawFutureContract) returns (Transaction) {
+  rpc Uc20WithdrawFuture (Uc20WithdrawFutureContract) returns (Transaction) {
     option (google.api.http) = {
-      post: "/wallet/urc40withdrawfuture"
+      post: "/wallet/uc20withdrawfuture"
       body: "*"
       additional_bindings {
-        get: "/wallet/urc40withdrawfuture"
+        get: "/wallet/uc20withdrawfuture"
       }
     };
   }
 
-  rpc Urc40TransferOwner (Urc40TransferOwnerContract) returns (Transaction) {
+  rpc Uc20TransferOwner (Uc20TransferOwnerContract) returns (Transaction) {
     option (google.api.http) = {
-      post: "/wallet/urc40transferowner"
+      post: "/wallet/uc20transferowner"
       body: "*"
       additional_bindings {
-        get: "/wallet/urc40transferowner"
+        get: "/wallet/uc20transferowner"
       }
     };
   };
 
-  rpc Urc40Exchange (Urc40ExchangeContract) returns (Transaction) {
+  rpc Uc20Exchange (Uc20ExchangeContract) returns (Transaction) {
     option (google.api.http) = {
-      post: "/wallet/urc40exchange"
+      post: "/wallet/uc20exchange"
       body: "*"
       additional_bindings {
-        get: "/wallet/urc40exchange"
+        get: "/wallet/uc20exchange"
       }
     };
   };
 
 
-  rpc Urc40Approve (Urc40ApproveContract) returns (Transaction) {
+  rpc Uc20Approve (Uc20ApproveContract) returns (Transaction) {
     option (google.api.http) = {
-      post: "/wallet/urc40approve"
+      post: "/wallet/uc20approve"
       body: "*"
       additional_bindings {
-        get: "/wallet/urc40approve"
+        get: "/wallet/uc20approve"
       }
     };
   }
 
-  rpc Urc40TransferFrom (Urc40TransferFromContract) returns (Transaction) {
+  rpc Uc20TransferFrom (Uc20TransferFromContract) returns (Transaction) {
     option (google.api.http) = {
-      post: "/wallet/urc40transferfrom"
+      post: "/wallet/uc20transferfrom"
       body: "*"
       additional_bindings {
-        get: "/wallet/urc40transferfrom"
+        get: "/wallet/uc20transferfrom"
       }
     };
   }
 
-  rpc Urc40Transfer (Urc40TransferContract) returns (Transaction) {
+  rpc Uc20Transfer (Uc20TransferContract) returns (Transaction) {
     option (google.api.http) = {
-      post: "/wallet/urc40transfer"
+      post: "/wallet/uc20transfer"
       body: "*"
       additional_bindings {
-        get: "/wallet/urc40transfer"
+        get: "/wallet/uc20transfer"
       }
     };
   }
@@ -1356,94 +1356,94 @@ service WalletSolidity {
   };
 
   /**
-  Urc40
+  Uc20
  */
-  rpc Urc40FutureGet (Urc40FutureTokenQuery) returns (Urc40FutureTokenPack) {
+  rpc Uc20FutureGet (Uc20FutureTokenQuery) returns (Uc20FutureTokenPack) {
     option (google.api.http) = {
-      post: "/walletsolidity/urc40futureget"
+      post: "/walletsolidity/uc20futureget"
       body: "*"
       additional_bindings {
-        get: "/walletsolidity/urc40futureget"
+        get: "/walletsolidity/uc20futureget"
       }
     };
   };
 
-  rpc Urc40ContractList (Urc40ContractQuery) returns (Urc40ContractPage) {
+  rpc Uc20ContractList (Uc20ContractQuery) returns (Uc20ContractPage) {
     option (google.api.http) = {
-      post: "/walletsolidity/urc40contractlist"
+      post: "/walletsolidity/uc20contractlist"
       body: "*"
       additional_bindings {
-        get: "/walletsolidity/urc40contractlist"
+        get: "/walletsolidity/uc20contractlist"
       }
     };
   };
 
-  rpc Urc40Name (AddressMessage) returns (StringMessage) {
+  rpc Uc20Name (AddressMessage) returns (StringMessage) {
     option (google.api.http) = {
-      post: "/walletsolidity/urc40name"
+      post: "/walletsolidity/uc20name"
       body: "*"
       additional_bindings {
-        get: "/walletsolidity/urc40name"
+        get: "/walletsolidity/uc20name"
       }
     };
   };
 
-  rpc Urc40Symbol (AddressMessage) returns (StringMessage) {
+  rpc Uc20Symbol (AddressMessage) returns (StringMessage) {
     option (google.api.http) = {
-      post: "/walletsolidity/urc40symbol"
+      post: "/walletsolidity/uc20symbol"
       body: "*"
       additional_bindings {
-        get: "/walletsolidity/urc40symbol"
+        get: "/walletsolidity/uc20symbol"
       }
     };
   };
 
-  rpc Urc40Decimals (AddressMessage) returns (NumberMessage) {
+  rpc Uc20Decimals (AddressMessage) returns (NumberMessage) {
     option (google.api.http) = {
-      post: "/walletsolidity/urc40decimals"
+      post: "/walletsolidity/uc20decimals"
       body: "*"
       additional_bindings {
-        get: "/walletsolidity/urc40decimals"
+        get: "/walletsolidity/uc20decimals"
       }
     };
   };
 
-  rpc Urc40TotalSupply (AddressMessage) returns (NumberMessage) {
+  rpc Uc20TotalSupply (AddressMessage) returns (NumberMessage) {
     option (google.api.http) = {
-      post: "/walletsolidity/urc40totalsupply"
+      post: "/walletsolidity/uc20totalsupply"
       body: "*"
       additional_bindings {
-        get: "/walletsolidity/urc40totalsupply"
+        get: "/walletsolidity/uc20totalsupply"
       }
     };
   };
 
-  rpc Urc40BalanceOf (Urc40BalanceOfQuery) returns (NumberMessage) {
+  rpc Uc20BalanceOf (Uc20BalanceOfQuery) returns (NumberMessage) {
     option (google.api.http) = {
-      post: "/walletsolidity/urc40balanceof"
+      post: "/walletsolidity/uc20balanceof"
       body: "*"
       additional_bindings {
-        get: "/walletsolidity/urc40balanceof"
+        get: "/walletsolidity/uc20balanceof"
       }
     };
   };
 
-  rpc Urc40GetOwner (AddressMessage) returns (AddressMessage) {
+  rpc Uc20GetOwner (AddressMessage) returns (AddressMessage) {
     option (google.api.http) = {
-      post: "/walletsolidity/urc40getowner"
+      post: "/walletsolidity/uc20getowner"
       body: "*"
       additional_bindings {
-        get: "/walletsolidity/urc40getowner"
+        get: "/walletsolidity/uc20getowner"
       }
     };
   };
 
-  rpc Urc40Allowance (Urc40AllowanceQuery) returns (NumberMessage) {
+  rpc Uc20Allowance (Uc20AllowanceQuery) returns (NumberMessage) {
     option (google.api.http) = {
-      post: "/walletsolidity/urc40allowance"
+      post: "/walletsolidity/uc20allowance"
       body: "*"
       additional_bindings {
-        get: "/walletsolidity/urc40allowance"
+        get: "/walletsolidity/uc20allowance"
       }
     };
   };
