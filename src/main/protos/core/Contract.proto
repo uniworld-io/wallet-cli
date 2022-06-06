@@ -30,11 +30,11 @@ message TokenPage {
   repeated CreateTokenContract tokens = 4;
 }
 
-message Uc20ContractPage {
+message Urc20ContractPage {
   int64  page_size = 1;
   int64 page_index = 2;
   int64 total = 3;
-  repeated Uc20CreateContract contracts = 4;
+  repeated Urc20CreateContract contracts = 4;
 }
 
 message AccountCreateContract {
@@ -212,9 +212,9 @@ message WithdrawFutureTokenContract {
 }
 
 /**
-  uc20 token
+  urc20 token
  */
-message Uc20CreateContract {
+message Urc20CreateContract {
   bytes owner_address = 1;
   bytes address = 2;
   string symbol = 3;
@@ -239,7 +239,7 @@ message Uc20CreateContract {
   int64 create_acc_fee = 22;
 }
 
-message Uc20TransferFromContract {
+message Urc20TransferFromContract {
   bytes owner_address = 1;
   bytes from = 2;
   bytes to = 3;
@@ -248,7 +248,7 @@ message Uc20TransferFromContract {
   int64 available_time = 6;
 }
 
-message Uc20TransferContract {
+message Urc20TransferContract {
   bytes owner_address = 1;
   bytes address = 2;
   bytes to = 3;
@@ -256,44 +256,44 @@ message Uc20TransferContract {
   int64 available_time = 5;
 }
 
-message Uc20ApproveContract{
+message Urc20ApproveContract{
   bytes owner_address = 1;
   bytes address = 2;
   bytes spender = 3;
   int64 amount = 4;
 }
 
-message Uc20MintContract {
+message Urc20MintContract {
   bytes owner_address = 1;
   bytes address = 2;
   int64 amount = 3;
 }
 
-message Uc20BurnContract {
+message Urc20BurnContract {
   bytes owner_address = 1;
   bytes address = 2;
   int64 amount = 3;
 }
 
-message Uc20TransferOwnerContract {
+message Urc20TransferOwnerContract {
   bytes owner_address = 1;
   bytes to_address = 2;
   bytes address = 3;
 }
 
-message Uc20ExchangeContract {
+message Urc20ExchangeContract {
   bytes owner_address = 1;
   bytes address = 2;
   int64 amount = 3;
 }
 
-message Uc20ContributePoolFeeContract {
+message Urc20ContributePoolFeeContract {
   bytes owner_address = 1;
   bytes address = 2;
   int64 amount = 3;
 }
 
-message Uc20UpdateParamsContract {
+message Urc20UpdateParamsContract {
   bytes owner_address = 1;
   bytes address = 2;
   int64 fee = 3; //what is this ?
@@ -307,7 +307,7 @@ message Uc20UpdateParamsContract {
   int64 create_acc_fee = 11;
 }
 
-message Uc20WithdrawFutureContract {
+message Urc20WithdrawFutureContract {
   bytes owner_address = 1;
   bytes address = 2;
 }
