@@ -3860,12 +3860,15 @@ public class Client {
     }
     else
     {
-      byte[] address = WalletApi.decodeFromBase58Check(parameters[index++]);
+      byte[] address = WalletApi.decodeFromBase58Check(addrStr);
       if (address == null) {
         System.out.println("urc20ContractList: invalid contractAddress!");
         return;
       }
-      addrOpt = Optional.of(address);
+      else
+      {
+        addrOpt = Optional.of(address);
+      }
     }
 
     Optional<String> symbolOpt;
