@@ -818,11 +818,11 @@ public class WalletApi {
     return processTransaction(transaction);
   }
 
-  public boolean urc20Mint(byte[] owner, byte[] address, long amount) throws CipherException, IOException, CancelException {
+  public boolean urc20Mint(byte[] owner, byte[] address, Optional<byte[]> toAddrOpt, long amount) throws CipherException, IOException, CancelException {
     if (owner == null) {
       owner = getAddress();
     }
-    var contract = createUrc20Mint(owner, address, amount);
+    var contract = createUrc20Mint(owner, address, toAddrOpt, amount);
     Transaction transaction = rpcCli.createTransaction(contract);
     return processTransaction(transaction);
   }
@@ -1544,12 +1544,16 @@ public class WalletApi {
             .build();
   }
 
-  public static Contract.Urc20MintContract createUrc20Mint(byte[] owner, byte[] address, long amount) {
-    return Contract.Urc20MintContract.newBuilder()
+  public static Contract.Urc20MintContract createUrc20Mint(byte[] owner, byte[] address, Optional<byte[]> toAddrOpt,  long amount) {
+    var builder =  Contract.Urc20MintContract.newBuilder()
             .setOwnerAddress(ByteString.copyFrom(owner))
             .setAddress(ByteString.copyFrom(address))
-            .setAmount(amount)
-            .build();
+            .setAmount(amount);
+
+    if(toAddrOpt.isPresent())
+      builder.setToAddress(ByteString.copyFrom(toAddrOpt.get()));
+
+    return builder.build();
   }
 
   public static Contract.TransferTokenContract createTransferToken(byte[] owner, byte[] toAddress, String tokenName, long amount, long availableTime) {

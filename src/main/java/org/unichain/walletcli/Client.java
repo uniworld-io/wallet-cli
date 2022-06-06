@@ -4340,15 +4340,15 @@ public class Client {
   }
 
   private void urc20Mint(String[] parameters) throws IOException, CipherException, CancelException{
-    if (parameters == null || (parameters.length != 2 && parameters.length != 3)) {
-      System.out.println("urc20Mint needs 2 parameters like following: ");
-      System.out.println("urc20Mint [ownerAddress] contractAddress amount");
+    if (parameters == null || (parameters.length != 3 && parameters.length != 4)) {
+      System.out.println("urc20Mint needs 3 parameters like following: ");
+      System.out.println("urc20Mint [ownerAddress] contractAddress toAddress(- if mint to owner) amount");
       return;
     }
 
     int index = 0;
     byte[] ownerAddress = null;
-    if (parameters.length == 3) {
+    if (parameters.length == 4) {
       ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
       if (ownerAddress == null) {
         System.out.println("Invalid OwnerAddress.");
@@ -4362,9 +4362,26 @@ public class Client {
       return;
     }
 
+    String toAddrStr = parameters[index++];
+    Optional<byte[]> toAddrOpt;
+    if("-".equals(toAddrStr)){
+      toAddrOpt = Optional.empty();
+    }
+    else {
+      byte[] toAddress = WalletApi.decodeFromBase58Check(toAddrStr);
+      if (toAddress == null) {
+        System.out.println("Invalid toAddress.");
+        return;
+      }
+      else
+      {
+        toAddrOpt = Optional.of(toAddress);
+      }
+    }
+
     long amount = new Long(parameters[index++]);
 
-    boolean result = walletApiWrapper.urc20Mint(ownerAddress, contractAddress, amount);
+    boolean result = walletApiWrapper.urc20Mint(ownerAddress, contractAddress, toAddrOpt, amount);
     String walletOwnerAddress = walletApiWrapper.getAddress();
     if (result) {
       System.out.println("urc20Mint of " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " successful !!");

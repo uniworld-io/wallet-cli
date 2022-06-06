@@ -417,13 +417,13 @@ public class WalletApiWrapper {
     return wallet.mineToken(ownerAddress, tokenName, amount);
   }
 
-  public boolean urc20Mint(byte[] ownerAddress,  byte[] address, long amount) throws CipherException, IOException, CancelException {
+  public boolean urc20Mint(byte[] ownerAddress,  byte[] address, Optional<byte[]> toAddrOpt, long amount) throws CipherException, IOException, CancelException {
     if (wallet == null || !wallet.isLoginState()) {
       System.out.println("Warning: urc20Mint failed,  Please login first !!");
       return false;
     }
 
-    return wallet.urc20Mint(ownerAddress, address, amount);
+    return wallet.urc20Mint(ownerAddress, address, toAddrOpt, amount);
   }
 
   public boolean burnToken(byte[] ownerAddress, String tokenName, long amount) throws CipherException, IOException, CancelException {
