@@ -3279,7 +3279,7 @@ public class Client {
               break;
             }
 
-            case "urc721AddMinter": {
+            case "urc721addminter": {
               urc721AddMinter(parameters);
               break;
             }
