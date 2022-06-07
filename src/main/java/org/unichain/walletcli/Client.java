@@ -5083,16 +5083,20 @@ public class Client {
       }
     }
 
-    byte[] contractAddr = org.apache.commons.codec.binary.Hex.decodeHex(parameters[index++].toCharArray());
-    String toAddrStr = parameters[index++];
-    String uri = parameters[index++];
-    String tokenIdStr = parameters[index++];
-
-    byte[] toAddr = WalletApi.decodeFromBase58Check(toAddrStr);
-    if (toAddr == null) {
-      System.out.println("Invalid target address.");
+    byte[] contractAddr = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (contractAddr == null) {
+      System.out.println("Invalid contractAddr.");
       return;
     }
+
+    byte[] toAddr = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (toAddr == null) {
+      System.out.println("Invalid to address.");
+      return;
+    }
+
+    String uri = parameters[index++];
+    String tokenIdStr = parameters[index++];
 
     long tokenId;
     if(Objects.isNull(tokenIdStr) || "-".equals(tokenIdStr))
@@ -5102,9 +5106,9 @@ public class Client {
 
     boolean result = walletApiWrapper.urc721Mint(ownerAddress, contractAddr, toAddr, uri, tokenId);
     if (result) {
-      System.out.println("urc721Mint with contractAddr: " + contractAddr + ", toAddr: " + toAddrStr + ", uri " + uri + ", tokenId" + tokenIdStr  + " successful !!");
+      System.out.println("urc721Mint with contractAddr: " + contractAddr + ", toAddr: " + toAddr + ", uri " + uri + ", tokenId" + tokenIdStr  + " successful !!");
     } else {
-      System.out.println("urc721Mint with contractAddr: " + contractAddr + ", toAddr: " + toAddrStr + ", uri " + uri + ", tokenId" + tokenIdStr  + " failed !!");
+      System.out.println("urc721Mint with contractAddr: " + contractAddr + ", toAddr: " + toAddr + ", uri " + uri + ", tokenId" + tokenIdStr  + " failed !!");
     }
   }
 
