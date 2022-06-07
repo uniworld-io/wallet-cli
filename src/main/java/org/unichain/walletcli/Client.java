@@ -4918,7 +4918,7 @@ public class Client {
     }
 
     boolean approveOrNot = Boolean.valueOf(parameters[index++]);
-    byte[] contractAddr = org.apache.commons.codec.binary.Hex.decodeHex(parameters[index++].toCharArray());
+    byte[] contractAddr = WalletApi.decodeFromBase58Check(parameters[index++]);
     if (contractAddr == null) {
       System.out.println("Invalid ContractAddress.");
       return;
@@ -4982,7 +4982,7 @@ public class Client {
       }
     }
 
-    byte[] contractAddr = org.apache.commons.codec.binary.Hex.decodeHex(parameters[index++].toCharArray());
+    byte[] contractAddr = WalletApi.decodeFromBase58Check(parameters[index++]);
     if (contractAddr == null) {
       System.out.println("Invalid ContractAddress.");
       return;
@@ -4999,7 +4999,7 @@ public class Client {
   private void urc721AddMinter(String[] parameters) throws CipherException, IOException, CancelException, DecoderException{
     if (parameters == null || (parameters.length != 2 && parameters.length != 3)) {
       System.out.println("urc721AddMinter needs 2 parameters like following: ");
-      System.out.println("urc721AddMinter [ownerAddr] contractAddr minter");
+      System.out.println("urc721AddMinter [ownerAddr] contractAddr minterAddr");
       return;
     }
 
@@ -5013,14 +5013,13 @@ public class Client {
       }
     }
 
-    byte[] contractAddr = org.apache.commons.codec.binary.Hex.decodeHex(parameters[index++].toCharArray());
+    byte[] contractAddr = WalletApi.decodeFromBase58Check(parameters[index++]);
     if (contractAddr == null) {
       System.out.println("Invalid ContractAddress.");
       return;
     }
 
-    String minterStr = parameters[index++];
-    byte[] minterAddr = WalletApi.decodeFromBase58Check(minterStr);
+    byte[] minterAddr = WalletApi.decodeFromBase58Check(parameters[index++]);
     if (minterAddr == null) {
       System.out.println("Invalid MinterAddr.");
       return;
@@ -5028,9 +5027,9 @@ public class Client {
 
     boolean result = walletApiWrapper.urc721AddMinter(ownerAddress, contractAddr, minterAddr);
     if (result) {
-      System.out.println("urc721AddMinter with ContractAddress: " + contractAddr + ", minter: " + minterStr +" successful !!");
+      System.out.println("urc721AddMinter with ContractAddress: " + contractAddr + ", minter: " + minterAddr +" successful !!");
     } else {
-      System.out.println("urc721AddMinter with ContractAddress: " + contractAddr + ", minter: " + minterStr +" failed !!");
+      System.out.println("urc721AddMinter with ContractAddress: " + contractAddr + ", minter: " + minterAddr +" failed !!");
     }
   }
 
@@ -5051,7 +5050,7 @@ public class Client {
       }
     }
 
-    byte[] contractAddr = org.apache.commons.codec.binary.Hex.decodeHex(parameters[index++].toCharArray());
+    byte[] contractAddr = WalletApi.decodeFromBase58Check(parameters[index++]);
 
     if (contractAddr == null) {
       System.out.println("Invalid contractAddr.");
@@ -5069,7 +5068,7 @@ public class Client {
   private void urc721Mint(String[] parameters) throws CipherException, IOException, CancelException, DecoderException {
     if (parameters == null || (parameters.length != 4 && parameters.length != 5)) {
       System.out.println("urc721Mint needs 5 parameters like following: ");
-      System.out.println("urc721Mint [OwnerAddress] contractAddr to_address uri  tokenId[- if not set]");
+      System.out.println("urc721Mint [OwnerAddress] contractAddr toAddress uri  tokenId[- if not set]");
       return;
     }
 
@@ -5163,7 +5162,7 @@ public class Client {
     }
 
     int index = 0;
-    byte[] address = org.apache.commons.codec.binary.Hex.decodeHex(parameters[index++].toCharArray());
+    byte[] address = WalletApi.decodeFromBase58Check(parameters[index++]);
     if (address == null) {
       System.out.println("Invalid address.");
       return;
@@ -5185,7 +5184,7 @@ public class Client {
     }
 
     int index = 0;
-    byte[] ownerAddress = org.apache.commons.codec.binary.Hex.decodeHex(parameters[index++].toCharArray());
+    byte[] ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
     if (ownerAddress == null) {
       System.out.println("Invalid address.");
       return;
@@ -5207,7 +5206,7 @@ public class Client {
     }
 
     int index = 0;
-    byte[] address = org.apache.commons.codec.binary.Hex.decodeHex(parameters[index++].toCharArray());
+    byte[] address = WalletApi.decodeFromBase58Check(parameters[index++]);
     if (address == null) {
       System.out.println("Invalid address.");
       return;
@@ -5224,7 +5223,7 @@ public class Client {
   private void urc721GetTokenUri(String[] parameters) throws IOException, CipherException, CancelException{
     if (parameters == null || (parameters.length != 2)) {
       System.out.println("urc721GetTokenUri needs 2 parameter like the following: ");
-      System.out.println("urc721GetTokenUri address token_id");
+      System.out.println("urc721GetTokenUri address tokenId");
       return;
     }
 
@@ -5248,12 +5247,12 @@ public class Client {
   private void urc721GetOwnerOf(String[] parameters) throws IOException, CipherException, CancelException, DecoderException{
     if (parameters == null || (parameters.length != 2)) {
       System.out.println("urc721GetOwnerOf needs 2 parameter like the following: ");
-      System.out.println("urc721GetOwnerOf address token_id");
+      System.out.println("urc721GetOwnerOf address tokenId");
       return;
     }
 
     int index = 0;
-    byte[] address = org.apache.commons.codec.binary.Hex.decodeHex(parameters[index++].toCharArray());
+    byte[] address = WalletApi.decodeFromBase58Check(parameters[index++]);
     if (address == null) {
       System.out.println("Invalid address.");
       return;
@@ -5272,7 +5271,7 @@ public class Client {
   private void urc721GetApproved(String[] parameters) throws IOException, CipherException, CancelException{
     if (parameters == null || (parameters.length != 2)) {
       System.out.println("urc721GetApproved needs 2 parameter like the following: ");
-      System.out.println("urc721GetApproved address token_id");
+      System.out.println("urc721GetApproved address tokenId");
       return;
     }
 
@@ -5296,7 +5295,7 @@ public class Client {
   private void urc721IsApprovedForAll(String[] parameters) throws IOException, CipherException, CancelException{
     if (parameters == null || (parameters.length != 2)) {
       System.out.println("urc721IsApprovedForAll needs 2 parameter like the following: ");
-      System.out.println("urc721IsApprovedForAll owner_address operatorAddr");
+      System.out.println("urc721IsApprovedForAll ownerAddress operatorAddress");
       return;
     }
 
@@ -5324,20 +5323,20 @@ public class Client {
   private void urc721BalanceOf(String[] parameters) throws IOException, CipherException, CancelException, DecoderException{
     if (parameters == null || (parameters.length != 2)) {
       System.out.println("urc721BalanceOf needs 2 parameter like the following: ");
-      System.out.println("urc721BalanceOf owner_address address");
+      System.out.println("urc721BalanceOf ownerAddress contractAddress");
       return;
     }
 
     int index = 0;
     byte[] ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
     if (ownerAddress == null) {
-      System.out.println("Invalid OwnerAddress.");
+      System.out.println("Invalid ownerAddress.");
       return;
     }
 
-    byte[] address = org.apache.commons.codec.binary.Hex.decodeHex(parameters[index++].toCharArray());
+    byte[] address = WalletApi.decodeFromBase58Check(parameters[index++]);
     if (address == null) {
-      System.out.println("Invalid address.");
+      System.out.println("Invalid contractAddress.");
       return;
     }
 
@@ -5352,15 +5351,20 @@ public class Client {
   private void urc721TokenGet(String[] parameters) throws IOException, CipherException, CancelException, DecoderException{
     if (parameters == null || (parameters.length != 2)) {
       System.out.println("urc721TokenGet needs 2 parameter like the following: ");
-      System.out.println("urc721TokenGet address tokenId");
+      System.out.println("urc721TokenGet contractAddress tokenId");
       return;
     }
 
     int index = 0;
-    byte[] address = org.apache.commons.codec.binary.Hex.decodeHex(parameters[index++].toCharArray());
+    byte[] contractAddress =  WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (contractAddress == null) {
+      System.out.println("Invalid contractAddress.");
+      return;
+    }
+
     long tokenId = Long.parseLong(parameters[index++]);
 
-    var result = WalletApi.urc721TokenGet(address, tokenId);
+    var result = WalletApi.urc721TokenGet(contractAddress, tokenId);
     if (result == null) {
       System.out.println("urc721TokenGet failed !!");
     } else {
@@ -5378,6 +5382,10 @@ public class Client {
     int index = 0;
 
     byte[] addr = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (addr == null) {
+      System.out.println("Invalid contractAddress.");
+      return;
+    }
 
     var result = WalletApi.urc721ContractGet(addr);
     if (result == null) {
@@ -5405,7 +5413,7 @@ public class Client {
     if("-".equalsIgnoreCase(_contractAddr))
       contractAddr = Optional.empty();
     else {
-      byte[] addr = org.apache.commons.codec.binary.Hex.decodeHex(_contractAddr.toCharArray());
+      byte[] addr = WalletApi.decodeFromBase58Check(_contractAddr);
       if (addr == null) {
         System.out.println("Invalid ContractAddress.");
         return;
