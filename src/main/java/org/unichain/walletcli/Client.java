@@ -5367,13 +5367,14 @@ public class Client {
   private void urc721ContractGet(String[] parameters) throws IOException, CipherException, CancelException, DecoderException{
     if (parameters == null || parameters.length != 1) {
       System.out.println("urc721ContractGet needs 1 parameter like the following: ");
-      System.out.println("urc721ContractGet address");
+      System.out.println("urc721ContractGet contractAddress");
       return;
     }
 
     int index = 0;
 
-    byte[] addr = org.apache.commons.codec.binary.Hex.decodeHex(parameters[index++].toCharArray());
+    byte[] addr = WalletApi.decodeFromBase58Check(parameters[index++]);
+
     var result = WalletApi.urc721ContractGet(addr);
     if (result == null) {
       System.out.println("urc721ContractGet failed !!");
