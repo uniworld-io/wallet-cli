@@ -241,13 +241,13 @@ public class WalletApiWrapper {
     return wallet.urc721Approve(ownerAddress, toAddr, approveOrNot, contractAddr, tokenId);
   }
 
-  public boolean urc721SetApproveForAll(byte[] ownerAddress, byte[] toAddr, boolean approve) throws CipherException, IOException, CancelException {
+  public boolean urc721SetApproveForAll(byte[] ownerAddress, byte[] contractAddr, byte[] toAddr, boolean approve) throws CipherException, IOException, CancelException {
     if (wallet == null || !wallet.isLoginState()) {
       System.out.println("Warning: urc721SetApproveForAll failed,  Please login first !!");
       return false;
     }
 
-    return wallet.urc721SetApproveForAll(ownerAddress, toAddr, approve);
+    return wallet.urc721SetApproveForAll(ownerAddress, contractAddr, toAddr, approve);
   }
 
   public boolean urc721AddMinter(byte[] ownerAddress, byte[] contractAddr, byte[] minterAddr) throws CipherException, IOException, CancelException {

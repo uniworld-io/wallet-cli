@@ -4860,20 +4860,26 @@ public class Client {
   }
 
   private void urc721SetApproveForAll(String[] parameters) throws CipherException, IOException, CancelException{
-    if (parameters == null || (parameters.length != 2 && parameters.length != 3)) {
-      System.out.println("urc721SetApproveForAll needs 2 parameters like following: ");
-      System.out.println("urc721SetApproveForAll [OwnerAddress] toAddress approveOrNot");
+    if (parameters == null || (parameters.length != 3 && parameters.length != 4)) {
+      System.out.println("urc721SetApproveForAll needs 3 parameters like following: ");
+      System.out.println("urc721SetApproveForAll [OwnerAddress] contractAddr toAddress approveOrNot");
       return;
     }
 
     int index = 0;
     byte[] ownerAddress = null;
-    if (parameters.length == 3) {
+    if (parameters.length == 4) {
       ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
       if (ownerAddress == null) {
         System.out.println("Invalid OwnerAddress.");
         return;
       }
+    }
+
+    byte[] contractAddr = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (contractAddr == null) {
+      System.out.println("Invalid ContractAddress.");
+      return;
     }
 
     byte[] toAddr = WalletApi.decodeFromBase58Check(parameters[index++]);
@@ -4884,7 +4890,7 @@ public class Client {
 
     boolean approve = Boolean.valueOf(parameters[index++]);
 
-    boolean result = walletApiWrapper.urc721SetApproveForAll(ownerAddress, toAddr, approve);
+    boolean result = walletApiWrapper.urc721SetApproveForAll(ownerAddress, contractAddr, toAddr, approve);
     if (result) {
       System.out.println("urc721SetApproveForAll with toAddr: " + toAddr + " successful !!");
     } else {

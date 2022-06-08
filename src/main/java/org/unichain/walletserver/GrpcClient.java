@@ -221,9 +221,9 @@ public class GrpcClient {
     request.setOperator(ByteString.copyFrom(operatorAddr));
 
     if (blockingStubSolidity != null) {
-      return blockingStubSolidity.urc721GetIsApprovedForAll(request.build());
+      return blockingStubSolidity.urc721IsApprovedForAll(request.build());
     } else {
-      return blockingStubFull.urc721GetIsApprovedForAll(request.build());
+      return blockingStubFull.urc721IsApprovedForAll(request.build());
     }
   }
 

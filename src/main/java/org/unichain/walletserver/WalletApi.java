@@ -679,11 +679,11 @@ public class WalletApi {
     return processTransaction(transaction);
   }
 
-  public boolean urc721SetApproveForAll(byte[] ownerAddress, byte[] toAddr, boolean approve) throws CipherException, IOException, CancelException{
+  public boolean urc721SetApproveForAll(byte[] ownerAddress, byte[] contractAddr, byte[] toAddr, boolean approve) throws CipherException, IOException, CancelException{
     if (ownerAddress == null) {
       ownerAddress = getAddress();
     }
-    var ctx  = createUrc721SetApproveForAllContract(ownerAddress, toAddr, approve);
+    var ctx  = createUrc721SetApproveForAllContract(ownerAddress, contractAddr, toAddr, approve);
     Transaction transaction = rpcCli.createTransaction(ctx);
     return processTransaction(transaction);
   }
@@ -1335,9 +1335,10 @@ public class WalletApi {
             .build();
   }
 
-  private Urc721SetApprovalForAllContract createUrc721SetApproveForAllContract(byte[] ownerAddress, byte[] toAddr, boolean approve) {
+  private Urc721SetApprovalForAllContract createUrc721SetApproveForAllContract(byte[] ownerAddress, byte[] contractAddr, byte[] toAddr, boolean approve) {
     return  Contract.Urc721SetApprovalForAllContract.newBuilder()
             .setOwnerAddress(ByteString.copyFrom(ownerAddress))
+            .setAddress(ByteString.copyFrom(contractAddr))
             .setToAddress(ByteString.copyFrom(toAddr))
             .setApprove(approve)
             .build();
