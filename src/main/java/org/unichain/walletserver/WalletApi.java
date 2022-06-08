@@ -326,7 +326,7 @@ public class WalletApi {
     return rpcCli.urc721TokenGet(contractAddr, tokenId);
   }
 
-  public static Urc721BalanceOf urc721BalanceOf(byte[] ownerAddress, byte[] address) {
+  public static NumberMessage urc721BalanceOf(byte[] ownerAddress, byte[] address) {
     return rpcCli.urc721BalanceOf(ownerAddress, address);
   }
 
@@ -354,7 +354,7 @@ public class WalletApi {
     return rpcCli.urc721GetApproved(contractAddr, tokenId);
   }
 
-  public static Urc721IsApprovedForAll urc721IsApprovedForAll(byte[] ownerAddress, byte[] operatorAddr) {
+  public static BoolMessage urc721IsApprovedForAll(byte[] ownerAddress, byte[] operatorAddr) {
     return rpcCli.urc721IsApprovedForAll(ownerAddress, operatorAddr);//call rpc
   }
 
@@ -707,11 +707,11 @@ public class WalletApi {
     return processTransaction(transaction);
   }
 
-  public boolean posBridgeCleanMapToken(byte[] ownerAddress, String rootToken, long rootChainId, String childToken, long childChainId, int type) throws CipherException, IOException, CancelException{
+  public boolean posBridgeCleanMapToken(byte[] ownerAddress, String rootToken, long rootChainId, String childToken, long childChainId) throws CipherException, IOException, CancelException{
     if (ownerAddress == null) {
       ownerAddress = getAddress();
     }
-    Contract.PosBridgeCleanMapTokenContract contract = createPosBridgeCleanMapToken(ownerAddress, rootToken, rootChainId, childToken, childChainId, type);
+    Contract.PosBridgeCleanMapTokenContract contract = createPosBridgeCleanMapToken(ownerAddress, rootToken, rootChainId, childToken, childChainId);
     Transaction transaction = rpcCli.createTransaction(contract);
     return processTransaction(transaction);
   }
@@ -1406,14 +1406,13 @@ public class WalletApi {
     return builder.build();
   }
 
-  private PosBridgeCleanMapTokenContract createPosBridgeCleanMapToken(byte[] ownerAddress, String rootToken, long rootChainId, String childToken, long childChainId, int type) {
+  private PosBridgeCleanMapTokenContract createPosBridgeCleanMapToken(byte[] ownerAddress, String rootToken, long rootChainId, String childToken, long childChainId) {
     var builder =  Contract.PosBridgeCleanMapTokenContract.newBuilder()
             .setOwnerAddress(ByteString.copyFrom(ownerAddress))
             .setRootChainid(rootChainId)
             .setRootToken(rootToken)
             .setChildChainid(childChainId)
-            .setChildToken(childToken)
-            .setType(type);
+            .setChildToken(childToken);
 
     return builder.build();
   }

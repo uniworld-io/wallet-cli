@@ -4652,15 +4652,15 @@ public class Client {
   }
 
   private void posBridgeCleanMapToken(String[] parameters) throws CipherException, IOException, CancelException{
-    if (parameters == null || (parameters.length != 5 && parameters.length != 6)) {
+    if (parameters == null || (parameters.length != 4 && parameters.length != 5)) {
       System.out.println("posBridgeCleanMapToken needs 5 parameters like following: ");
-      System.out.println("posBridgeCleanMapToken [OwnerAddress] root_token root_chainid child_token child_chainid type[1,2,3]");
+      System.out.println("posBridgeCleanMapToken [OwnerAddress] root_token root_chainid child_token child_chainid");
       return;
     }
 
     int index = 0;
     byte[] ownerAddress = null;
-    if (parameters.length == 6) {
+    if (parameters.length == 5) {
       ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
       if (ownerAddress == null) {
         System.out.println("Invalid OwnerAddress.");
@@ -4686,13 +4686,11 @@ public class Client {
 
     long childChainId = Long.parseLong(parameters[index++]);
 
-    int assetType = Integer.parseInt(parameters[index++]);
-
-    boolean result = walletApiWrapper.posBridgeCleanMapToken(ownerAddress, rootToken, rootChainId, childToken, childChainId, assetType);
+    boolean result = walletApiWrapper.posBridgeCleanMapToken(ownerAddress, rootToken, rootChainId, childToken, childChainId);
     if (result) {
-      System.out.println("posBridgeCleanMapToken with rootToken: " + rootToken + ", rootChainId: " + rootChainId + ", childToken: " + childToken +  ", childChainId: " + childChainId +  ", assetType: " + assetType + " successful!!");
+      System.out.println("posBridgeCleanMapToken with rootToken: " + rootToken + ", rootChainId: " + rootChainId + ", childToken: " + childToken +  ", childChainId: " + childChainId + " successful!!");
     } else {
-      System.out.println("posBridgeCleanMapToken with rootToken: " + rootToken + ", rootChainId: " + rootChainId + ", childToken: " + childToken +  ", childChainId: " + childChainId + ", assetType: " + assetType +" failed!!");
+      System.out.println("posBridgeCleanMapToken with rootToken: " + rootToken + ", rootChainId: " + rootChainId + ", childToken: " + childToken +  ", childChainId: " + childChainId +" failed!!");
     }
   }
 

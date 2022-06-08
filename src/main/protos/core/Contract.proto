@@ -228,22 +228,22 @@ message Urc20CreateContract {
   int64 fee = 11;
   int64 extra_fee_rate = 12;
   int64 fee_pool = 13;
-  int64 burned = 14;
-  int64 latest_operation_time = 15;
+  int64 burned = 14;//internal
+  int64 latest_operation_time = 15;//internal
   int64 lot = 16;
-  int64 fee_pool_origin = 17;
+  int64 fee_pool_origin = 17;//internal
   int64 exch_unx_num = 18;
   int64 exch_num = 19;
   bool  exch_enable = 20;
-  int64 critical_update_time = 21;
+  int64 critical_update_time = 21;//internal
   int64 create_acc_fee = 22;
 }
 
 message Urc20TransferFromContract {
-  bytes owner_address = 1;
-  bytes from = 2;
-  bytes to = 3;
-  bytes address = 4;
+  bytes owner_address = 1; //spender
+  bytes from = 2; //owner
+  bytes to = 3; //target
+  bytes address = 4; //contract
   int64 amount = 5;
   int64 available_time = 6;
 }
@@ -568,7 +568,6 @@ message PosBridgeCleanMapTokenContract{
     string root_token= 3; //hex address if token, symbol if native
     int64 child_chainid = 4;
     string child_token= 5;
-    uint32 type = 6; //1:native, 2:erc20, 3:erc721
 }
 
 //call from user

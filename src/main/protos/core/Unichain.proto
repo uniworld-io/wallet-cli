@@ -15,7 +15,7 @@ message AddressMessage {
 }
 
 message BoolMessage {
-  bool flag = 1;
+  bool value = 1;
 }
 
 enum AccountType {
@@ -971,7 +971,7 @@ message Urc721ContractPage{
   repeated Urc721Contract contracts = 5;
 }
 
-message Urc721TokenQuery{
+message Urc721TokenListQuery{
   bytes owner_address = 1;
   bytes address = 2;
   int32 page_size = 3;
@@ -987,17 +987,20 @@ message Urc721TokenPage{
   repeated Urc721Token tokens = 5;
 }
 
-message Urc721BalanceOf{
-  bytes owner_address = 1;
-  bytes address = 2;
-  int64 count = 3;
+message Urc721TokenQuery{
+  bytes address = 1;
+  int64 id = 2;
 }
 
-message Urc721IsApprovedForAll{
+message Urc721BalanceOfQuery{
+  bytes owner_address = 1;
+  bytes address = 2;
+}
+
+message Urc721IsApprovedForAllQuery{
   bytes owner_address = 1;
   bytes operator = 2;
   bytes address = 3;
-  bool is_approved = 4;
 }
 
 message Urc721TokenApproveRelation{

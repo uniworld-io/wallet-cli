@@ -326,13 +326,13 @@ public class WalletApiWrapper {
   }
 
 
-  public boolean posBridgeCleanMapToken(byte[] ownerAddress, String rootToken, long rootChainId, String childToken, long childChainId, int type) throws CipherException, IOException, CancelException{
+  public boolean posBridgeCleanMapToken(byte[] ownerAddress, String rootToken, long rootChainId, String childToken, long childChainId) throws CipherException, IOException, CancelException{
     if (wallet == null || !wallet.isLoginState()) {
       System.out.println("Warning: posBridgeCleanMapToken failed,  Please login first !!");
       return false;
     }
 
-    return wallet.posBridgeCleanMapToken(ownerAddress, rootToken, rootChainId, childToken, childChainId, type);
+    return wallet.posBridgeCleanMapToken(ownerAddress, rootToken, rootChainId, childToken, childChainId);
   }
 
   public boolean posBridgeDeposit(byte[] ownerAddress, String rootToken, String receiveAddr, long childChainId, long data) throws CipherException, IOException, CancelException{

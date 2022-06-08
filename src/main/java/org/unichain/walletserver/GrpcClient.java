@@ -94,7 +94,7 @@ public class GrpcClient {
   }
 
   public Urc721TokenPage urc721TokenList(byte[] ownerAddress, Optional<byte[]> contractAddr, String ownerType, int pageIndex, int pageSize) {
-    var request = Urc721TokenQuery.newBuilder();
+    var request = Urc721TokenListQuery.newBuilder();
     request.setOwnerAddress(ByteString.copyFrom(ownerAddress));
     request.setOwnerType(ownerType);
     contractAddr.ifPresent(v -> request.setAddress(ByteString.copyFrom(v)));
@@ -112,7 +112,7 @@ public class GrpcClient {
   }
 
   public Urc721Contract urc721ContractGet(byte[] addr) {
-    var request = Urc721Contract.newBuilder();
+    var request = AddressMessage.newBuilder();
     request.setAddress(ByteString.copyFrom(addr));
     if (blockingStubSolidity != null) {
       return blockingStubSolidity.urc721GetContract(request.build());
@@ -122,7 +122,7 @@ public class GrpcClient {
   }
 
   public Urc721Token urc721TokenGet(byte[] contractAddr, long tokenId) {
-    var request = Urc721Token.newBuilder();
+    var request = Urc721TokenQuery.newBuilder();
     request.setAddress(ByteString.copyFrom(contractAddr));
     request.setId(tokenId);
 
@@ -133,8 +133,8 @@ public class GrpcClient {
     }
   }
 
-  public Urc721BalanceOf urc721BalanceOf(byte[] ownerAddress,  byte[] address) {
-    var request = Urc721BalanceOf.newBuilder();
+  public NumberMessage urc721BalanceOf(byte[] ownerAddress,  byte[] address) {
+    var request = Urc721BalanceOfQuery.newBuilder();
     request.setOwnerAddress(ByteString.copyFrom(ownerAddress));
     request.setAddress(ByteString.copyFrom(address));
 
@@ -146,7 +146,7 @@ public class GrpcClient {
   }
 
   public StringMessage urc721TokenUri(byte[] address, long id) {
-    var request = Urc721Token.newBuilder();
+    var request = Urc721TokenQuery.newBuilder();
     request.setAddress(ByteString.copyFrom(address));
     request.setId(id);
 
@@ -191,7 +191,7 @@ public class GrpcClient {
   }
 
   public AddressMessage urc721GetOwnerOf(byte[] contractAddr, long tokenId) {
-    var request = Urc721Token.newBuilder();
+    var request = Urc721TokenQuery.newBuilder();
     request.setAddress(ByteString.copyFrom(contractAddr));
     request.setId(tokenId);
 
@@ -203,7 +203,7 @@ public class GrpcClient {
   }
 
   public AddressMessage urc721GetApproved(byte[] contractAddr, long tokenId) {
-    var request = Urc721Token.newBuilder();
+    var request = Urc721TokenQuery.newBuilder();
     request.setAddress(ByteString.copyFrom(contractAddr));
     request.setId(tokenId);
 
@@ -215,8 +215,8 @@ public class GrpcClient {
   }
 
 
-  public Urc721IsApprovedForAll urc721IsApprovedForAll(byte[] ownerAddress, byte[] operatorAddr) {
-    var request = Urc721IsApprovedForAll.newBuilder();
+  public BoolMessage urc721IsApprovedForAll(byte[] ownerAddress, byte[] operatorAddr) {
+    var request = Urc721IsApprovedForAllQuery.newBuilder();
     request.setOwnerAddress(ByteString.copyFrom(ownerAddress));
     request.setOperator(ByteString.copyFrom(operatorAddr));
 
@@ -262,7 +262,8 @@ public class GrpcClient {
 
   public Account queryAccount(byte[] address) {
     System.out.println("GetAccount: 0x" + ByteArray.toHexString(address) + "|" + WalletApi.encode58Check(address));
-    Account request = Account.newBuilder().setAddress(ByteString.copyFrom(address)).build();
+    var addressBs = ByteString.copyFrom(address);
+    Account request = Account.newBuilder().setAddress(addressBs).build();
     if (blockingStubSolidity != null) {
       return blockingStubSolidity.getAccount(request);
     } else {
