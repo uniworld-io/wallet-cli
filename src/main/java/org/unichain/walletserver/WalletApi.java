@@ -1001,11 +1001,11 @@ public class WalletApi {
     return processTransaction(transaction);
   }
 
-  public boolean sendFutureLocked(byte[] owner, byte[] to, long expireTime) throws CipherException, IOException, CancelException {
+  public boolean sendFutureDeal(byte[] owner, byte[] to,  Optional<Long> amt, long expireTime) throws CipherException, IOException, CancelException {
     if (owner == null) {
       owner = getAddress();
     }
-    var contract = createFutureDealTransferTransaction(owner, to, expireTime);
+    var contract = createFutureDealTransferTransaction(owner, to, amt, expireTime);
     Transaction transaction = rpcCli.createTransaction(contract);
     return processTransaction(transaction);
   }
@@ -1671,12 +1671,16 @@ public class WalletApi {
     return builder.build();
   }
 
-  public static Contract.FutureDealTransferContract createFutureDealTransferTransaction(byte[] owner, byte[] to, long expireTime) {
-    return Contract.FutureDealTransferContract.newBuilder()
+  public static Contract.FutureDealTransferContract createFutureDealTransferTransaction(byte[] owner, byte[] to, Optional<Long> amt, long expireTime) {
+    var builder =  Contract.FutureDealTransferContract.newBuilder()
             .setOwnerAddress(ByteString.copyFrom(owner))
             .setToAddress(ByteString.copyFrom(to))
-            .setDealId(expireTime)
-            .build();
+            .setDealId(expireTime);
+
+    if(amt.isPresent())
+      builder.setAmount(amt.get());
+
+    return builder.build();
   }
 
   public static Contract.FutureWithdrawContract createFutureWithdrawContract(byte[] owner) {

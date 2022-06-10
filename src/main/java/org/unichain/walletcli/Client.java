@@ -118,7 +118,7 @@ public class Client {
           "RegisterWallet",
           "SendCoin",
           "SendFuture",
-          "SendFutureLocked",
+          "SendFutureDeal",
           "WithdrawFuture",
           "GetFutureTransfer",
 
@@ -286,7 +286,7 @@ public class Client {
           "RegisterWallet",
           "SendCoin",
           "SendFuture",
-          "SendFutureLocked",
+          "SendFutureDeal",
           "WithdrawFuture",
           "GetFutureTransfer",
 
@@ -874,17 +874,17 @@ public class Client {
     }
   }
 
-  private void sendFutureLocked(String[] parameters) throws IOException, CipherException, CancelException {
-    if (parameters == null || (parameters.length != 2 && parameters.length != 3 )) {
-      System.out.println("SendFutureLocked needs 3 parameters like following: ");
-      System.out.println("SendFutureLocked [OwnerAddress] ToAddress ExpireTime");
+  private void sendFutureDeal(String[] parameters) throws IOException, CipherException, CancelException {
+    if (parameters == null || (parameters.length != 3 && parameters.length != 4 )) {
+      System.out.println("SendFutureDeal needs 3 parameters like following: ");
+      System.out.println("SendFutureDeal [ownerAddress] toAddress amount(- if send all deal) [expireDateAsDealId]");
       return;
     }
 
     int index = 0;
 
     byte[] ownerAddress = null;
-    if (parameters.length == 3) {
+    if (parameters.length == 4) {
       ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
       if (ownerAddress == null) {
         System.out.println("Invalid ownerAddress.");
@@ -899,19 +899,26 @@ public class Client {
       return;
     }
 
+    String amtStr = parameters[index++];
+    Optional<Long> amt;
+    if("-".equals(amtStr))
+      amt = Optional.empty();
+    else
+      amt = Optional.of(Long.parseLong(amtStr));
+
     Date expireDate = Utils.strToDateLong(parameters[index]);
 
     if (expireDate == null) {
       System.out.println("The ExpiredDate format should look like yyyy-MM-dd HH:mm:ss or yyyy-MM-dd");
-      System.out.println("SendFutureLocked failed due to invalid expire date!!");
+      System.out.println("SendFutureDeal failed due to invalid expire date!!");
       return;
     }
 
-    boolean result = walletApiWrapper.sendFutureLocked(ownerAddress, toAddress, expireDate.getTime());
+    boolean result = walletApiWrapper.sendFutureDeal(ownerAddress, toAddress, amt, expireDate.getTime());
     if (result) {
-      System.out.println("SendFutureLocked with expireDate " + expireDate + " Ginza to " + base58ToAddress + " successful !!");
+      System.out.println("SendFutureDeal with expireDate " + expireDate + " Ginza to " + base58ToAddress + " successful !!");
     } else {
-      System.out.println("SendFutureLocked with expireDate " + expireDate + " Ginza to " + base58ToAddress + " failed !!");
+      System.out.println("SendFutureDeal with expireDate " + expireDate + " Ginza to " + base58ToAddress + " failed !!");
     }
   }
 
@@ -3190,8 +3197,8 @@ public class Client {
               break;
             }
 
-            case "sendfuturelocked": {
-              sendFutureLocked(parameters);
+            case "sendfuturedeal": {
+              sendFutureDeal(parameters);
               break;
             }
 

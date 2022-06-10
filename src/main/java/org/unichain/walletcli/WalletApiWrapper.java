@@ -158,13 +158,13 @@ public class WalletApiWrapper {
     return wallet.sendFuture(ownerAddress, toAddress, amount, expireTime);
   }
 
-  public boolean sendFutureLocked(byte[] ownerAddress, byte[] toAddress, long expireTime) throws CipherException, IOException, CancelException {
+  public boolean sendFutureDeal(byte[] ownerAddress, byte[] toAddress,  Optional<Long> amt, long expireTime) throws CipherException, IOException, CancelException {
     if (wallet == null || !wallet.isLoginState()) {
-      System.out.println("Warning: SendFutureLocked failed,  Please login first !!");
+      System.out.println("Warning: SendFutureDeal failed,  Please login first !!");
       return false;
     }
 
-    return wallet.sendFutureLocked(ownerAddress, toAddress, expireTime);
+    return wallet.sendFutureDeal(ownerAddress, toAddress, amt, expireTime);
   }
 
   public boolean createToken(byte[] ownerAddress, String tokenName, String abbr, long maxSupply, long totalSupply, long startTime, long endTime,  String description,  String url, long fee, long extra_fee_rate, long feePool, long lot, long exchUnwNum, long exchTokenNum, long createAccFee) throws CipherException, IOException, CancelException {
