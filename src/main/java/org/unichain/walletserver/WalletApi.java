@@ -354,8 +354,8 @@ public class WalletApi {
     return rpcCli.urc721GetApproved(contractAddr, tokenId);
   }
 
-  public static BoolMessage urc721IsApprovedForAll(byte[] ownerAddress, byte[] operatorAddr) {
-    return rpcCli.urc721IsApprovedForAll(ownerAddress, operatorAddr);//call rpc
+  public static BoolMessage urc721IsApprovedForAll(byte[] ownerAddress, byte[] operatorAddr, byte[] contractAddr) {
+    return rpcCli.urc721IsApprovedForAll(ownerAddress, operatorAddr, contractAddr);//call rpc
   }
 
   public static FutureTokenPack queryToken(byte[] address, String name, int pageSize, int pageIndex) {

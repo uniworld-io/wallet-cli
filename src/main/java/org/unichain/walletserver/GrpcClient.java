@@ -215,9 +215,10 @@ public class GrpcClient {
   }
 
 
-  public BoolMessage urc721IsApprovedForAll(byte[] ownerAddress, byte[] operatorAddr) {
+  public BoolMessage urc721IsApprovedForAll(byte[] ownerAddress, byte[] operatorAddr, byte[] contractAddr) {
     var request = Urc721IsApprovedForAllQuery.newBuilder();
     request.setOwnerAddress(ByteString.copyFrom(ownerAddress));
+    request.setAddress(ByteString.copyFrom(contractAddr));
     request.setOperator(ByteString.copyFrom(operatorAddr));
 
     if (blockingStubSolidity != null) {

@@ -4889,7 +4889,8 @@ public class Client {
       return;
     }
 
-    byte[] toAddr = WalletApi.decodeFromBase58Check(parameters[index++]);
+    String toAddrBase58 = parameters[index++];
+    byte[] toAddr = WalletApi.decodeFromBase58Check(toAddrBase58);
     if (toAddr == null) {
       System.out.println("Invalid ToAddress.");
       return;
@@ -4899,9 +4900,9 @@ public class Client {
 
     boolean result = walletApiWrapper.urc721SetApproveForAll(ownerAddress, contractAddr, toAddr, approve);
     if (result) {
-      System.out.println("urc721SetApproveForAll with toAddr: " + toAddr + " successful !!");
+      System.out.println("urc721SetApproveForAll with toAddr: " + toAddrBase58 + " successful !!");
     } else {
-      System.out.println("urc721SetApproveForAll with toAddr: " + toAddr + " failed !!");
+      System.out.println("urc721SetApproveForAll with toAddr: " + toAddrBase58 + " failed !!");
     }
   }
 
@@ -4929,7 +4930,8 @@ public class Client {
     }
 
     boolean approveOrNot = Boolean.valueOf(parameters[index++]);
-    byte[] contractAddr = WalletApi.decodeFromBase58Check(parameters[index++]);
+    String contractAddrBase58 = parameters[index++];
+    byte[] contractAddr = WalletApi.decodeFromBase58Check(contractAddrBase58);
     if (contractAddr == null) {
       System.out.println("Invalid ContractAddress.");
       return;
@@ -4938,9 +4940,9 @@ public class Client {
 
     boolean result = walletApiWrapper.urc721Approve(ownerAddress, toAddr, approveOrNot, contractAddr, tokenId);
     if (result) {
-      System.out.println("urc721Approve with contractAddr: " + contractAddr + " successful !!");
+      System.out.println("urc721Approve with contractAddr: " + contractAddrBase58 + " successful !!");
     } else {
-      System.out.println("urc721Approve with contractAddr: " + contractAddr + " failed !!");
+      System.out.println("urc721Approve with contractAddr: " + contractAddrBase58 + " failed !!");
     }
   }
 
@@ -4961,7 +4963,8 @@ public class Client {
       }
     }
 
-    byte[] contractAddr = WalletApi.decodeFromBase58Check(parameters[index++]);
+    String contractAddrBase58 = parameters[index++];
+    byte[] contractAddr = WalletApi.decodeFromBase58Check(contractAddrBase58);
     if (contractAddr == null) {
       System.out.println("Invalid contractAddr.");
       return;
@@ -4970,9 +4973,9 @@ public class Client {
 
     boolean result = walletApiWrapper.urc721Burn(ownerAddress, contractAddr, tokenId);
     if (result) {
-      System.out.println("urc721Burn with contractAddr: " + contractAddr + ", tokenId: " + tokenId + " successful !!");
+      System.out.println("urc721Burn with contractAddr: " + contractAddrBase58 + ", tokenId: " + tokenId + " successful !!");
     } else {
-      System.out.println("urc721Burn with contractAddr: " + contractAddr +  ", tokenId: " + tokenId + " failed !!");
+      System.out.println("urc721Burn with contractAddr: " + contractAddrBase58 +  ", tokenId: " + tokenId + " failed !!");
     }
   }
 
@@ -4993,7 +4996,8 @@ public class Client {
       }
     }
 
-    byte[] contractAddr = WalletApi.decodeFromBase58Check(parameters[index++]);
+    String contractAddrBase58 = parameters[index++];
+    byte[] contractAddr = WalletApi.decodeFromBase58Check(contractAddrBase58);
     if (contractAddr == null) {
       System.out.println("Invalid ContractAddress.");
       return;
@@ -5001,9 +5005,9 @@ public class Client {
 
     boolean result = walletApiWrapper.urc721RenounceMinter(ownerAddress, contractAddr);
     if (result) {
-      System.out.println("urc721RenounceMinter with contractAddr: " + contractAddr + " successful !!");
+      System.out.println("urc721RenounceMinter with contractAddr: " + contractAddrBase58 + " successful !!");
     } else {
-      System.out.println("urc721RenounceMinter with contractAddr: " + contractAddr + " failed !!");
+      System.out.println("urc721RenounceMinter with contractAddr: " + contractAddrBase58 + " failed !!");
     }
   }
 
@@ -5063,7 +5067,8 @@ public class Client {
       }
     }
 
-    byte[] contractAddr = WalletApi.decodeFromBase58Check(parameters[index++]);
+    var contractAddrStr = parameters[index++];
+    byte[] contractAddr = WalletApi.decodeFromBase58Check(contractAddrStr);
 
     if (contractAddr == null) {
       System.out.println("Invalid contractAddr.");
@@ -5072,9 +5077,9 @@ public class Client {
 
     boolean result = walletApiWrapper.urc721RemoveMinter(ownerAddress, contractAddr);
     if (result) {
-      System.out.println("urc721RemoveMinter with contract: " + contractAddr + " successful !!");
+      System.out.println("urc721RemoveMinter with contract: " + contractAddrStr + " successful !!");
     } else {
-      System.out.println("urc721RemoveMinter with contract: " + contractAddr + " failed !!");
+      System.out.println("urc721RemoveMinter with contract: " + contractAddrStr + " failed !!");
     }
   }
 
@@ -5095,13 +5100,15 @@ public class Client {
       }
     }
 
-    byte[] contractAddr = WalletApi.decodeFromBase58Check(parameters[index++]);
+    var contractAddrStr = parameters[index++];
+    byte[] contractAddr = WalletApi.decodeFromBase58Check(contractAddrStr);
     if (contractAddr == null) {
       System.out.println("Invalid contractAddr.");
       return;
     }
 
-    byte[] toAddr = WalletApi.decodeFromBase58Check(parameters[index++]);
+    var toAddrBase58 = parameters[index++];
+    byte[] toAddr = WalletApi.decodeFromBase58Check(toAddrBase58);
     if (toAddr == null) {
       System.out.println("Invalid to address.");
       return;
@@ -5118,9 +5125,9 @@ public class Client {
 
     boolean result = walletApiWrapper.urc721Mint(ownerAddress, contractAddr, toAddr, uri, tokenId);
     if (result) {
-      System.out.println("urc721Mint with contractAddr: " + contractAddr + ", toAddr: " + toAddr + ", uri " + uri + ", tokenId" + tokenIdStr  + " successful !!");
+      System.out.println("urc721Mint with contractAddr: " + contractAddrStr + ", toAddr: " + toAddrBase58 + ", uri " + uri + ", tokenId" + tokenIdStr  + " successful !!");
     } else {
-      System.out.println("urc721Mint with contractAddr: " + contractAddr + ", toAddr: " + toAddr + ", uri " + uri + ", tokenId" + tokenIdStr  + " failed !!");
+      System.out.println("urc721Mint with contractAddr: " + contractAddrStr + ", toAddr: " + toAddrBase58 + ", uri " + uri + ", tokenId" + tokenIdStr  + " failed !!");
     }
   }
 
@@ -5306,9 +5313,9 @@ public class Client {
   }
 
   private void urc721IsApprovedForAll(String[] parameters) throws IOException, CipherException, CancelException{
-    if (parameters == null || (parameters.length != 2)) {
-      System.out.println("urc721IsApprovedForAll needs 2 parameter like the following: ");
-      System.out.println("urc721IsApprovedForAll ownerAddress operatorAddress");
+    if (parameters == null || (parameters.length != 3)) {
+      System.out.println("urc721IsApprovedForAll needs 3 parameter like the following: ");
+      System.out.println("urc721IsApprovedForAll ownerAddress operatorAddress contractAddr");
       return;
     }
 
@@ -5325,7 +5332,13 @@ public class Client {
       return;
     }
 
-    var result = WalletApi.urc721IsApprovedForAll(ownerAddress, operatorAddr);
+    byte[] contractAddr = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (contractAddr == null) {
+      System.out.println("Invalid ContractAddr.");
+      return;
+    }
+
+    var result = WalletApi.urc721IsApprovedForAll(ownerAddress, operatorAddr, contractAddr);
     if (result == null) {
       System.out.println("urc721IsApprovedForAll failed !!");
     } else {
