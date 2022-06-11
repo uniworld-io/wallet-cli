@@ -5024,13 +5024,15 @@ public class Client {
       }
     }
 
-    byte[] contractAddr = WalletApi.decodeFromBase58Check(parameters[index++]);
+    var contractAddrStr = parameters[index++];
+    byte[] contractAddr = WalletApi.decodeFromBase58Check(contractAddrStr);
     if (contractAddr == null) {
       System.out.println("Invalid ContractAddress.");
       return;
     }
 
-    byte[] minterAddr = WalletApi.decodeFromBase58Check(parameters[index++]);
+    var minterAddrStr = parameters[index++];
+    byte[] minterAddr = WalletApi.decodeFromBase58Check(minterAddrStr);
     if (minterAddr == null) {
       System.out.println("Invalid MinterAddr.");
       return;
@@ -5038,9 +5040,9 @@ public class Client {
 
     boolean result = walletApiWrapper.urc721AddMinter(ownerAddress, contractAddr, minterAddr);
     if (result) {
-      System.out.println("urc721AddMinter with ContractAddress: " + contractAddr + ", minter: " + minterAddr +" successful !!");
+      System.out.println("urc721AddMinter with ContractAddress: " + contractAddrStr + ", minter: " + minterAddrStr +" successful !!");
     } else {
-      System.out.println("urc721AddMinter with ContractAddress: " + contractAddr + ", minter: " + minterAddr +" failed !!");
+      System.out.println("urc721AddMinter with ContractAddress: " + contractAddrStr + ", minter: " + minterAddrStr +" failed !!");
     }
   }
 
