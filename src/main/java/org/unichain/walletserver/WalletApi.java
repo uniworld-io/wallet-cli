@@ -604,13 +604,13 @@ public class WalletApi {
     return processTransaction(transaction);
   }
 
-  public boolean createUrc20Contract(byte[] owner, String symbol, String name, long decimals, long maxSupply, long totalSupply,
+  public boolean createUrc20Contract(byte[] owner, String symbol, String name, long decimals, long rootDecimals, long maxSupply, long totalSupply,
                                      long startTime, long endTime, String url, long fee, long extraFeeRate, long feePool, long lot,
                                      boolean enableExch, long exchUnwNum, long exchTokenNum, long createAccFee) throws CipherException, IOException, CancelException {
     if (owner == null) {
       owner = getAddress();
     }
-    var contract = createCreateUrc20Contract(owner, symbol, name, decimals, maxSupply, totalSupply, startTime, endTime, url, fee, extraFeeRate, feePool, lot, enableExch, exchUnwNum, exchTokenNum, createAccFee);
+    var contract = createCreateUrc20Contract(owner, symbol, name, decimals, rootDecimals, maxSupply, totalSupply, startTime, endTime, url, fee, extraFeeRate, feePool, lot, enableExch, exchUnwNum, exchTokenNum, createAccFee);
     Transaction transaction = rpcCli.createTransaction(contract);
     return processTransaction(transaction);
   }
@@ -1241,7 +1241,7 @@ public class WalletApi {
     return builder.build();
   }
 
-  public static Contract.Urc20CreateContract createCreateUrc20Contract(byte[] owner, String symbol, String name, long decimals, long maxSupply, long totalSupply,
+  public static Contract.Urc20CreateContract createCreateUrc20Contract(byte[] owner, String symbol, String name, long decimals, long rootDecimals, long maxSupply, long totalSupply,
                                                                        long startTime, long endTime, String url, long fee, long extraFeeRate, long feePool, long lot,
                                                                        boolean enableExch, long exchUnwNum, long exchTokenNum, long createAccFee) {
     var builder = Contract.Urc20CreateContract.newBuilder()
@@ -1249,6 +1249,7 @@ public class WalletApi {
             .setSymbol(symbol)
             .setName(name)
             .setDecimals(decimals)
+            .setRootDecimals(rootDecimals)
             .setMaxSupply(maxSupply)
             .setTotalSupply(totalSupply)
             .setUrl(url)
@@ -1264,6 +1265,8 @@ public class WalletApi {
       builder.setStartTime(startTime);
     if(endTime != -1L)
       builder.setEndTime(endTime);
+    if(rootDecimals != -1L)
+      builder.setRootDecimals(18);
 
     return builder.build();
   }

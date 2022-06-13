@@ -176,7 +176,7 @@ public class WalletApiWrapper {
     return wallet.createToken(ownerAddress, tokenName, abbr, maxSupply, totalSupply, startTime, endTime, description, url, fee, extra_fee_rate, feePool, lot, exchUnwNum, exchTokenNum, createAccFee);
   }
 
-  public boolean createUrc20Contract(byte[] owner, String symbol, String name, long decimals, long maxSupply, long totalSupply,
+  public boolean createUrc20Contract(byte[] owner, String symbol, String name, long decimals, long rootDecimals, long maxSupply, long totalSupply,
                                      long startTime, long endTime, String url, long fee, long extraFeeRate, long feePool, long lot,
                                      boolean enableExch, long exchUnwNum, long exchTokenNum, long createAccFee) throws CipherException, IOException, CancelException {
     if (wallet == null || !wallet.isLoginState()) {
@@ -184,7 +184,7 @@ public class WalletApiWrapper {
       return false;
     }
 
-    return wallet.createUrc20Contract(owner, symbol, name, decimals, maxSupply, totalSupply, startTime, endTime, url, fee, extraFeeRate, feePool, lot, enableExch, exchUnwNum, exchTokenNum, createAccFee);
+    return wallet.createUrc20Contract(owner, symbol, name, decimals, rootDecimals, maxSupply, totalSupply, startTime, endTime, url, fee, extraFeeRate, feePool, lot, enableExch, exchUnwNum, exchTokenNum, createAccFee);
   }
 
   public boolean createUrc721Contract(byte[] ownerAddress, String symbol, String name, long totalSupply, byte[] minter) throws CipherException, IOException, CancelException {

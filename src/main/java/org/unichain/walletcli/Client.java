@@ -4475,9 +4475,9 @@ public class Client {
   }
 
   private void urc20CreateContract(String[] parameters) throws IOException, CipherException, CancelException {
-    if (parameters == null || (parameters.length != 16 && parameters.length != 17)) {
-      System.out.println("urc20CreateContract needs 15 parameters like following: ");
-      System.out.println("urc20CreateContract [OwnerAddress] symbol name decimals max_supply total_supply start_time(- if default) end_time(- if default)  url fee extra_fee_rate fee_pool lot enable_exch exch_unw_num exch_token_num create_acc_fee");
+    if (parameters == null || (parameters.length != 17 && parameters.length != 18)) {
+      System.out.println("urc20CreateContract needs 16 parameters like following: ");
+      System.out.println("urc20CreateContract [OwnerAddress] symbol name decimals root_decimals(-1 if set 18) max_supply total_supply start_time(- if default) end_time(- if default)  url fee extra_fee_rate fee_pool lot enable_exch exch_unw_num exch_token_num create_acc_fee");
       return;
     }
 
@@ -4494,6 +4494,7 @@ public class Client {
     String symbol = parameters[index++];
     String name = parameters[index++];
     long decimals = new Long(parameters[index++]);
+    long rootDecimals = new Long(parameters[index++]);
     long maxSupply = new Long(parameters[index++]);
     long totalSupply = new Long(parameters[index++]);
     String startDateStr = parameters[index++];
@@ -4540,7 +4541,7 @@ public class Client {
     long exchTokenNum = new Long(parameters[index++]);
     long createAccFee = new Long(parameters[index++]);
 
-    boolean result = walletApiWrapper.createUrc20Contract(ownerAddress, symbol, name, decimals, maxSupply, totalSupply, startTime, endTime, url, fee, extra_fee_rate, poolFee , lot, enableExch, exchUnwNum, exchTokenNum, createAccFee);
+    boolean result = walletApiWrapper.createUrc20Contract(ownerAddress, symbol, name, decimals, rootDecimals, maxSupply, totalSupply, startTime, endTime, url, fee, extra_fee_rate, poolFee , lot, enableExch, exchUnwNum, exchTokenNum, createAccFee);
     if (result) {
       System.out.println("urc20CreateContract with token name: " + symbol + ", abbr: " + name + ", max supply: " + maxSupply + ", total supply:" + totalSupply + " successful !!");
     } else {
