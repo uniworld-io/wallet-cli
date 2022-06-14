@@ -38,6 +38,7 @@ import org.unichain.protos.Protocol.Transaction.Result;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -604,7 +605,7 @@ public class WalletApi {
     return processTransaction(transaction);
   }
 
-  public boolean createUrc20Contract(byte[] owner, String symbol, String name, long decimals, long maxSupply, long totalSupply,
+  public boolean createUrc20Contract(byte[] owner, String symbol, String name, long decimals, BigInteger maxSupply, BigInteger totalSupply,
                                      long startTime, long endTime, String url, long fee, long extraFeeRate, long feePool, long lot,
                                      boolean enableExch, long exchUnwNum, long exchTokenNum, long createAccFee) throws CipherException, IOException, CancelException {
     if (owner == null) {
@@ -797,7 +798,7 @@ public class WalletApi {
     return processTransaction(transaction);
   }
 
-  public boolean urc20UpdateTokenParams(byte[] owner, byte[] address, long totalSupply, long feePool,
+  public boolean urc20UpdateTokenParams(byte[] owner, byte[] address, BigInteger totalSupply, long feePool,
                                         long fee, long extraFeeRate, long lot, String url, long exchUnwNum,
                                         long exchTokenNum, long createAccFee) throws CipherException, IOException, CancelException {
     if(owner == null) {
@@ -818,7 +819,7 @@ public class WalletApi {
     return processTransaction(transaction);
   }
 
-  public boolean urc20Mint(byte[] owner, byte[] address, Optional<byte[]> toAddrOpt, long amount) throws CipherException, IOException, CancelException {
+  public boolean urc20Mint(byte[] owner, byte[] address, Optional<byte[]> toAddrOpt, BigInteger amount) throws CipherException, IOException, CancelException {
     if (owner == null) {
       owner = getAddress();
     }
@@ -837,7 +838,7 @@ public class WalletApi {
   }
 
 
-  public boolean burnUrc20(byte[] owner, byte[] address, long amount) throws CipherException, IOException, CancelException {
+  public boolean burnUrc20(byte[] owner, byte[] address, BigInteger amount) throws CipherException, IOException, CancelException {
     if (owner == null) {
       owner = getAddress();
     }
@@ -856,7 +857,7 @@ public class WalletApi {
     return processTransaction(transaction);
   }
 
-  public boolean urc20TransferFrom(byte[] owner, byte[] fromAddress, byte[] toAddress,  byte[] contractAddr, long amount, long availableTime) throws CipherException, IOException, CancelException {
+  public boolean urc20TransferFrom(byte[] owner, byte[] fromAddress, byte[] toAddress,  byte[] contractAddr, BigInteger amount, long availableTime) throws CipherException, IOException, CancelException {
     if (owner == null) {
       owner = getAddress();
     }
@@ -865,7 +866,7 @@ public class WalletApi {
     return processTransaction(transaction);
   }
 
-  public boolean urc20Transfer(byte[] owner, byte[] contractAddr, byte[] toAddress, long amount, long availableTime) throws CipherException, IOException, CancelException {
+  public boolean urc20Transfer(byte[] owner, byte[] contractAddr, byte[] toAddress, BigInteger amount, long availableTime) throws CipherException, IOException, CancelException {
     if (owner == null) {
       owner = getAddress();
     }
@@ -874,7 +875,7 @@ public class WalletApi {
     return processTransaction(transaction);
   }
 
-  public boolean urc20Approve(byte[] ownerAddress, byte[] address, byte[] spender, long amount) throws CipherException, IOException, CancelException {
+  public boolean urc20Approve(byte[] ownerAddress, byte[] address, byte[] spender, BigInteger amount) throws CipherException, IOException, CancelException {
     if (ownerAddress == null) {
       ownerAddress = getAddress();
     }
@@ -936,11 +937,11 @@ public class WalletApi {
     return rpcCli.urc20Decimals(address);
   }
 
-  public static NumberMessage urc20TotalSupply(byte[] address) {
+  public static StringMessage urc20TotalSupply(byte[] address) {
     return rpcCli.urc20TotalSupply(address);
   }
 
-  public static NumberMessage urc20BalanceOf(byte[] ownerAddr, byte[] contractAddr) {
+  public static StringMessage urc20BalanceOf(byte[] ownerAddr, byte[] contractAddr) {
     return rpcCli.urc20BalanceOf(ownerAddr, contractAddr);
   }
 
@@ -948,7 +949,7 @@ public class WalletApi {
     return rpcCli.urc20GetOwner(contractAddr);
   }
 
-  public static NumberMessage urc20Allowance(byte[] owner, byte[] address, byte[] spender) {
+  public static StringMessage urc20Allowance(byte[] owner, byte[] address, byte[] spender) {
     return rpcCli.urc20Allowance(owner, address, spender);
   }
 
@@ -1241,7 +1242,7 @@ public class WalletApi {
     return builder.build();
   }
 
-  public static Contract.Urc20CreateContract createCreateUrc20Contract(byte[] owner, String symbol, String name, long decimals, long maxSupply, long totalSupply,
+  public static Contract.Urc20CreateContract createCreateUrc20Contract(byte[] owner, String symbol, String name, long decimals, BigInteger maxSupply, BigInteger totalSupply,
                                                                        long startTime, long endTime, String url, long fee, long extraFeeRate, long feePool, long lot,
                                                                        boolean enableExch, long exchUnwNum, long exchTokenNum, long createAccFee) {
     var builder = Contract.Urc20CreateContract.newBuilder()
@@ -1249,8 +1250,8 @@ public class WalletApi {
             .setSymbol(symbol)
             .setName(name)
             .setDecimals(decimals)
-            .setMaxSupply(maxSupply)
-            .setTotalSupply(totalSupply)
+            .setMaxSupply(maxSupply.toString())
+            .setTotalSupply(totalSupply.toString())
             .setUrl(url)
             .setFee(fee)
             .setExtraFeeRate(extraFeeRate)
@@ -1508,14 +1509,14 @@ public class WalletApi {
     return builder.build();
   }
 
-  public static Contract.Urc20UpdateParamsContract createUrc20UpdateTokenParams(byte[] owner, byte[] address, long totalSupply, long feePool,
+  public static Contract.Urc20UpdateParamsContract createUrc20UpdateTokenParams(byte[] owner, byte[] address, BigInteger totalSupply, long feePool,
                                                                                 long fee, long extraFeeRate, long lot, String url, long exchUnwNum,
                                                                                 long exchTokenNum, long createAccFee) {
     var builder =  Contract.Urc20UpdateParamsContract.newBuilder()
             .setOwnerAddress(ByteString.copyFrom(owner))
             .setAddress(ByteString.copyFrom(address));
-    if(totalSupply != -1)
-      builder.setTotalSupply(totalSupply);
+    if(totalSupply.compareTo(BigInteger.valueOf(-1)) != 0)
+      builder.setTotalSupply(totalSupply.toString());
     if(feePool != -1)
       builder.setFeePool(feePool);
     if(fee != -1)
@@ -1544,11 +1545,11 @@ public class WalletApi {
             .build();
   }
 
-  public static Contract.Urc20MintContract createUrc20Mint(byte[] owner, byte[] address, Optional<byte[]> toAddrOpt,  long amount) {
+  public static Contract.Urc20MintContract createUrc20Mint(byte[] owner, byte[] address, Optional<byte[]> toAddrOpt,  BigInteger amount) {
     var builder =  Contract.Urc20MintContract.newBuilder()
             .setOwnerAddress(ByteString.copyFrom(owner))
             .setAddress(ByteString.copyFrom(address))
-            .setAmount(amount);
+            .setAmount(amount.toString());
 
     if(toAddrOpt.isPresent())
       builder.setToAddress(ByteString.copyFrom(toAddrOpt.get()));
@@ -1566,34 +1567,34 @@ public class WalletApi {
             .build();
   }
 
-  public static Contract.Urc20TransferFromContract createUrc20TransferFrom(byte[] owner, byte[] fromAddress, byte[] toAddress, byte[] contractAddr, long amount, long availableTime) {
+  public static Contract.Urc20TransferFromContract createUrc20TransferFrom(byte[] owner, byte[] fromAddress, byte[] toAddress, byte[] contractAddr, BigInteger amount, long availableTime) {
     return Contract.Urc20TransferFromContract.newBuilder()
             .setOwnerAddress(ByteString.copyFrom(owner))
             .setFrom(ByteString.copyFrom(fromAddress))
             .setTo(ByteString.copyFrom(toAddress))
             .setAddress(ByteString.copyFrom(contractAddr))
-            .setAmount(amount)
+            .setAmount(amount.toString())
             .setAvailableTime(availableTime)
             .build();
   }
 
-  public static Contract.Urc20TransferContract createUrc20Transfer(byte[] owner, byte[] contractAddr, byte[] toAddress, long amount, long availableTime) {
+  public static Contract.Urc20TransferContract createUrc20Transfer(byte[] owner, byte[] contractAddr, byte[] toAddress, BigInteger amount, long availableTime) {
     return Contract.Urc20TransferContract.newBuilder()
             .setOwnerAddress(ByteString.copyFrom(owner))
             .setAddress(ByteString.copyFrom(contractAddr))
             .setTo(ByteString.copyFrom(toAddress))
-            .setAmount(amount)
+            .setAmount(amount.toString())
             .setAvailableTime(availableTime)
             .build();
   }
 
-  public static Contract.Urc20ApproveContract createUrc20ApproveContract(byte[] ownerAddress, byte[] address, byte[] spender, long amount) {
+  public static Contract.Urc20ApproveContract createUrc20ApproveContract(byte[] ownerAddress, byte[] address, byte[] spender, BigInteger amount) {
     return Contract.Urc20ApproveContract
         .newBuilder()
         .setOwnerAddress(ByteString.copyFrom(ownerAddress))
         .setAddress(ByteString.copyFrom(address))
         .setSpender(ByteString.copyFrom(spender))
-        .setAmount(amount)
+        .setAmount(amount.toString())
         .build();
   }
 
@@ -1651,11 +1652,11 @@ public class WalletApi {
   }
 
 
-  public static Contract.Urc20BurnContract createBurnUrc20(byte[] owner, byte[] address, long amount) {
+  public static Contract.Urc20BurnContract createBurnUrc20(byte[] owner, byte[] address, BigInteger amount) {
     return Contract.Urc20BurnContract.newBuilder()
             .setOwnerAddress(ByteString.copyFrom(owner))
             .setAddress(ByteString.copyFrom(address))
-            .setAmount(amount)
+            .setAmount(amount.toString())
             .build();
   }
 

@@ -1174,7 +1174,7 @@ public class GrpcClient {
     }
   }
 
-  public NumberMessage urc20TotalSupply(byte[] address) {
+  public StringMessage urc20TotalSupply(byte[] address) {
     var request = AddressMessage
             .newBuilder()
             .setAddress(ByteString.copyFrom(address))
@@ -1187,7 +1187,7 @@ public class GrpcClient {
     }
   }
 
-  public NumberMessage urc20BalanceOf(byte[] ownerAddr, byte[] contractAddr) {
+  public StringMessage urc20BalanceOf(byte[] ownerAddr, byte[] contractAddr) {
     var request = Urc20BalanceOfQuery
             .newBuilder()
             .setOwnerAddress(ByteString.copyFrom(ownerAddr))
@@ -1214,7 +1214,7 @@ public class GrpcClient {
     }
   }
 
-  public NumberMessage urc20Allowance(byte[] owner, byte[] address, byte[] spender) {
+  public StringMessage urc20Allowance(byte[] owner, byte[] address, byte[] spender) {
     var request = Urc20AllowanceQuery
         .newBuilder()
         .setOwner(ByteString.copyFrom(owner))

@@ -33,6 +33,7 @@ import org.unichain.protos.Protocol.*;
 import org.unichain.walletserver.WalletApi;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -4087,7 +4088,7 @@ public class Client {
       System.out.println("urc20Approve: invalid spenderAddress!");
       return;
     }
-    long amount = Long.parseLong(parameters[index]);
+    var amount = new BigInteger(parameters[index]);
     boolean result = walletApiWrapper.urc20Approve(ownerAddress, contractAddr, spenderAddr, amount);
     if (result) {
       System.out.println("urc20Approve successful !!!");
@@ -4231,7 +4232,7 @@ public class Client {
       return;
     }
 
-    long amount = new Long(parameters[index++]);
+    var amount = new BigInteger(parameters[index++]);
 
     long availableTime;
     String availableTimeStr = parameters[index];
@@ -4287,7 +4288,7 @@ public class Client {
       return;
     }
 
-    long amount = new Long(parameters[index++]);
+    var amount = new BigInteger(parameters[index++]);
 
     long availableTime;
     String availableTimeStr = parameters[index];
@@ -4335,7 +4336,7 @@ public class Client {
       return;
     }
 
-    long amount = new Long(parameters[index++]);
+    var amount = new BigInteger(parameters[index++]);
 
     boolean result = walletApiWrapper.burnUrc20(ownerAddress, contractAddress, amount);
     String walletOwnerAddress = walletApiWrapper.getAddress();
@@ -4386,7 +4387,7 @@ public class Client {
       }
     }
 
-    long amount = new Long(parameters[index++]);
+    BigInteger amount = new BigInteger(parameters[index++]);
 
     boolean result = walletApiWrapper.urc20Mint(ownerAddress, contractAddress, toAddrOpt, amount);
     String walletOwnerAddress = walletApiWrapper.getAddress();
@@ -4420,7 +4421,7 @@ public class Client {
         return;
       }
 
-      long total_supply = new Long(parameters[index++]);
+      BigInteger total_supply = new BigInteger(parameters[index++]);
       long fee_pool = new Long(parameters[index++]);
       long fee = new Long(parameters[index++]);
       long extraFeeRate = new Long(parameters[index++]);
@@ -4494,8 +4495,8 @@ public class Client {
     String symbol = parameters[index++];
     String name = parameters[index++];
     long decimals = new Long(parameters[index++]);
-    long maxSupply = new Long(parameters[index++]);
-    long totalSupply = new Long(parameters[index++]);
+    BigInteger maxSupply = new BigInteger(parameters[index++]);
+    BigInteger totalSupply = new BigInteger(parameters[index++]);
     String startDateStr = parameters[index++];
     String endDateStr = parameters[index++];
 
