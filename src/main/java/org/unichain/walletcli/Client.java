@@ -4477,7 +4477,7 @@ public class Client {
 
   private void urc20CreateContract(String[] parameters) throws IOException, CipherException, CancelException {
     if (parameters == null || (parameters.length != 16 && parameters.length != 17)) {
-      System.out.println("urc20CreateContract needs 15 parameters like following: ");
+      System.out.println("urc20CreateContract needs 16 parameters like following: ");
       System.out.println("urc20CreateContract [OwnerAddress] symbol name decimals max_supply total_supply start_time(- if default) end_time(- if default)  url fee extra_fee_rate fee_pool lot enable_exch exch_unw_num exch_token_num create_acc_fee");
       return;
     }
