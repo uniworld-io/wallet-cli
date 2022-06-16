@@ -5425,7 +5425,7 @@ public class Client {
   private void urc721TokenList(String[] parameters) throws IOException, CipherException, CancelException, DecoderException {
     if (parameters == null || (parameters.length != 5 )) {
       System.out.println("urc721TokenList needs 5 parameter like the following: ");
-      System.out.println("urc721TokenList ownerAddress address(- if not set) pageIndex(-1 if not set) pageSize(-1 if not set) ownerType(owner or approved or approved_all)");
+      System.out.println("urc721TokenList ownerAddress contractAddress(- if not set) pageIndex(-1 if not set) pageSize(-1 if not set) ownerType(owner or approved or approved_all)");
       return;
     }
 
