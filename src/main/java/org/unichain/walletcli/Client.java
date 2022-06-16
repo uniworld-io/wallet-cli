@@ -7,6 +7,7 @@ import com.google.common.base.Strings;
 import com.google.common.primitives.Longs;
 import com.google.protobuf.InvalidProtocolBufferException;
 import lombok.var;
+import org.apache.commons.codec.DecoderException;
 import org.apache.commons.lang3.ArrayUtils;
 import org.bouncycastle.util.encoders.Hex;
 import org.jline.reader.Completer;
@@ -32,6 +33,7 @@ import org.unichain.protos.Protocol.*;
 import org.unichain.walletserver.WalletApi;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -41,7 +43,6 @@ import java.util.Base64.Decoder;
 import java.util.Base64.Encoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 
 public class Client {
@@ -50,245 +51,337 @@ public class Client {
   private static int retryTime = 3;
 
   private static String[] commandHelp = {
-      "AddTransactionSign",
-      "ApproveProposal",
-      "AssetIssue",
-      "BackupWallet",
-      "BackupWallet2Base64",
-      "BroadcastTransaction",
-      "ChangePassword",
-      "ClearContractABI",
-      "Create2",
-      "CreateAccount",
-      "CreateProposal",
-      "CreateWitness",
-      "DeleteProposal",
-      "DeployContract contractName ABI byteCode constructor params isHex fee_limit consume_user_resource_percent origin_energy_limit value token_value token_id <library:address,library:address,...> <lib_compiler_version(e.g:v5)>",
-      "ExchangeCreate",
-      "ExchangeInject",
-      "ExchangeTransaction",
-      "ExchangeWithdraw",
-      "FreezeBalance",
-      "GenerateAddress",
-      "GenerateShieldedAddress",
-      "GetAccount",
-      "GetAccountNet",
-      "GetAccountResource",
-      "GetAddress",
-      "GetAssetIssueByAccount",
-      "GetAssetIssueById",
-      "GetAssetIssueByName",
-      "GetAssetIssueListByName",
-      "GetBalance",
-      "GetBlock",
-      "GetBlockById",
-      "GetBlockByLatestNum",
-      "GetBlockByLimitNext",
-      "GetChainParameters",
-      "GetContract contractAddress",
-      "GetDelegatedResource",
-      "GetDelegatedResourceAccountIndex",
-      "GetDiversifier",
-      "GetExchange",
-      "GetNextMaintenanceTime",
-      "GetProposal",
-      "GetReward",
-      "GetTotalTransaction",
-      "GetTransactionApprovedList",
-      "GetTransactionById",
-      "GetTransactionCountByBlockNum",
-      "GetTransactionInfoById",
-      "GetTransactionsFromThis",
-      "GetTransactionsToThis",
-      "GetTransactionSignWeight",
-      "ImportShieldedAddress",
-      "ImportWallet",
-      "ImportWalletByBase64",
-      "ListAssetIssue",
-      "ListAssetIssuePaginated",
-      "ListExchanges",
-      "ListExchangesPaginated",
-      "ListNodes",
-      "ListProposals",
-      "ListProposalsPaginated",
-      "ListWitnesses",
-      "Login",
-      "Logout",
-      "ParticipateAssetIssue",
-      "RegisterWallet",
-      "SendCoin",
-      "SendFuture",
-      "WithdrawFuture",
-       "GetFutureTransfer",
-      "CreateToken",
-      "TransferTokenOwner",
-      "ExchangeToken",
-      "ContributeTokenPoolFee",
-      "UpdateTokenParams",
-      "MineToken",
-      "BurnToken",
-      "TransferToken",
-      "WithdrawFutureToken",
-      "ListTokenPool",
-      "GetTokenFuture",
-      "SendShieldedCoin",
-      "SendShieldedCoinWithoutAsk",
-      "SetAccountId",
-      "TransferAsset",
-      "TriggerContract contractAddress method args isHex fee_limit value",
-      "TriggerConstantContract contractAddress method args isHex",
-      "UnfreezeAsset",
-      "UnfreezeBalance",
-      "UpdateAccount",
-      "UpdateAsset",
-      "UpdateEnergyLimit contract_address energy_limit",
-      "UpdateSetting contract_address consume_user_resource_percent",
-      "UpdateWitness",
-      "UpdateAccountPermission",
-      "UpdateBrokerage",
-      "VoteWitness",
-      "WithdrawBalance",
-      "UpdateBrokerage",
-      "GetReward",
-      "GetBrokerage",
-      "NftCreateTemplate",
-      "NftMintToken",
-      "NftRemoveMinter",
-      "NftAddMinter",
-      "NftRenounceMinter",
-      "NftBurnToken",
-      "NftApprove",
-      "NftApproveForAll",
-      "NftTransfer",
-      "ListNftTemplate",
-      "ListNftToken",
-      "ListNftTokenApproveAll",
-      "ListNftTokenApprove",
-      "GetNftTemplate",
-      "GetNftToken",
-      "GetNftBalance",
-      "GetNftApprovedForAll"
+          "AddTransactionSign",
+          "ApproveProposal",
+          "AssetIssue",
+          "BackupWallet",
+          "BackupWallet2Base64",
+          "BroadcastTransaction",
+          "ChangePassword",
+          "ClearContractABI",
+          "Create2",
+          "CreateAccount",
+          "CreateProposal",
+          "CreateWitness",
+          "DeleteProposal",
+          "DeployContract contractName ABI byteCode constructor params isHex fee_limit consume_user_resource_percent origin_energy_limit value token_value token_id <library:address,library:address,...> <lib_compiler_version(e.g:v5)>",
+          "ExchangeCreate",
+          "ExchangeInject",
+          "ExchangeTransaction",
+          "ExchangeWithdraw",
+          "FreezeBalance",
+          "GenerateAddress",
+          "GenerateShieldedAddress",
+          "GetAccount",
+          "GetAccountNet",
+          "GetAccountResource",
+          "GetAddress",
+          "GetAssetIssueByAccount",
+          "GetAssetIssueById",
+          "GetAssetIssueByName",
+          "GetAssetIssueListByName",
+          "GetBalance",
+          "GetBlock",
+          "GetBlockById",
+          "GetBlockByLatestNum",
+          "GetBlockByLimitNext",
+          "GetChainParameters",
+          "GetContract contractAddress",
+          "GetDelegatedResource",
+          "GetDelegatedResourceAccountIndex",
+          "GetDiversifier",
+          "GetExchange",
+          "GetNextMaintenanceTime",
+          "GetProposal",
+          "GetReward",
+          "GetTotalTransaction",
+          "GetTransactionApprovedList",
+          "GetTransactionById",
+          "GetTransactionCountByBlockNum",
+          "GetTransactionInfoById",
+          "GetTransactionsFromThis",
+          "GetTransactionsToThis",
+          "GetTransactionSignWeight",
+          "ImportShieldedAddress",
+          "ImportWallet",
+          "ImportWalletByBase64",
+          "ListAssetIssue",
+          "ListAssetIssuePaginated",
+          "ListExchanges",
+          "ListExchangesPaginated",
+          "ListNodes",
+          "ListProposals",
+          "ListProposalsPaginated",
+          "ListWitnesses",
+          "Login",
+          "Logout",
+          "ParticipateAssetIssue",
+          "RegisterWallet",
+          "SendCoin",
+          "SendFuture",
+          "SendFutureDeal",
+          "WithdrawFuture",
+          "GetFutureTransfer",
+
+          //urc30
+          "CreateToken",
+          "TransferTokenOwner",
+          "ExchangeToken",
+          "ContributeTokenPoolFee",
+          "UpdateTokenParams",
+          "MineToken",
+          "BurnToken",
+          "TransferToken",
+          "WithdrawFutureToken",
+          "ListTokenPool",
+          "GetTokenFuture",
+
+          //urc20
+          "Urc20CreateContract",
+          "Urc20ContributePoolFee",
+          "Urc20UpdateParams",
+          "Urc20Mint",
+          "Urc20Burn",
+          "Urc20TransferFrom",
+          "Urc20Transfer",
+          "Urc20WithdrawFuture",
+          "Urc20TransferOwner",
+          "Urc20Exchange",
+          "Urc20Approve",
+
+          "Urc20Allowance",
+          "Urc20GetOwner",
+          "Urc20BalanceOf",
+          "Urc20TotalSupply",
+          "Urc20Decimals",
+          "Urc20Symbol",
+          "Urc20Name",
+          "Urc20ContractList",
+          "Urc20FutureGet",
+
+          "SendShieldedCoin",
+          "SendShieldedCoinWithoutAsk",
+          "SetAccountId",
+          "TransferAsset",
+          "TriggerContract contractAddress method args isHex fee_limit value",
+          "TriggerConstantContract contractAddress method args isHex",
+          "UnfreezeAsset",
+          "UnfreezeBalance",
+          "UpdateAccount",
+          "UpdateAsset",
+          "UpdateEnergyLimit contract_address energy_limit",
+          "UpdateSetting contract_address consume_user_resource_percent",
+          "UpdateWitness",
+          "UpdateAccountPermission",
+          "UpdateBrokerage",
+          "VoteWitness",
+          "WithdrawBalance",
+          "UpdateBrokerage",
+          "GetReward",
+          "GetBrokerage",
+
+          //urc721
+          "Urc721CreateContract",
+          "Urc721Mint",
+          "Urc721RemoveMinter",
+          "Urc721AddMinter",
+          "Urc721RenounceMinter",
+          "Urc721Burn",
+          "Urc721Approve",
+          "Urc721SetApproveForAll",
+          "Urc721TransferFrom",
+          "Urc721ContractList",
+          "Urc721TokenList",
+          "Urc721ContractGet",
+          "Urc721TokenGet",
+          "Urc721BalanceOf",
+          "Urc721IsApprovedForAll",
+
+          "Urc721GetName",
+          "Urc721GetSymbol",
+          "Urc721GetTotalSupply",
+          "Urc721GetTokenUri",
+          "Urc721GetOwnerOf",
+          "Urc721GetApproved",
+
+           //posbridge
+          "GetPosBridgeConfig",
+          "GetPosBridgeTokenMap",
+          "PosBridgeSetup",
+          "PosBridgeMapToken",
+          "PosBridgeCleanMapToken",
+          "PosBridgeDeposit",
+          "PosBridgeDepositExec",
+          "PosBridgeWithdraw",
+          "PosBridgeWithdrawExec"
   };
 
   private static String[] commandList = {
-      "AddTransactionSign",
-      "ApproveProposal",
-      "AssetIssue",
-      "BackupWallet",
-      "BackupWallet2Base64",
-      "BroadcastTransaction",
-      "ChangePassword",
-      "ClearContractABI",
-      "Create2",
-      "CreateAccount",
-      "CreateProposal",
-      "CreateWitness",
-      "DeleteProposal",
-      "DeployContract",
-      "DeployContractFile",
-      "ExchangeCreate",
-      "ExchangeInject",
-      "ExchangeTransaction",
-      "ExchangeWithdraw",
-      "FreezeBalance",
-      "GenerateAddress",
-      "GetAccount",
-      "GetAccountNet",
-      "GetAccountResource",
-      "GetAddress",
-      "GetAssetIssueByAccount",
-      "GetAssetIssueById",
-      "GetAssetIssueByName",
-      "GetAssetIssueListByName",
-      "GetBalance",
-      "GetBlock",
-      "GetBlockById",
-      "GetBlockByLatestNum",
-      "GetBlockByLimitNext",
-      "GetBrokerage",
-      "GetChainParameters",
-      "GetContract",
-      "GetDelegatedResource",
-      "GetDelegatedResourceAccountIndex",
-      "GetDiversifier",
-      "GetExchange",
-      "GetNextMaintenanceTime",
-      "GetProposal",
-      "GetReward",
-      "GetTotalTransaction",
-      "GetTransactionApprovedList",
-      "GetTransactionById",
-      "GetTransactionCountByBlockNum",
-      "GetTransactionInfoById",
-      "GetTransactionsFromThis",
-      "GetTransactionsToThis",
-      "GetTransactionSignWeight",
-      "Help",
-      "ImportShieldedAddress",
-      "ImportWallet",
-      "ImportWalletByBase64",
-      "ListAssetIssue",
-      "ListAssetIssuePaginated",
-      "ListExchanges",
-      "ListExchangesPaginated",
-      "ListNodes",
-      "ListProposals",
-      "ListProposalsPaginated",
-      "ListWitnesses",
-      "Login",
-      "Logout",
-      "ParticipateAssetIssue",
-      "RegisterWallet",
-      "SendCoin",
-      "SendFuture",
-      "WithdrawFuture",
-      "GetFutureTransfer",
-      "CreateToken",
-      "TransferTokenOwner",
-      "ExchangeToken",
-      "ContributeTokenPoolFee",
-      "UpdateTokenParams",
-      "MineToken",
-      "BurnToken",
-      "TransferToken",
-      "WithdrawFutureToken",
-      "ListTokenPool",
-      "GetTokenFuture",
-      "SendShieldedCoin",
-      "SendShieldedCoinWithoutAsk",
-      "SetAccountId",
-      "TransferAsset",
-      "TriggerContract",
-      "TriggerConstantContract",
-      "UnfreezeAsset",
-      "UnfreezeBalance",
-      "UpdateAccount",
-      "UpdateAsset",
-      "UpdateEnergyLimit",
-      "UpdateSetting",
-      "UpdateWitness",
-      "UpdateAccountPermission",
-      "UpdateBrokerage",
-      "VoteWitness",
-      "WithdrawBalance",
-      "UpdateBrokerage",
-      "GetReward",
-      "GetBrokerage",
-      "NftCreateTemplate",
-      "NftMintToken",
-      "NftRemoveMinter",
-      "NftAddMinter",
-      "NftRenounceMinter",
-      "NftBurnToken",
-      "NftApprove",
-      "NftApproveForAll",
-      "NftTransfer",
-      "ListNftTemplate",
-      "ListNftToken",
-      "GetNftTemplate",
-      "GetNftToken",
-      "GetNftBalance",
-      "GetNftApprovedForAll"
+          "AddTransactionSign",
+          "ApproveProposal",
+          "AssetIssue",
+          "BackupWallet",
+          "BackupWallet2Base64",
+          "BroadcastTransaction",
+          "ChangePassword",
+          "ClearContractABI",
+          "Create2",
+          "CreateAccount",
+          "CreateProposal",
+          "CreateWitness",
+          "DeleteProposal",
+          "DeployContract",
+          "DeployContractFile",
+          "ExchangeCreate",
+          "ExchangeInject",
+          "ExchangeTransaction",
+          "ExchangeWithdraw",
+          "FreezeBalance",
+          "GenerateAddress",
+          "GetAccount",
+          "GetAccountNet",
+          "GetAccountResource",
+          "GetAddress",
+          "GetAssetIssueByAccount",
+          "GetAssetIssueById",
+          "GetAssetIssueByName",
+          "GetAssetIssueListByName",
+          "GetBalance",
+          "GetBlock",
+          "GetBlockById",
+          "GetBlockByLatestNum",
+          "GetBlockByLimitNext",
+          "GetBrokerage",
+          "GetChainParameters",
+          "GetContract",
+          "GetDelegatedResource",
+          "GetDelegatedResourceAccountIndex",
+          "GetDiversifier",
+          "GetExchange",
+          "GetNextMaintenanceTime",
+          "GetProposal",
+          "GetReward",
+          "GetTotalTransaction",
+          "GetTransactionApprovedList",
+          "GetTransactionById",
+          "GetTransactionCountByBlockNum",
+          "GetTransactionInfoById",
+          "GetTransactionsFromThis",
+          "GetTransactionsToThis",
+          "GetTransactionSignWeight",
+          "Help",
+          "ImportShieldedAddress",
+          "ImportWallet",
+          "ImportWalletByBase64",
+          "ListAssetIssue",
+          "ListAssetIssuePaginated",
+          "ListExchanges",
+          "ListExchangesPaginated",
+          "ListNodes",
+          "ListProposals",
+          "ListProposalsPaginated",
+          "ListWitnesses",
+          "Login",
+          "Logout",
+          "ParticipateAssetIssue",
+          "RegisterWallet",
+          "SendCoin",
+          "SendFuture",
+          "SendFutureDeal",
+          "WithdrawFuture",
+          "GetFutureTransfer",
+
+          //urc30
+          "CreateToken",
+          "TransferTokenOwner",
+          "ExchangeToken",
+          "ContributeTokenPoolFee",
+          "UpdateTokenParams",
+          "MineToken",
+          "BurnToken",
+          "TransferToken",
+          "WithdrawFutureToken",
+          "ListTokenPool",
+          "GetTokenFuture",
+
+          //urc20
+          "Urc20CreateContract",
+          "Urc20ContributePoolFee",
+          "Urc20UpdateParams",
+          "Urc20Mint",
+          "Urc20Burn",
+          "Urc20TransferFrom",
+          "Urc20Transfer",
+          "Urc20WithdrawFuture",
+          "Urc20TransferOwner",
+          "Urc20Exchange",
+          "Urc20Approve",
+
+          "Urc20Allowance",
+          "Urc20GetOwner",
+          "Urc20BalanceOf",
+          "Urc20TotalSupply",
+          "Urc20Decimals",
+          "Urc20Symbol",
+          "Urc20Name",
+          "Urc20ContractList",
+          "Urc20FutureGet",
+
+          "SendShieldedCoin",
+          "SendShieldedCoinWithoutAsk",
+          "SetAccountId",
+          "TransferAsset",
+          "TriggerContract",
+          "TriggerConstantContract",
+          "UnfreezeAsset",
+          "UnfreezeBalance",
+          "UpdateAccount",
+          "UpdateAsset",
+          "UpdateEnergyLimit",
+          "UpdateSetting",
+          "UpdateWitness",
+          "UpdateAccountPermission",
+          "UpdateBrokerage",
+          "VoteWitness",
+          "WithdrawBalance",
+          "UpdateBrokerage",
+          "GetReward",
+          "GetBrokerage",
+
+          //urc721
+          "Urc721CreateContract",
+          "Urc721Mint",
+          "Urc721RemoveMinter",
+          "Urc721AddMinter",
+          "Urc721RenounceMinter",
+          "Urc721Burn",
+          "Urc721Approve",
+          "Urc721SetApproveForAll",
+          "Urc721TransferFrom",
+          "Urc721ContractList",
+          "Urc721TokenList",
+          "Urc721ContractGet",
+          "Urc721TokenGet",
+          "Urc721BalanceOf",
+          "Urc721IsApprovedForAll",
+
+          "Urc721GetName",
+          "Urc721GetSymbol",
+          "Urc721GetTotalSupply",
+          "Urc721GetTokenUri",
+          "Urc721GetOwnerOf",
+          "Urc721GetApproved",
+
+          //posbridge
+          "PosBridgeSetup",
+          "PosBridgeMapToken",
+          "PosBridgeCleanMapToken",
+          "PosBridgeDeposit",
+          "PosBridgeDepositExec",
+          "PosBridgeWithdraw",
+          "PosBridgeWithdrawExec",
+          "GetPosBridgeConfig",
+          "GetPosBridgeTokenMap"
   };
 
   private byte[] inputPrivateKey() throws IOException {
@@ -744,7 +837,7 @@ public class Client {
   private void sendFuture(String[] parameters) throws IOException, CipherException, CancelException {
     if (parameters == null || (parameters.length != 2 && parameters.length != 3 )) {
       System.out.println("SendFuture needs 2 parameters like following: ");
-      System.out.println("SendFuture  [ToAddress] Amount ExpireTime");
+      System.out.println("SendFuture [ToAddress] Amount ExpireTime");
       return;
     }
 
@@ -779,6 +872,54 @@ public class Client {
       System.out.println("SendFuture " + amount + " with expireDate " + expireDate + " Ginza to " + (selfLock ? "itself" : base58ToAddress) + " successful !!");
     } else {
       System.out.println("SendFuture " + amount + " with expireDate " + expireDate + " Ginza to " + (selfLock ? "itself" : base58ToAddress) + " failed !!");
+    }
+  }
+
+  private void sendFutureDeal(String[] parameters) throws IOException, CipherException, CancelException {
+    if (parameters == null || (parameters.length != 3 && parameters.length != 4 )) {
+      System.out.println("SendFutureDeal needs 3 parameters like following: ");
+      System.out.println("SendFutureDeal [ownerAddress] toAddress amount(- if send all deal) [expireDateAsDealId]");
+      return;
+    }
+
+    int index = 0;
+
+    byte[] ownerAddress = null;
+    if (parameters.length == 4) {
+      ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+      if (ownerAddress == null) {
+        System.out.println("Invalid ownerAddress.");
+        return;
+      }
+    }
+
+    String base58ToAddress = parameters[index++];
+    byte[] toAddress = WalletApi.decodeFromBase58Check(base58ToAddress);
+    if (toAddress == null) {
+      System.out.println("Invalid toAddress.");
+      return;
+    }
+
+    String amtStr = parameters[index++];
+    Optional<Long> amt;
+    if("-".equals(amtStr))
+      amt = Optional.empty();
+    else
+      amt = Optional.of(Long.parseLong(amtStr));
+
+    Date expireDate = Utils.strToDateLong(parameters[index]);
+
+    if (expireDate == null) {
+      System.out.println("The ExpiredDate format should look like yyyy-MM-dd HH:mm:ss or yyyy-MM-dd");
+      System.out.println("SendFutureDeal failed due to invalid expire date!!");
+      return;
+    }
+
+    boolean result = walletApiWrapper.sendFutureDeal(ownerAddress, toAddress, amt, expireDate.getTime());
+    if (result) {
+      System.out.println("SendFutureDeal with expireDate " + expireDate + " Ginza to " + base58ToAddress + " successful !!");
+    } else {
+      System.out.println("SendFutureDeal with expireDate " + expireDate + " Ginza to " + base58ToAddress + " failed !!");
     }
   }
 
@@ -3057,6 +3198,11 @@ public class Client {
               break;
             }
 
+            case "sendfuturedeal": {
+              sendFutureDeal(parameters);
+              break;
+            }
+
             case "withdrawfuture": {
               withdrawFuture(parameters);
               break;
@@ -3126,88 +3272,240 @@ public class Client {
              * Nft
              */
 
-            case "nftcreatetemplate": {
-              createNftTemplate(parameters);
+            case "urc721createcontract": {
+              createUrc721Contract(parameters);
               break;
             }
 
-            case "nftminttoken": {
-              mintNftToken(parameters);
+            case "urc721mint": {
+              urc721Mint(parameters);
               break;
             }
 
-            case "nftremoveminter": {
-              removeNftMinter(parameters);
+            case "urc721removeminter": {
+              urc721RemoveMinter(parameters);
               break;
             }
 
-            case "nftaddminter": {
-              addNftMinter(parameters);
+            case "urc721addminter": {
+              urc721AddMinter(parameters);
               break;
             }
 
-            case "nftrenounceminter": {
-              renounceNftMinter(parameters);
+            case "urc721renounceminter": {
+              urc721RenounceMinter(parameters);
               break;
             }
 
-            case "nftburntoken": {
-              burnNftToken(parameters);
+            case "urc721burn": {
+              urc721Burn(parameters);
               break;
             }
 
-            case "nftapprove": {
-              approveNftToken(parameters);
+            case "urc721approve": {
+              urc721Approve(parameters);
               break;
             }
 
-            case "nftapproveforall": {
-              approveForAllNft(parameters);
+            case "urc721setapproveforall": {
+              urc721SetApproveForAll(parameters);
               break;
             }
 
-            case "nfttransfer": {
-              transferNftToken(parameters);
+            case "urc721transferfrom": {
+              urc721TransferFrom(parameters);
               break;
             }
 
-            case "listnfttemplate": {
-              listNftTemplate(parameters);
+            case "urc721contractlist": {
+              urc721ContractList(parameters);
               break;
             }
 
-            case "listnfttoken": {
-              listNftToken(parameters);
+            case "urc721tokenlist": {
+              urc721TokenList(parameters);
               break;
             }
 
-            case "listnfttokenapprove": {
-              listNftTokenApprove(parameters);
+            case "urc721contractget": {
+              urc721ContractGet(parameters);
               break;
             }
 
-            case "listnfttokenapproveall": {
-              listNftTokenApproveAll(parameters);
+            case "urc721tokenget": {
+              urc721TokenGet(parameters);
               break;
             }
 
-            case "getnfttemplate": {
-              getNftTemplate(parameters);
+            case "urc721balanceof": {
+              urc721BalanceOf(parameters);
               break;
             }
 
-            case "getnfttoken": {
-              getNftToken(parameters);
+            case "urc721getname": {
+              urc721GetName(parameters);
               break;
             }
 
-            case "getnftbalance": {
-              getNftBalance(parameters);
+            case "urc721getsymbol": {
+              urc721GetSymbol(parameters);
               break;
             }
 
-            case "getnftapprovedforall": {
-              getNftApprovedForAll(parameters);
+            case "urc721gettotalsupply": {
+              urc721GetTotalSupply(parameters);
+              break;
+            }
+
+            case "urc721gettokenuri": {
+              urc721GetTokenUri(parameters);
+              break;
+            }
+
+            case "urc721getownerof": {
+              urc721GetOwnerOf(parameters);
+              break;
+            }
+
+            case "urc721getapproved": {
+              urc721GetApproved(parameters);
+              break;
+            }
+
+            case "urc721isapprovedforall": {
+              urc721IsApprovedForAll(parameters);
+              break;
+            }
+
+            /**
+             * POSBridge
+             */
+            case "posbridgesetup": {
+              posBridgeSetup(parameters);
+              break;
+            }
+
+            case "posbridgemaptoken": {
+              posBridgeMapToken(parameters);
+              break;
+            }
+
+            case "posbridgecleanmaptoken": {
+              posBridgeCleanMapToken(parameters);
+              break;
+            }
+
+            case "posbridgedeposit": {
+              posBridgeDeposit(parameters);
+              break;
+            }
+
+            case "posbridgedepositexec": {
+              posBridgeDepositExec(parameters);
+              break;
+            }
+
+            case "posbridgewithdraw": {
+              posBridgeWithdraw(parameters);
+              break;
+            }
+
+            case "posbridgewithdrawexec": {
+              posBridgeWithdrawExec(parameters);
+              break;
+            }
+
+            case "getposbridgeconfig": {
+              getPosBridgeConfig(parameters);
+              break;
+            }
+
+            case "getposbridgetokenmap": {
+              getPosBridgeTokenMap(parameters);
+              break;
+            }
+
+            /**
+             * urc20
+             */
+            case "urc20createcontract": {
+              urc20CreateContract(parameters);
+              break;
+            }
+            case "urc20contributepoolfee": {
+              urc20ContributePoolFee(parameters);
+              break;
+            }
+            case "urc20updateparams": {
+              urc20UpdateParams(parameters);
+              break;
+            }
+            case "urc20mint": {
+              urc20Mint(parameters);
+              break;
+            }
+            case "urc20burn": {
+              urc20Burn(parameters);
+              break;
+            }
+            case "urc20transferfrom": {
+              urc20TransferFrom(parameters);
+              break;
+            }
+            case "urc20transfer": {
+              urc20Transfer(parameters);
+              break;
+            }
+            case "urc20withdrawfuture": {
+              urc20WithdrawFuture(parameters);
+              break;
+            }
+            case "urc20transferowner": {
+              urc20TransferOwner(parameters);
+              break;
+            }
+            case "urc20exchange": {
+              urc20Exchange(parameters);
+              break;
+            }
+            case "urc20approve": {
+              urc20Approve(parameters);
+              break;
+            }
+            case "urc20allowance": {
+              urc20Allowance(parameters);
+              break;
+            }
+            case "urc20getowner": {
+              urc20GetOwner(parameters);
+              break;
+            }
+            case "urc20balanceof": {
+              urc20BalanceOf(parameters);
+              break;
+            }
+            case "urc20totalsupply": {
+              urc20TotalSupply(parameters);
+              break;
+            }
+            case "urc20decimals": {
+              urc20Decimals(parameters);
+              break;
+            }
+            case "urc20symbol": {
+              urc20Symbol(parameters);
+              break;
+            }
+            case "urc20name": {
+              urc20Name(parameters);
+              break;
+            }
+            case "urc20contractlist": {
+              urc20ContractList(parameters);
+              break;
+            }
+            case "urc20futureget": {
+              urc20FutureGet(parameters);
               break;
             }
 
@@ -3525,10 +3823,247 @@ public class Client {
     }
   }
 
-  private void transferNftToken(String[] parameters) throws CipherException, IOException, CancelException{
+  private void urc20FutureGet(String[] parameters) throws IOException, CipherException, CancelException{
+    if (parameters == null || parameters.length != 4) {
+      System.out.println("Using urc20FutureGet needs 3 parameters, like: ownerAddress contractAddress pageSize(-1 if not set) pageIndex(-1 if not set)");
+      return;
+    }
+
+    int index = 0;
+
+    byte[] ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (ownerAddress == null) {
+      System.out.println("urc20FutureGet: invalid ownerAddress!");
+      return;
+    }
+
+    byte[] address = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (address == null) {
+      System.out.println("urc20FutureGet: invalid address!");
+      return;
+    }
+
+    int pageSize = Integer.parseInt(parameters[index++]);
+    int pageIndex = Integer.parseInt(parameters[index++]);
+
+    var result = WalletApi.urc20FutureGet(ownerAddress, address, pageSize, pageIndex);
+    if (result == null) {
+      System.out.println("urc20FutureGet failed !!!");
+    } else {
+      System.out.println(Utils.formatMessageString(result));
+    }
+  }
+
+  private void urc20ContractList(String[] parameters) throws IOException, CipherException, CancelException{
+    if (parameters == null || parameters.length != 4) {
+      System.out.println("Using urc20ContractList needs 4 parameters, like: contractAddress(- if not set) symbol(- if not set) pageSize(-1 if not set) pageIndex(-1 if not set)");
+      return;
+    }
+
+    int index = 0;
+    String addrStr = parameters[index++];
+    Optional<byte[]> addrOpt;
+    if("-".equals(addrStr)){
+      addrOpt = Optional.empty();
+    }
+    else
+    {
+      byte[] address = WalletApi.decodeFromBase58Check(addrStr);
+      if (address == null) {
+        System.out.println("urc20ContractList: invalid contractAddress!");
+        return;
+      }
+      else
+      {
+        addrOpt = Optional.of(address);
+      }
+    }
+
+    Optional<String> symbolOpt;
+    String symbol = parameters[index++];
+    if("-".equals(symbol)){
+      symbolOpt = Optional.empty();
+    }
+    else
+    {
+      symbolOpt = Optional.of(symbol);
+    }
+
+    int pageSize = Integer.parseInt(parameters[index++]);
+    int pageIndex = Integer.parseInt(parameters[index++]);
+    var result = WalletApi.urc20ContractList(addrOpt, symbolOpt, pageIndex, pageSize);
+    if (result == null) {
+      System.out.println("urc20ContractList failed !!!");
+    } else {
+      System.out.println(Utils.formatMessageString(result));
+    }
+  }
+
+  private void urc20Name(String[] parameters) throws IOException, CipherException, CancelException{
+    if (parameters == null || parameters.length != 1) {
+      System.out.println("Using urc20Name needs 1 parameters, like contractAddress");
+      return;
+    }
+
+    byte[] contractAddr = WalletApi.decodeFromBase58Check(parameters[0]);
+    if (contractAddr == null) {
+      System.out.println("urc20Name: invalid address!");
+      return;
+    }
+
+    var result = WalletApi.urc20Name(contractAddr);
+    if (result == null) {
+      System.out.println("urc20Name failed !!!");
+    } else {
+      System.out.println(Utils.formatMessageString(result));
+    }
+  }
+
+  private void urc20Symbol(String[] parameters) throws IOException, CipherException, CancelException{
+    if (parameters == null || parameters.length != 1) {
+      System.out.println("Using urc20Symbol needs 1 parameters: address");
+      return;
+    }
+
+    byte[] address = WalletApi.decodeFromBase58Check(parameters[0]);
+    if (address == null) {
+      System.out.println("urc20Symbol: invalid address!");
+      return;
+    }
+
+    var result = WalletApi.urc20Symbol(address);
+    if (result == null) {
+      System.out.println("urc20Symbol failed !!!");
+    } else {
+      System.out.println(Utils.formatMessageString(result));
+    }
+  }
+
+  private void urc20Decimals(String[] parameters) throws IOException, CipherException, CancelException{
+    if (parameters == null || parameters.length != 1) {
+      System.out.println("Using urc20Decimals needs 1 parameters, like Urc20Decimals address");
+      return;
+    }
+
+    byte[] address = WalletApi.decodeFromBase58Check(parameters[0]);
+    if (address == null) {
+      System.out.println("urc20Decimals: invalid address!");
+      return;
+    }
+
+    var result = WalletApi.urc20Decimals(address);
+    if (result == null) {
+      System.out.println("urc20Decimals failed !!!");
+    } else {
+      System.out.println(Utils.formatMessageString(result));
+    }
+  }
+
+  private void urc20TotalSupply(String[] parameters)throws IOException, CipherException, CancelException {
+    if (parameters == null || parameters.length != 1) {
+      System.out.println("Using urc20TotalSupply needs 1 parameters, like Urc20TotalSupply address");
+      return;
+    }
+
+    byte[] address = WalletApi.decodeFromBase58Check(parameters[0]);
+    if (address == null) {
+      System.out.println("urc20TotalSupply: invalid address!");
+      return;
+    }
+
+    var result = WalletApi.urc20TotalSupply(address);
+    if (result == null) {
+      System.out.println("urc20TotalSupply failed !!!");
+    } else {
+      System.out.println(Utils.formatMessageString(result));
+    }
+  }
+
+  private void urc20BalanceOf(String[] parameters) throws IOException, CipherException, CancelException{
+    if (parameters == null || parameters.length != 2) {
+      System.out.println("Using urc20BalanceOf needs 2 parameters, like ownerAddress contractAddress");
+      return;
+    }
+
+    byte[] ownerAddr = WalletApi.decodeFromBase58Check(parameters[0]);
+    if (ownerAddr == null) {
+      System.out.println("urc20BalanceOf: invalid ownerAddress!");
+      return;
+    }
+
+    byte[] contractAddr = WalletApi.decodeFromBase58Check(parameters[1]);
+    if (contractAddr == null) {
+      System.out.println("urc20BalanceOf: invalid contractAddress!");
+      return;
+    }
+
+    var result = WalletApi.urc20BalanceOf(ownerAddr, contractAddr);
+    if (result == null) {
+      System.out.println("urc20BalanceOf failed !!!");
+    } else {
+      System.out.println(Utils.formatMessageString(result));
+    }
+  }
+
+  private void urc20GetOwner(String[] parameters) throws IOException, CipherException, CancelException {
+    if (parameters == null || parameters.length != 1) {
+      System.out.println("Using urc20GetOwner needs 1 parameters, like contractAddress");
+      return;
+    }
+
+    byte[] contractAddr = WalletApi.decodeFromBase58Check(parameters[0]);
+    if (contractAddr == null) {
+      System.out.println("urc20GetOwner: invalid contractAddress!");
+      return;
+    }
+
+    var result = WalletApi.urc20GetOwner(contractAddr);
+    if (result == null) {
+      System.out.println("urc20GetOwner failed !!!");
+    } else {
+      System.out.println(Utils.formatMessageString(result));
+    }
+  }
+
+  private void urc20Allowance(String[] parameters) throws IOException, CipherException, CancelException{
+    if (parameters == null || parameters.length != 3) {
+      System.out.println("urc20Allowance needs 3 parameters like following: ");
+      System.out.println("urc20Allowance ownerAddress contractAddress spenderAddress");
+      return;
+    }
+
+    int index = 0;
+
+    byte[] ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (ownerAddress == null) {
+      System.out.println("Invalid owner.");
+      return;
+    }
+
+    byte[] contractAddr = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (contractAddr == null) {
+      System.out.println("urc20Allowance: invalid contractAddress!");
+      return;
+    }
+
+    byte[] spenderAddr = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (spenderAddr == null) {
+      System.out.println("urc20Allowance: invalid spenderAddress!");
+      return;
+    }
+
+    var result = WalletApi.urc20Allowance(ownerAddress, contractAddr, spenderAddr);
+    if (result == null) {
+      System.out.println("urc20Allowance failed !!!");
+    } else {
+      System.out.println(Utils.formatMessageString(result));
+    }
+  }
+
+  private void urc20Approve(String[] parameters) throws IOException, CipherException, CancelException{
     if (parameters == null || (parameters.length != 3 && parameters.length != 4)) {
-      System.out.println("TransferNftToken needs 3 parameters like following: ");
-      System.out.println("TransferNftToken [OwnerAddress] to_address contract id");
+      System.out.println("Use urc20Approve command with below syntax: ");
+      System.out.println("urc20Approve [ownerAddress] contractAddress spenderAddress amount");
       return;
     }
 
@@ -3542,28 +4077,30 @@ public class Client {
       }
     }
 
-    String toAddrStr = parameters[index++];
-    byte[] toAddr = WalletApi.decodeFromBase58Check(toAddrStr);
-    if (toAddr == null) {
-      System.out.println("Invalid ToAddress.");
+    byte[] contractAddr = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (contractAddr == null) {
+      System.out.println("urc20Approve: invalid contractAddress!");
       return;
     }
 
-    String contract = parameters[index++];
-    long tokenId = Long.parseLong(parameters[index++]);
-
-    boolean result = walletApiWrapper.transferNftToken(ownerAddress, toAddr, contract, tokenId);
+    byte[] spenderAddr = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (spenderAddr == null) {
+      System.out.println("urc20Approve: invalid spenderAddress!");
+      return;
+    }
+    var amount = new BigInteger(parameters[index]);
+    boolean result = walletApiWrapper.urc20Approve(ownerAddress, contractAddr, spenderAddr, amount);
     if (result) {
-      System.out.println("TransferNftToken with toAddr: " + toAddrStr + " successful!!");
+      System.out.println("urc20Approve successful !!!");
     } else {
-      System.out.println("TransferNftToken with toAddr: " + toAddrStr + " failed!!");
+      System.out.println("urc20Approve failed !!!");
     }
   }
 
-  private void approveForAllNft(String[] parameters) throws CipherException, IOException, CancelException{
+  private void urc20Exchange(String[] parameters) throws IOException, CipherException, CancelException{
     if (parameters == null || (parameters.length != 2 && parameters.length != 3)) {
-      System.out.println("ApproveForAllNft needs 2 parameters like following: ");
-      System.out.println("ApproveForAllNft [OwnerAddress] to_address approveOrNot");
+      System.out.println("Use urc20Exchange command with below syntax: ");
+      System.out.println("urc20Exchange [OwnerAddress] contractAddress amount");
       return;
     }
 
@@ -3577,7 +4114,784 @@ public class Client {
       }
     }
 
-    byte[] toAddr = WalletApi.decodeFromBase58Check(parameters[index++]);
+    byte[] contractAddr = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (contractAddr == null) {
+      System.out.println("urc20Exchange: invalid address!");
+      return;
+    }
+
+    long amount = Long.parseLong(parameters[index]);
+    boolean result = walletApiWrapper.urc20Exchange(ownerAddress, contractAddr, amount);
+    if (result) {
+      System.out.println("urc20Exchange successful !!!");
+    } else {
+      System.out.println("urc20Exchange failed !!!");
+    }
+  }
+
+  private void urc20TransferOwner(String[] parameters) throws IOException, CipherException, CancelException{
+    if (parameters == null || (parameters.length != 2 && parameters.length != 3)) {
+      System.out.println("Use urc20TransferOwner command with below syntax: ");
+      System.out.println("urc20TransferOwner [OwnerAddress] toAddress contractAddress");
+      return;
+    }
+
+    int index = 0;
+    byte[] ownerAddress = null;
+    if (parameters.length == 3) {
+      ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+      if (ownerAddress == null) {
+        System.out.println("Invalid OwnerAddress.");
+        return;
+      }
+    }
+
+    byte[] toAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (toAddress == null) {
+      System.out.println("urc20TransferOwner: invalid toAddress!");
+      return;
+    }
+
+    byte[] contractAddr = WalletApi.decodeFromBase58Check(parameters[index]);
+    if (contractAddr == null) {
+      System.out.println("urc20TransferOwner: invalid contractAddress!");
+      return;
+    }
+
+    boolean result = walletApiWrapper.urc20TransferOwner(ownerAddress, toAddress, contractAddr);
+    if (result) {
+      System.out.println("urc20TransferOwner successful !!!");
+    } else {
+      System.out.println("urc20TransferOwner failed !!!");
+    }
+  }
+
+  private void urc20WithdrawFuture(String[] parameters) throws IOException, CipherException, CancelException{
+    if (parameters == null || (parameters.length != 1 && parameters.length != 2)) {
+      System.out.println("Use urc20WithdrawFuture command with below syntax: ");
+      System.out.println("urc20WithdrawFuture [OwnerAddress] contractAddress");
+      return;
+    }
+
+    int index = 0;
+    byte[] ownerAddress = null;
+    if (parameters.length == 2) {
+      ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+      if (ownerAddress == null) {
+        System.out.println("Invalid OwnerAddress.");
+        return;
+      }
+    }
+
+    byte[] contractAddr = WalletApi.decodeFromBase58Check(parameters[index]);
+    if (contractAddr == null) {
+      System.out.println("urc20WithdrawFuture: invalid address!");
+      return;
+    }
+
+    boolean result = walletApiWrapper.urc20WithdrawFuture(ownerAddress, contractAddr);
+    if (result) {
+      System.out.println("urc20WithdrawFuture successful !!!");
+    } else {
+      System.out.println("urc20WithdrawFuture failed !!!");
+    }
+  }
+
+  private void urc20TransferFrom(String[] parameters) throws IOException, CipherException, CancelException{
+    if (parameters == null || (parameters.length != 5 && parameters.length != 6)) {
+      System.out.println("urc20TransferFrom needs 5 parameters like following: ");
+      System.out.println("urc20TransferFrom [OwnerAddress] fromAddress toAddress contractAddress amount available_time(- for default now or 2021-01-01 or 2021-01-01 01:00:01)");
+      return;
+    }
+
+    int index = 0;
+    byte[] ownerAddress = null;
+    if (parameters.length == 6) {
+      ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+      if (ownerAddress == null) {
+        System.out.println("Invalid OwnerAddress.");
+        return;
+      }
+    }
+
+    byte[] fromAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (fromAddress == null) {
+      System.out.println("Invalid OwnerAddress.");
+      return;
+    }
+
+    byte[] toAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (toAddress == null) {
+      System.out.println("Invalid OwnerAddress.");
+      return;
+    }
+
+    byte[] contractAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (contractAddress == null) {
+      System.out.println("Invalid contractAddress.");
+      return;
+    }
+
+    var amount = new BigInteger(parameters[index++]);
+
+    long availableTime;
+    String availableTimeStr = parameters[index];
+    if("-".equals(availableTimeStr))
+    {
+      availableTime = 0;
+    }
+    else {
+      Date availableDate = Utils.strToDateLong(availableTimeStr);
+      if (availableDate == null) {
+        System.out.println("The available_time format should look like 2018-03-01 OR 2018-03-01 00:01:02");
+        System.out.println("urc20TransferFrom " + contractAddress + " failed !!");
+        return;
+      }
+      availableTime = availableDate.getTime();
+    }
+
+    boolean result = walletApiWrapper.urc20TransferFrom(ownerAddress, fromAddress, toAddress, contractAddress, amount, availableTime);
+    String walletOwnerAddress = walletApiWrapper.getAddress();
+    if (result) {
+      System.out.println("urc20TransferFrom of " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " successful !!");
+    } else {
+      System.out.println("urc20TransferFrom " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " failed !!");
+    }
+  }
+
+  private void urc20Transfer(String[] parameters) throws IOException, CipherException, CancelException{
+    if (parameters == null || (parameters.length != 4 && parameters.length != 5)) {
+      System.out.println("urc20Transfer needs 5 parameters like following: ");
+      System.out.println("urc20Transfer [ownerAddress] contractAddress toAddress amount available_time(- for default now or 2021-01-01 or 2021-01-01 01:00:01)");
+      return;
+    }
+
+    int index = 0;
+    byte[] ownerAddress = null;
+    if (parameters.length == 5) {
+      ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+      if (ownerAddress == null) {
+        System.out.println("Invalid OwnerAddress.");
+        return;
+      }
+    }
+
+    byte[] contractAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (contractAddress == null) {
+      System.out.println("Invalid contractAddress.");
+      return;
+    }
+
+    byte[] toAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (toAddress == null) {
+      System.out.println("Invalid toAddress.");
+      return;
+    }
+
+    var amount = new BigInteger(parameters[index++]);
+
+    long availableTime;
+    String availableTimeStr = parameters[index];
+    if("-".equals(availableTimeStr))
+      availableTime = 0;
+    else {
+      Date availableDate = Utils.strToDateLong(availableTimeStr);
+      if (availableDate == null) {
+        System.out.println("The available_time format should look like 2018-03-01 OR 2018-03-01 00:01:02");
+        System.out.println("urc20Transfer " + contractAddress + " failed !!");
+        return;
+      }
+      availableTime = availableDate.getTime();
+    }
+
+    var result = walletApiWrapper.urc20Transfer(ownerAddress, contractAddress, toAddress, amount, availableTime);
+    String walletOwnerAddress = walletApiWrapper.getAddress();
+    if (result) {
+      System.out.println("urc20Transfer of " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " successful !!");
+    } else {
+      System.out.println("urc20Transfer of " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " failed !!");
+    }
+  }
+
+  private void urc20Burn(String[] parameters) throws IOException, CipherException, CancelException{
+    if (parameters == null || (parameters.length != 2 && parameters.length != 3)) {
+      System.out.println("urc20Burn needs 2 parameters like following: ");
+      System.out.println("urc20Burn [ownerAddress] contractAddress amount");
+      return;
+    }
+
+    int index = 0;
+    byte[] ownerAddress = null;
+    if (parameters.length == 3) {
+      ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+      if (ownerAddress == null) {
+        System.out.println("Invalid OwnerAddress.");
+        return;
+      }
+    }
+
+    byte[] contractAddress =  WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (contractAddress == null) {
+      System.out.println("Invalid contractAddress.");
+      return;
+    }
+
+    var amount = new BigInteger(parameters[index++]);
+
+    boolean result = walletApiWrapper.burnUrc20(ownerAddress, contractAddress, amount);
+    String walletOwnerAddress = walletApiWrapper.getAddress();
+    if (result) {
+      System.out.println("urc20Burn of " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " successful !!");
+    } else {
+      System.out.println("urc20Burn " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " failed !!");
+    }
+  }
+
+  private void urc20Mint(String[] parameters) throws IOException, CipherException, CancelException{
+    if (parameters == null || (parameters.length != 3 && parameters.length != 4)) {
+      System.out.println("urc20Mint needs 3 parameters like following: ");
+      System.out.println("urc20Mint [ownerAddress] contractAddress toAddress(- if mint to owner) amount");
+      return;
+    }
+
+    int index = 0;
+    byte[] ownerAddress = null;
+    if (parameters.length == 4) {
+      ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+      if (ownerAddress == null) {
+        System.out.println("Invalid OwnerAddress.");
+        return;
+      }
+    }
+
+    byte[] contractAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (contractAddress == null) {
+      System.out.println("Invalid contractAddress.");
+      return;
+    }
+
+    String toAddrStr = parameters[index++];
+    Optional<byte[]> toAddrOpt;
+    if("-".equals(toAddrStr)){
+      toAddrOpt = Optional.empty();
+    }
+    else {
+      byte[] toAddress = WalletApi.decodeFromBase58Check(toAddrStr);
+      if (toAddress == null) {
+        System.out.println("Invalid toAddress.");
+        return;
+      }
+      else
+      {
+        toAddrOpt = Optional.of(toAddress);
+      }
+    }
+
+    BigInteger amount = new BigInteger(parameters[index++]);
+
+    boolean result = walletApiWrapper.urc20Mint(ownerAddress, contractAddress, toAddrOpt, amount);
+    String walletOwnerAddress = walletApiWrapper.getAddress();
+    if (result) {
+      System.out.println("urc20Mint of " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " successful !!");
+    } else {
+      System.out.println("urc20Mint " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " failed !!");
+    }
+  }
+
+  private void urc20UpdateParams(String[] parameters) throws IOException, CipherException, CancelException{
+      if (parameters == null || (parameters.length != 10 && parameters.length != 11)) {
+        System.out.println("urc20UpdateParams needs 11 parameters like following: ");
+        System.out.println("urc20UpdateParams [ownerAddress] contract_addr total_supply[-1 if not set] fee_pool[-1 if not set] fee[-1 if not set] extra_fee_rate[-1 if not set] lot[-1 if not set]  url[- if not set] exch_unw_num[-1 if not set] exch_token_num[-1 if not set] create_acc_fee[-1 if not set]");
+        return;
+      }
+
+      int index = 0;
+      byte[] ownerAddress = null;
+      if (parameters.length == 11) {
+        ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+        if (ownerAddress == null) {
+          System.out.println("Invalid OwnerAddress.");
+          return;
+        }
+      }
+
+      byte[] address = WalletApi.decodeFromBase58Check(parameters[index++]);
+      if (address == null) {
+        System.out.println("Invalid contract address.");
+        return;
+      }
+
+      BigInteger total_supply = new BigInteger(parameters[index++]);
+      long fee_pool = new Long(parameters[index++]);
+      long fee = new Long(parameters[index++]);
+      long extraFeeRate = new Long(parameters[index++]);
+      long lot = new Long(parameters[index++]);
+      String url = parameters[index++].trim();
+      long exchUnwNum = new Long(parameters[index++]);
+      long exchTokenNum = new Long(parameters[index++]);
+      long createAccFee = new Long(parameters[index++]);
+
+      boolean result = walletApiWrapper.urc20UpdateTokenParams(ownerAddress, address, total_supply, fee_pool, fee, extraFeeRate, lot, url, exchUnwNum, exchTokenNum, createAccFee);
+      String walletOwnerAddress = walletApiWrapper.getAddress();
+      if (result) {
+        System.out.println("urc20UpdateParams of " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " successful !!");
+      } else {
+        System.out.println("urc20UpdateParams " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " failed !!");
+      }
+  }
+
+  private void urc20ContributePoolFee(String[] parameters) throws IOException, CipherException, CancelException{
+        if (parameters == null || (parameters.length != 2 && parameters.length != 3)) {
+          System.out.println("urc20ContributePoolFee needs 2 parameters like following: ");
+          System.out.println("urc20ContributePoolFee [ownerAddress] contractAddress amount");
+          return;
+        }
+
+        int index = 0;
+        byte[] ownerAddress = null;
+        if (parameters.length == 3) {
+          ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+          if (ownerAddress == null) {
+            System.out.println("Invalid OwnerAddress.");
+            return;
+          }
+        }
+
+        byte[] contractAddress = null;
+        contractAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+        if (contractAddress == null) {
+          System.out.println("Invalid contractAddress.");
+          return;
+        }
+
+        long amount = new Long(parameters[index++]);
+
+        boolean result = walletApiWrapper.contributeUrc20FeePool(ownerAddress, contractAddress, amount);
+        String walletOwnerAddress = walletApiWrapper.getAddress();
+        if (result) {
+          System.out.println("urc20ContributePoolFee of " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " successful !!");
+        } else {
+          System.out.println("urc20ContributePoolFee " + (ownerAddress == null ? walletOwnerAddress : ownerAddress) + " failed !!");
+        }
+  }
+
+  private void urc20CreateContract(String[] parameters) throws IOException, CipherException, CancelException {
+    if (parameters == null || (parameters.length != 16 && parameters.length != 17)) {
+      System.out.println("urc20CreateContract needs 16 parameters like following: ");
+      System.out.println("urc20CreateContract [OwnerAddress] symbol name decimals max_supply total_supply start_time(- if default) end_time(- if default)  url fee extra_fee_rate fee_pool lot enable_exch exch_unw_num exch_token_num create_acc_fee");
+      return;
+    }
+
+    int index = 0;
+    byte[] ownerAddress = null;
+    if (parameters.length == 17) {
+      ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+      if (ownerAddress == null) {
+        System.out.println("Invalid OwnerAddress.");
+        return;
+      }
+    }
+
+    String symbol = parameters[index++];
+    String name = parameters[index++];
+    long decimals = new Long(parameters[index++]);
+    BigInteger maxSupply = new BigInteger(parameters[index++]);
+    BigInteger totalSupply = new BigInteger(parameters[index++]);
+    String startDateStr = parameters[index++];
+    String endDateStr = parameters[index++];
+
+    long startTime;
+    if("-".equals(startDateStr)){
+      startTime = -1;
+    }
+    else {
+      Date startDate = Utils.strToDateLong(startDateStr);
+      if(startDate == null)
+      {
+        System.out.println("The StartDate and EndDate format should look like (now OR yyyy-MM-dd HH:mm:ss OR yyyy-MM-dd");
+        System.out.println("urc20CreateContract " + symbol + " failed !!");
+        return;
+      }
+      else
+        startTime = startDate.getTime();
+    }
+
+    long endTime;
+    if("-".equals(endDateStr)){
+      endTime = -1;
+    }
+    else{
+      Date endDate = Utils.strToDateLong(endDateStr);
+      if (endDate == null) {
+        System.out.println("The StartDate and EndDate format should look like yyyy-MM-dd HH:mm:ss or yyyy-MM-dd");
+        System.out.println("urc20CreateContract " + symbol + " failed !!");
+        return;
+      }
+      else
+        endTime = endDate.getTime();
+    }
+
+    String url = parameters[index++];
+    long fee = new Long(parameters[index++]);
+    long extra_fee_rate = new Long(parameters[index++]);
+    long poolFee = new Long(parameters[index++]);
+    long lot = new Long(parameters[index++]);
+    boolean enableExch = new Boolean(parameters[index++]);
+    long exchUnwNum = new Long(parameters[index++]);
+    long exchTokenNum = new Long(parameters[index++]);
+    long createAccFee = new Long(parameters[index++]);
+
+    boolean result = walletApiWrapper.createUrc20Contract(ownerAddress, symbol, name, decimals, maxSupply, totalSupply, startTime, endTime, url, fee, extra_fee_rate, poolFee , lot, enableExch, exchUnwNum, exchTokenNum, createAccFee);
+    if (result) {
+      System.out.println("urc20CreateContract with token name: " + symbol + ", abbr: " + name + ", max supply: " + maxSupply + ", total supply:" + totalSupply + " successful !!");
+    } else {
+      System.out.println("urc20CreateContract with token name: " + symbol + ", abbr: " + name + ", max supply: " + maxSupply + ", total supply:" + totalSupply + " failed !!");
+    }
+  }
+
+  //PoSBridge
+  private void posBridgeWithdrawExec(String[] parameters) throws Exception{
+    if (parameters == null || (parameters.length != 2 && parameters.length != 3)) {
+      System.out.println("posBridgeWithdrawExec needs 2 parameters like following: ");
+      System.out.println("posBridgeWithdrawExec [OwnerAddress] signatures[multi hex with | split] msg[hex]");
+      return;
+    }
+
+    int index = 0;
+    byte[] ownerAddress = null;
+    if (parameters.length == 3) {
+      ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+      if (ownerAddress == null) {
+        System.out.println("Invalid OwnerAddress.");
+        return;
+      }
+    }
+    var signatures = Arrays.asList(parameters[index++].split("|"));
+    var msg = parameters[index++];
+
+    boolean result = walletApiWrapper.posBridgeWithdrawExec(ownerAddress, signatures, msg);
+    if (result) {
+      System.out.println("posBridgeWithdrawExec with signatures hex: " + signatures + ", msg hex: " + msg + " successful!!");
+    } else {
+      System.out.println("posBridgeWithdrawExec with signatures hex: " + signatures +  ", msg hex: " + msg + " failed!!");    }
+  }
+
+  private void posBridgeWithdraw(String[] parameters) throws Exception{
+    if (parameters == null || (parameters.length != 3 && parameters.length != 4)) {
+      System.out.println("posBridgeWithdraw needs 4 parameters like following: ");
+      System.out.println("posBridgeWithdraw [OwnerAddress] childToken[token symbol]  receiveAddress[hex addr like 0x...] data[amount or nft id]");
+      return;
+    }
+
+    int index = 0;
+    byte[] ownerAddress = null;
+    if (parameters.length == 4) {
+      ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+      if (ownerAddress == null) {
+        System.out.println("Invalid OwnerAddress.");
+        return;
+      }
+    }
+    String childToken = parameters[index++];
+    String receiveAddress = parameters[index++];
+    long data = Long.valueOf(parameters[index++]);
+
+    boolean result = walletApiWrapper.posBridgeWithdraw(ownerAddress, childToken, receiveAddress, data);
+    if(result) {
+      System.out.println("posBridgeWithdraw with childToken: " + childToken + ", receiveAddress: " + receiveAddress + ", data: " + data + " successful!!");
+    } else {
+      System.out.println("posBridgeWithdraw with childToken: " + childToken + ", receiveAddress: " + receiveAddress + ", data: " + data + " failed!!");
+    }
+  }
+
+  private void posBridgeDepositExec(String[] parameters) throws Exception{
+    if (parameters == null || (parameters.length != 2 && parameters.length != 3)) {
+      System.out.println("posBridgeDepositExec needs 2 parameters like following: ");
+      System.out.println("posBridgeDepositExec [OwnerAddress] signatures[hex] msg[hex]");
+      return;
+    }
+
+    int index = 0;
+    byte[] ownerAddress = null;
+    if (parameters.length == 3) {
+      ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+      if (ownerAddress == null) {
+        System.out.println("Invalid OwnerAddress.");
+        return;
+      }
+    }
+    var signatures = Arrays.asList(parameters[index++].split("|"));
+    var msg = parameters[index++];
+
+    boolean result = walletApiWrapper.posBridgeDepositExec(ownerAddress, signatures, msg);
+    if (result) {
+      System.out.println("posBridgeDepositExec with signatures hex: " + signatures + ", msg hex: " + msg + " successful!!");
+    } else {
+      System.out.println("posBridgeDepositExec with signatures hex: " + signatures +  ", msg hex: " + msg + " failed!!");    }
+  }
+
+  private void posBridgeDeposit(String[] parameters) throws Exception{
+    if (parameters == null || (parameters.length != 5 && parameters.length != 6)) {
+      System.out.println("posBridgeDeposit needs 5 parameters like following: ");
+      System.out.println("posBridgeDeposit [OwnerAddress] root_token[token addr] receiveAddr[hex addr like 0x...] child_chainid data[amount or nft id]");
+      return;
+    }
+
+    int index = 0;
+    byte[] ownerAddress = null;
+    if (parameters.length == 6) {
+      ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+      if (ownerAddress == null) {
+        System.out.println("Invalid OwnerAddress.");
+        return;
+      }
+    }
+    String rootToken = parameters[index++];
+    String receiveAddr = parameters[index++];
+    long childChainId = Long.valueOf(parameters[index++]);
+    long data = Long.valueOf(parameters[index++]);
+
+    boolean result = walletApiWrapper.posBridgeDeposit(ownerAddress, rootToken, receiveAddr, childChainId, data);
+    if (result) {
+      System.out.println("posBridgeDeposit with rootToken: " + rootToken + ", receiveAddr: " + receiveAddr + ", childChainId: " + childChainId +  ", data: " + data + " successful!!");
+    } else {
+      System.out.println("posBridgeDeposit with rootToken: " + rootToken + ", receiveAddr: " + receiveAddr + ", childChainId: " + childChainId +  ", data: " + data + " failed!!");
+    }
+  }
+
+  private void posBridgeCleanMapToken(String[] parameters) throws CipherException, IOException, CancelException{
+    if (parameters == null || (parameters.length != 4 && parameters.length != 5)) {
+      System.out.println("posBridgeCleanMapToken needs 5 parameters like following: ");
+      System.out.println("posBridgeCleanMapToken [OwnerAddress] root_token root_chainid child_token child_chainid");
+      return;
+    }
+
+    int index = 0;
+    byte[] ownerAddress = null;
+    if (parameters.length == 5) {
+      ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+      if (ownerAddress == null) {
+        System.out.println("Invalid OwnerAddress.");
+        return;
+      }
+    }
+
+    String rootToken = parameters[index++];
+
+    if (!WalletApi.addressValid(Hex.decode(rootToken))) {
+      System.out.println("Invalid rootToken.");
+      return;
+    }
+
+    long rootChainId = Long.parseLong(parameters[index++]);
+
+    String childToken = parameters[index++];
+
+    if (!WalletApi.addressValid(Hex.decode(childToken))){
+      System.out.println("Invalid childToken.");
+      return;
+    }
+
+    long childChainId = Long.parseLong(parameters[index++]);
+
+    boolean result = walletApiWrapper.posBridgeCleanMapToken(ownerAddress, rootToken, rootChainId, childToken, childChainId);
+    if (result) {
+      System.out.println("posBridgeCleanMapToken with rootToken: " + rootToken + ", rootChainId: " + rootChainId + ", childToken: " + childToken +  ", childChainId: " + childChainId + " successful!!");
+    } else {
+      System.out.println("posBridgeCleanMapToken with rootToken: " + rootToken + ", rootChainId: " + rootChainId + ", childToken: " + childToken +  ", childChainId: " + childChainId +" failed!!");
+    }
+  }
+
+  private void posBridgeMapToken(String[] parameters) throws CipherException, IOException, CancelException{
+    if (parameters == null || (parameters.length != 5 && parameters.length != 6)) {
+      System.out.println("posBridgeMapToken needs 5 parameters like following: ");
+      System.out.println("posBridgeMapToken [OwnerAddress] root_token root_chainid child_token child_chainid type[1,2,3]");
+      return;
+    }
+
+    int index = 0;
+    byte[] ownerAddress = null;
+    if (parameters.length == 6) {
+      ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+      if (ownerAddress == null) {
+        System.out.println("Invalid OwnerAddress.");
+        return;
+      }
+    }
+
+    String rootToken = parameters[index++];
+
+    if (!WalletApi.addressValid(Hex.decode(rootToken))) {
+      System.out.println("Invalid rootToken.");
+      return;
+    }
+
+    long rootChainId = Long.parseLong(parameters[index++]);
+
+    String childToken = parameters[index++];
+
+    if (!WalletApi.addressValid(Hex.decode(childToken))){
+      System.out.println("Invalid childToken.");
+      return;
+    }
+
+    long childChainId = Long.parseLong(parameters[index++]);
+
+    int assetType = Integer.parseInt(parameters[index++]);
+
+    boolean result = walletApiWrapper.posBridgeMapToken(ownerAddress, rootToken, rootChainId, childToken, childChainId, assetType);
+    if (result) {
+      System.out.println("posBridgeMapToken with rootToken: " + rootToken + ", rootChainId: " + rootChainId + ", childToken: " + childToken +  ", childChainId: " + childChainId +  ", assetType: " + assetType + " successful!!");
+    } else {
+      System.out.println("posBridgeMapToken with rootToken: " + rootToken + ", rootChainId: " + rootChainId + ", childToken: " + childToken +  ", childChainId: " + childChainId + ", assetType: " + assetType +" failed!!");
+    }
+  }
+
+  private void posBridgeSetup(String[] parameters) throws CipherException, IOException, CancelException{
+    if (parameters == null || (parameters.length != 7 && parameters.length != 8)) {
+      System.out.println("posBridgeSetup needs 7 parameters like following: ");
+      System.out.println("posBridgeSetup [OwnerAddress] new_owner[- if not set] min_validator[- if not set] validators[- if not set or \"v1|v2|v3\"] consensus_rate[- if not set] native_predicate[ | if not set] token_predicate[ | if not set] nft_predicate[ | if not set]");
+      return;
+    }
+
+    int index = 0;
+    byte[] ownerAddress = null;
+    if (parameters.length == 6) {
+      ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+      if (ownerAddress == null) {
+        System.out.println("Invalid OwnerAddress.");
+        return;
+      }
+    }
+
+    String newOwner = parameters[index++];
+    byte[] newOwnerAddr = null;
+    if(!"-".equalsIgnoreCase(newOwner))
+    {
+      newOwnerAddr = WalletApi.decodeFromBase58Check(newOwner);
+      if (newOwnerAddr == null) {
+        System.out.println("Invalid newOwnerAddr.");
+        return;
+      }
+    }
+
+    String minValidatorStr = parameters[index++];
+    long minValidator = -1L;
+
+    if(!"-".equalsIgnoreCase(minValidatorStr))
+    {
+      minValidator = Long.parseLong(minValidatorStr);
+    }
+
+    String validators = parameters[index++];
+    if("-".equalsIgnoreCase(validators))
+    {
+      validators = null;
+    }
+
+    String consensusRateStr = parameters[index++];
+    int consensusRate = -1;
+
+    if(!"-".equalsIgnoreCase(consensusRateStr))
+    {
+      consensusRate = Integer.parseInt(consensusRateStr);
+    }
+
+    String predicateNative = parameters[index++];
+    String predicateToken = parameters[index++];
+    String predicateNft = parameters[index++];
+
+    boolean result = walletApiWrapper.posBridgeSetup(ownerAddress, newOwnerAddr, minValidator, validators, consensusRate, predicateNative, predicateToken, predicateNft);
+    if (result) {
+      System.out.println("posBridgeSetup with newOwner: " + newOwnerAddr + "minValidator: " + minValidator + ", validators: " + validators + " successful!!");
+    } else {
+      System.out.println("posBridgeSetup with newOwner: " + newOwnerAddr + "minValidator: " + minValidator + ", validators: " + validators + " failed!!");
+    }
+  }
+
+  //@todo later
+  private void getPosBridgeConfig(String[] parameters) throws CipherException, IOException, CancelException{
+    var config = WalletApi.getPosBridgeConfig();
+    if (config == null) {
+      System.out.println("getPosBridgeConfig failed !!");
+    } else {
+      System.out.println(Utils.formatMessageString(config));
+    }
+  }
+
+  private void getPosBridgeTokenMap(String[] parameters) throws CipherException, IOException, CancelException{
+    var config = WalletApi.getPosBridgeTokenMap();
+    if (config == null) {
+      System.out.println("getPosBridgeTokenMap failed !!");
+    } else {
+      System.out.println(Utils.formatMessageString(config));
+    }
+  }
+
+  private void urc721TransferFrom(String[] parameters) throws CipherException, IOException, CancelException, DecoderException {
+    if (parameters == null || (parameters.length != 3 && parameters.length != 4)) {
+      System.out.println("urc721TransferFrom needs 3 parameters like following: ");
+      System.out.println("urc721TransferFrom [OwnerAddress] toAddress contractAddr tokenId");
+      return;
+    }
+
+    int index = 0;
+    byte[] ownerAddress = null;
+    if (parameters.length == 4) {
+      ownerAddress = org.apache.commons.codec.binary.Hex.decodeHex(parameters[index++].toCharArray());
+      if (ownerAddress == null) {
+        System.out.println("Invalid OwnerAddress.");
+        return;
+      }
+    }
+
+    String toAddrStr = parameters[index++];
+    byte[] toAddr = WalletApi.decodeFromBase58Check(toAddrStr);
+    if (toAddr == null) {
+      System.out.println("Invalid ToAddress.");
+      return;
+    }
+
+    byte[] contractAddr = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (contractAddr == null) {
+      System.out.println("Invalid ContractAddress.");
+      return;
+    }
+    long tokenId = Long.parseLong(parameters[index++]);
+
+    boolean result = walletApiWrapper.urc721TransferFrom(ownerAddress, toAddr, contractAddr, tokenId);
+    if (result) {
+      System.out.println("urc721TransferFrom with toAddr: " + toAddrStr + " successful!!");
+    } else {
+      System.out.println("urc721TransferFrom with toAddr: " + toAddrStr + " failed!!");
+    }
+  }
+
+  private void urc721SetApproveForAll(String[] parameters) throws CipherException, IOException, CancelException{
+    if (parameters == null || (parameters.length != 3 && parameters.length != 4)) {
+      System.out.println("urc721SetApproveForAll needs 3 parameters like following: ");
+      System.out.println("urc721SetApproveForAll [OwnerAddress] contractAddr toAddress approveOrNot");
+      return;
+    }
+
+    int index = 0;
+    byte[] ownerAddress = null;
+    if (parameters.length == 4) {
+      ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+      if (ownerAddress == null) {
+        System.out.println("Invalid OwnerAddress.");
+        return;
+      }
+    }
+
+    byte[] contractAddr = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (contractAddr == null) {
+      System.out.println("Invalid ContractAddress.");
+      return;
+    }
+
+    String toAddrBase58 = parameters[index++];
+    byte[] toAddr = WalletApi.decodeFromBase58Check(toAddrBase58);
     if (toAddr == null) {
       System.out.println("Invalid ToAddress.");
       return;
@@ -3585,18 +4899,18 @@ public class Client {
 
     boolean approve = Boolean.valueOf(parameters[index++]);
 
-    boolean result = walletApiWrapper.approveForAllNft(ownerAddress, toAddr, approve);
+    boolean result = walletApiWrapper.urc721SetApproveForAll(ownerAddress, contractAddr, toAddr, approve);
     if (result) {
-      System.out.println("ApproveForAllNft with toAddr: " + toAddr + " successful !!");
+      System.out.println("urc721SetApproveForAll with toAddr: " + toAddrBase58 + " successful !!");
     } else {
-      System.out.println("ApproveForAllNft with toAddr: " + toAddr + " failed !!");
+      System.out.println("urc721SetApproveForAll with toAddr: " + toAddrBase58 + " failed !!");
     }
   }
 
-  private void approveNftToken(String[] parameters) throws CipherException, IOException, CancelException{
+  private void urc721Approve(String[] parameters) throws CipherException, IOException, CancelException, DecoderException {
     if (parameters == null || (parameters.length != 4 && parameters.length != 5)) {
-      System.out.println("ApproveNftToken needs 4 parameters like following: ");
-      System.out.println("ApproveNftToken [OwnerAddress] to_address approveOrNot contract id");
+      System.out.println("urc721Approve needs 4 parameters like following: ");
+      System.out.println("urc721Approve [OwnerAddress] toAddr approveOrNot contractAddr tokenId");
       return;
     }
 
@@ -3616,22 +4930,27 @@ public class Client {
       return;
     }
 
-    boolean approve = Boolean.valueOf(parameters[index++]);
-    String contract = parameters[index++];
+    boolean approveOrNot = Boolean.valueOf(parameters[index++]);
+    String contractAddrBase58 = parameters[index++];
+    byte[] contractAddr = WalletApi.decodeFromBase58Check(contractAddrBase58);
+    if (contractAddr == null) {
+      System.out.println("Invalid ContractAddress.");
+      return;
+    }
     long tokenId = Long.parseLong(parameters[index++]);
 
-    boolean result = walletApiWrapper.approveNftToken(ownerAddress, toAddr, approve, contract, tokenId);
+    boolean result = walletApiWrapper.urc721Approve(ownerAddress, toAddr, approveOrNot, contractAddr, tokenId);
     if (result) {
-      System.out.println("ApproveNftToken with contract: " + contract + " successful !!");
+      System.out.println("urc721Approve with contractAddr: " + contractAddrBase58 + " successful !!");
     } else {
-      System.out.println("ApproveNftToken with contract: " + contract + " failed !!");
+      System.out.println("urc721Approve with contractAddr: " + contractAddrBase58 + " failed !!");
     }
   }
 
-  private void burnNftToken(String[] parameters) throws CipherException, IOException, CancelException {
+  private void urc721Burn(String[] parameters) throws CipherException, IOException, CancelException {
     if (parameters == null || (parameters.length != 2 && parameters.length != 3)) {
-      System.out.println("BurnNftToken needs 2 parameters like following: ");
-      System.out.println("BurnNftToken [OwnerAddress] contract id");
+      System.out.println("urc721Burn needs 2 parameters like following: ");
+      System.out.println("urc721Burn [OwnerAddress] contractAddr tokenId");
       return;
     }
 
@@ -3645,21 +4964,26 @@ public class Client {
       }
     }
 
-    String contract = parameters[index++];
-    long id = Long.parseLong(parameters[index++]);
+    String contractAddrBase58 = parameters[index++];
+    byte[] contractAddr = WalletApi.decodeFromBase58Check(contractAddrBase58);
+    if (contractAddr == null) {
+      System.out.println("Invalid contractAddr.");
+      return;
+    }
+    long tokenId = Long.parseLong(parameters[index++]);
 
-    boolean result = walletApiWrapper.burnNftToken(ownerAddress, contract, id);
+    boolean result = walletApiWrapper.urc721Burn(ownerAddress, contractAddr, tokenId);
     if (result) {
-      System.out.println("BurnNftToken with contract: " + contract + " successful !!");
+      System.out.println("urc721Burn with contractAddr: " + contractAddrBase58 + ", tokenId: " + tokenId + " successful !!");
     } else {
-      System.out.println("BurnNftToken with contract: " + contract + " failed !!");
+      System.out.println("urc721Burn with contractAddr: " + contractAddrBase58 +  ", tokenId: " + tokenId + " failed !!");
     }
   }
 
-  private void renounceNftMinter(String[] parameters) throws CipherException, IOException, CancelException{
+  private void urc721RenounceMinter(String[] parameters) throws CipherException, IOException, CancelException, DecoderException{
     if (parameters == null || (parameters.length != 1 && parameters.length != 2)) {
-      System.out.println("RenounceNftMinter needs 1 parameters like following: ");
-      System.out.println("RenounceNftMinter [OwnerAddress] contract");
+      System.out.println("urc721RenounceMinter needs 1 parameters like following: ");
+      System.out.println("urc721RenounceMinter [OwnerAddress] contractAddr");
       return;
     }
 
@@ -3673,20 +4997,25 @@ public class Client {
       }
     }
 
-    String contract = parameters[index++];
+    String contractAddrBase58 = parameters[index++];
+    byte[] contractAddr = WalletApi.decodeFromBase58Check(contractAddrBase58);
+    if (contractAddr == null) {
+      System.out.println("Invalid ContractAddress.");
+      return;
+    }
 
-    boolean result = walletApiWrapper.renounceNftMinter(ownerAddress, contract);
+    boolean result = walletApiWrapper.urc721RenounceMinter(ownerAddress, contractAddr);
     if (result) {
-      System.out.println("RenounceNftMinter with contract: " + contract + " successful !!");
+      System.out.println("urc721RenounceMinter with contractAddr: " + contractAddrBase58 + " successful !!");
     } else {
-      System.out.println("RenounceNftMinter with contract: " + contract + " failed !!");
+      System.out.println("urc721RenounceMinter with contractAddr: " + contractAddrBase58 + " failed !!");
     }
   }
 
-  private void addNftMinter(String[] parameters) throws CipherException, IOException, CancelException {
+  private void urc721AddMinter(String[] parameters) throws CipherException, IOException, CancelException, DecoderException{
     if (parameters == null || (parameters.length != 2 && parameters.length != 3)) {
-      System.out.println("AddNftMinter needs 2 parameters like following: ");
-      System.out.println("AddNftMinter [OwnerAddress] contract minter");
+      System.out.println("urc721AddMinter needs 2 parameters like following: ");
+      System.out.println("urc721AddMinter [ownerAddr] contractAddr minterAddr");
       return;
     }
 
@@ -3700,27 +5029,32 @@ public class Client {
       }
     }
 
-    String contract = parameters[index++];
+    var contractAddrStr = parameters[index++];
+    byte[] contractAddr = WalletApi.decodeFromBase58Check(contractAddrStr);
+    if (contractAddr == null) {
+      System.out.println("Invalid ContractAddress.");
+      return;
+    }
 
-    String minterStr = parameters[index++];
-    byte[] minterAddr = WalletApi.decodeFromBase58Check(minterStr);
+    var minterAddrStr = parameters[index++];
+    byte[] minterAddr = WalletApi.decodeFromBase58Check(minterAddrStr);
     if (minterAddr == null) {
       System.out.println("Invalid MinterAddr.");
       return;
     }
 
-    boolean result = walletApiWrapper.addNftMinter(ownerAddress, contract, minterAddr);
+    boolean result = walletApiWrapper.urc721AddMinter(ownerAddress, contractAddr, minterAddr);
     if (result) {
-      System.out.println("AddNftMinter with contract: " + contract + ", minter: " + minterStr +" successful !!");
+      System.out.println("urc721AddMinter with ContractAddress: " + contractAddrStr + ", minter: " + minterAddrStr +" successful !!");
     } else {
-      System.out.println("AddNftMinter with contract: " + contract + ", minter: " + minterStr +" failed !!");
+      System.out.println("urc721AddMinter with ContractAddress: " + contractAddrStr + ", minter: " + minterAddrStr +" failed !!");
     }
   }
 
-  private void removeNftMinter(String[] parameters) throws CipherException, IOException, CancelException {
+  private void urc721RemoveMinter(String[] parameters) throws CipherException, IOException, CancelException, DecoderException {
     if (parameters == null || (parameters.length != 1 && parameters.length != 2)) {
-      System.out.println("RemoveNftMinter needs 1 parameters like following: ");
-      System.out.println("RemoveNftMinter [OwnerAddress] contract");
+      System.out.println("urc721RemoveMinter needs 1 parameters like following: ");
+      System.out.println("urc721RemoveMinter [OwnerAddress] contractAddr");
       return;
     }
 
@@ -3734,20 +5068,26 @@ public class Client {
       }
     }
 
-    String contract = parameters[index++];
+    var contractAddrStr = parameters[index++];
+    byte[] contractAddr = WalletApi.decodeFromBase58Check(contractAddrStr);
 
-    boolean result = walletApiWrapper.removeNftMinter(ownerAddress, contract);
+    if (contractAddr == null) {
+      System.out.println("Invalid contractAddr.");
+      return;
+    }
+
+    boolean result = walletApiWrapper.urc721RemoveMinter(ownerAddress, contractAddr);
     if (result) {
-      System.out.println("RemoveNftMinter with contract: " + contract + " successful !!");
+      System.out.println("urc721RemoveMinter with contract: " + contractAddrStr + " successful !!");
     } else {
-      System.out.println("RemoveNftMinter with contract: " + contract + " failed !!");
+      System.out.println("urc721RemoveMinter with contract: " + contractAddrStr + " failed !!");
     }
   }
 
-  private void mintNftToken(String[] parameters) throws CipherException, IOException, CancelException {
+  private void urc721Mint(String[] parameters) throws CipherException, IOException, CancelException, DecoderException {
     if (parameters == null || (parameters.length != 4 && parameters.length != 5)) {
-      System.out.println("MintNftToken needs 5 parameters like following: ");
-      System.out.println("MintNftToken [OwnerAddress] contract to_address uri  [metadata or - if not set]");
+      System.out.println("urc721Mint needs 5 parameters like following: ");
+      System.out.println("urc721Mint [OwnerAddress] contractAddr toAddress uri  tokenId[- if not set]");
       return;
     }
 
@@ -3761,35 +5101,41 @@ public class Client {
       }
     }
 
-    String contract = parameters[index++];
-    String toAddrStr = parameters[index++];
-    String uri = parameters[index++];
-    String metadataStr = parameters[index++];
+    var contractAddrStr = parameters[index++];
+    byte[] contractAddr = WalletApi.decodeFromBase58Check(contractAddrStr);
+    if (contractAddr == null) {
+      System.out.println("Invalid contractAddr.");
+      return;
+    }
 
-    byte[] toAddr = WalletApi.decodeFromBase58Check(toAddrStr);
+    var toAddrBase58 = parameters[index++];
+    byte[] toAddr = WalletApi.decodeFromBase58Check(toAddrBase58);
     if (toAddr == null) {
-      System.out.println("Invalid target address.");
+      System.out.println("Invalid to address.");
       return;
     }
 
-    String metaData;
-    if(Objects.isNull(metadataStr) || "-".equals(metadataStr))
-      metaData = null;
-    else
-      metaData = metadataStr;
+    String uri = parameters[index++];
+    String tokenIdStr = parameters[index++];
 
-    boolean result = walletApiWrapper.mintNftToken(ownerAddress, contract, toAddr, uri, metaData);
+    long tokenId;
+    if(Objects.isNull(tokenIdStr) || "-".equals(tokenIdStr))
+      tokenId = -1;
+    else
+      tokenId = Long.parseLong(tokenIdStr);
+
+    boolean result = walletApiWrapper.urc721Mint(ownerAddress, contractAddr, toAddr, uri, tokenId);
     if (result) {
-      System.out.println("MintNftToken with contract: " + contract + ", toAddr: " + toAddrStr + ", uri " + uri + ", metaData" + metaData  + " successful !!");
+      System.out.println("urc721Mint with contractAddr: " + contractAddrStr + ", toAddr: " + toAddrBase58 + ", uri " + uri + ", tokenId" + tokenIdStr  + " successful !!");
     } else {
-      System.out.println("MintNftToken with contract: " + contract + ", toAddr: " + toAddrStr + ", uri " + uri + ", metaData" + metaData  + " failed !!");
+      System.out.println("urc721Mint with contractAddr: " + contractAddrStr + ", toAddr: " + toAddrBase58 + ", uri " + uri + ", tokenId" + tokenIdStr  + " failed !!");
     }
   }
 
-  private void createNftTemplate(String[] parameters) throws IOException, CipherException, CancelException {
+  private void createUrc721Contract(String[] parameters) throws IOException, CipherException, CancelException {
     if (parameters == null || (parameters.length != 4 && parameters.length != 5)) {
-      System.out.println("CreateNftTemplate needs 4 parameters like following: ");
-      System.out.println("CreateNftTemplate [OwnerAddress] contract name total_supply  [minter or - if not set]");
+      System.out.println("createUrc721Contract needs 4 parameters like following: ");
+      System.out.println("createUrc721Contract [OwnerAddress] symbol name total_supply  minterAddr(- if not set)");
       return;
     }
 
@@ -3803,7 +5149,7 @@ public class Client {
       }
     }
 
-    String contract = parameters[index++];
+    String symbol = parameters[index++];
     String name = parameters[index++];
     long totalSupply = new Long(parameters[index++]);
     String minterStr = parameters[index++];
@@ -3820,21 +5166,157 @@ public class Client {
       }
     }
 
-    boolean result = walletApiWrapper.createNftTemplate(ownerAddress, contract, name, totalSupply, minter);
+    boolean result = walletApiWrapper.createUrc721Contract(ownerAddress, symbol, name, totalSupply, minter);
     if (result) {
-      System.out.println("CreateNftTemplate with contract: " + contract + ", name: " + name + ", totalSupply " + totalSupply + ", minter " + minterStr + " successful !!");
+      System.out.println("createUrc721Contract with symbol: " + symbol + ", desc: " + name + ", totalSupply " + totalSupply + ", minter " + minterStr + " successful !!");
     } else {
-      System.out.println("CreateNftTemplate with contract: " + contract + ", name: " + name + ", totalSupply " + totalSupply + ", minter " + minterStr + " failed !!");
+      System.out.println("createUrc721Contract with symbol: " + symbol + ", desc: " + name + ", totalSupply " + totalSupply + ", minter " + minterStr + " failed !!");
     }
   }
 
-//  bytes owner_address = 1;
-//  bytes operator = 2;
-//  bool isApproved = 3
-  private void getNftApprovedForAll(String[] parameters) throws IOException, CipherException, CancelException{
+
+  private void urc721GetName(String[] parameters) throws IOException, CipherException, CancelException, DecoderException{
+    if (parameters == null || (parameters.length != 1)) {
+      System.out.println("urc721GetName needs 1 parameter like the following: ");
+      System.out.println("urc721GetName address");
+      return;
+    }
+
+    int index = 0;
+    byte[] address = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (address == null) {
+      System.out.println("Invalid address.");
+      return;
+    }
+
+    var result = WalletApi.urc721GetName(address);
+    if (result == null) {
+      System.out.println("urc721GetName failed !!");
+    } else {
+      System.out.println(Utils.formatMessageString(result));
+    }
+  }
+
+  private void urc721GetSymbol(String[] parameters) throws IOException, CipherException, CancelException, DecoderException{
+    if (parameters == null || (parameters.length != 1)) {
+      System.out.println("urc721GetSymbol needs 1 parameter like the following: ");
+      System.out.println("urc721GetSymbol address");
+      return;
+    }
+
+    int index = 0;
+    byte[] ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (ownerAddress == null) {
+      System.out.println("Invalid address.");
+      return;
+    }
+
+    var result = WalletApi.urc721GetSymbol(ownerAddress);
+    if (result == null) {
+      System.out.println("urc721GetSymbol failed !!");
+    } else {
+      System.out.println(Utils.formatMessageString(result));
+    }
+  }
+
+  private void urc721GetTotalSupply(String[] parameters) throws IOException, CipherException, CancelException, DecoderException{
+    if (parameters == null || (parameters.length != 1)) {
+      System.out.println("urc721GetTotalSupply needs 1 parameter like the following: ");
+      System.out.println("urc721GetTotalSupply address");
+      return;
+    }
+
+    int index = 0;
+    byte[] address = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (address == null) {
+      System.out.println("Invalid address.");
+      return;
+    }
+
+    var result = WalletApi.urc721GetTotalSupply(address);
+    if (result == null) {
+      System.out.println("urc721GetTotalSupply failed !!");
+    } else {
+      System.out.println(Utils.formatMessageString(result));
+    }
+  }
+
+  private void urc721GetTokenUri(String[] parameters) throws IOException, CipherException, CancelException{
     if (parameters == null || (parameters.length != 2)) {
-      System.out.println("getNftApprovedForAll needs 2 parameter like the following: ");
-      System.out.println("getNftApprovedForAll owner_address operator");
+      System.out.println("urc721GetTokenUri needs 2 parameter like the following: ");
+      System.out.println("urc721GetTokenUri address tokenId");
+      return;
+    }
+
+    int index = 0;
+    byte[] address = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (address == null) {
+      System.out.println("Invalid address.");
+      return;
+    }
+
+    long id = Long.parseLong(parameters[index++]);
+
+    var result = WalletApi.urc721TokenUri(address, id);
+    if (result == null) {
+      System.out.println("urc721GetTokenUri failed !!");
+    } else {
+      System.out.println(Utils.formatMessageString(result));
+    }
+  }
+
+  private void urc721GetOwnerOf(String[] parameters) throws IOException, CipherException, CancelException, DecoderException{
+    if (parameters == null || (parameters.length != 2)) {
+      System.out.println("urc721GetOwnerOf needs 2 parameter like the following: ");
+      System.out.println("urc721GetOwnerOf address tokenId");
+      return;
+    }
+
+    int index = 0;
+    byte[] address = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (address == null) {
+      System.out.println("Invalid address.");
+      return;
+    }
+
+    long id = Long.parseLong(parameters[index++]);
+
+    var result = WalletApi.urc721GetOwnerOf(address, id);
+    if (result == null) {
+      System.out.println("urc721GetOwnerOf failed !!");
+    } else {
+      System.out.println(Utils.formatMessageString(result));
+    }
+  }
+
+  private void urc721GetApproved(String[] parameters) throws IOException, CipherException, CancelException{
+    if (parameters == null || (parameters.length != 2)) {
+      System.out.println("urc721GetApproved needs 2 parameter like the following: ");
+      System.out.println("urc721GetApproved address tokenId");
+      return;
+    }
+
+    int index = 0;
+    byte[] address = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (address == null) {
+      System.out.println("Invalid address.");
+      return;
+    }
+
+    long id = Long.parseLong(parameters[index++]);
+
+    var result = WalletApi.urc721GetApproved(address, id);
+    if (result == null) {
+      System.out.println("urc721GetApproved failed !!");
+    } else {
+      System.out.println(Utils.formatMessageString(result));
+    }
+  }
+
+  private void urc721IsApprovedForAll(String[] parameters) throws IOException, CipherException, CancelException{
+    if (parameters == null || (parameters.length != 3)) {
+      System.out.println("urc721IsApprovedForAll needs 3 parameter like the following: ");
+      System.out.println("urc721IsApprovedForAll ownerAddress operatorAddress contractAddr");
       return;
     }
 
@@ -3851,78 +5333,99 @@ public class Client {
       return;
     }
 
-    IsApprovedForAll result = WalletApi.getNftApprovedForAll(ownerAddress, operatorAddr);
+    byte[] contractAddr = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (contractAddr == null) {
+      System.out.println("Invalid ContractAddr.");
+      return;
+    }
+
+    var result = WalletApi.urc721IsApprovedForAll(ownerAddress, operatorAddr, contractAddr);
     if (result == null) {
-      System.out.println("getNftApprovedForAll failed !!");
+      System.out.println("urc721IsApprovedForAll failed !!");
     } else {
       System.out.println(Utils.formatMessageString(result));
     }
   }
 
-  private void getNftBalance(String[] parameters) throws IOException, CipherException, CancelException{
-    if (parameters == null || (parameters.length != 1)) {
-      System.out.println("getNftBalance needs 1 parameter like the following: ");
-      System.out.println("getNftBalance owner_address");
-      return;
-    }
-
-    int index = 0;
-    byte[] ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
-    if (ownerAddress == null) {
-      System.out.println("Invalid OwnerAddress.");
-      return;
-    }
-
-    NftBalanceOf result = WalletApi.getNftBalanceOf(ownerAddress);
-    if (result == null) {
-      System.out.println("getNftBalance failed !!");
-    } else {
-      System.out.println(Utils.formatMessageString(result));
-    }
-  }
-
-  private void getNftToken(String[] parameters) throws IOException, CipherException, CancelException{
+  private void urc721BalanceOf(String[] parameters) throws IOException, CipherException, CancelException, DecoderException{
     if (parameters == null || (parameters.length != 2)) {
-      System.out.println("getNftToken needs 2 parameter like the following: ");
-      System.out.println("getNftToken contract id");
+      System.out.println("urc721BalanceOf needs 2 parameter like the following: ");
+      System.out.println("urc721BalanceOf ownerAddress contractAddress");
       return;
     }
 
     int index = 0;
-    String contract = parameters[index++];
-    long id = Long.parseLong(parameters[index++]);
+    byte[] ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (ownerAddress == null) {
+      System.out.println("Invalid ownerAddress.");
+      return;
+    }
 
-    NftTokenGetResult result = WalletApi.getNftToken(contract, id);
+    byte[] address = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (address == null) {
+      System.out.println("Invalid contractAddress.");
+      return;
+    }
+
+    var result = WalletApi.urc721BalanceOf(ownerAddress, address);
     if (result == null) {
-      System.out.println("getNftToken failed !!");
+      System.out.println("urc721BalanceOf failed !!");
     } else {
       System.out.println(Utils.formatMessageString(result));
     }
   }
 
-  private void getNftTemplate(String[] parameters) throws IOException, CipherException, CancelException{
-    if (parameters == null || (parameters.length != 1)) {
-      System.out.println("getNftTemplate needs 1 parameter like the following: ");
-      System.out.println("getNftTemplate contract");
+  private void urc721TokenGet(String[] parameters) throws IOException, CipherException, CancelException, DecoderException{
+    if (parameters == null || (parameters.length != 2)) {
+      System.out.println("urc721TokenGet needs 2 parameter like the following: ");
+      System.out.println("urc721TokenGet contractAddress tokenId");
       return;
     }
 
     int index = 0;
+    byte[] contractAddress =  WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (contractAddress == null) {
+      System.out.println("Invalid contractAddress.");
+      return;
+    }
 
-    String contract = parameters[index++];
+    long tokenId = Long.parseLong(parameters[index++]);
 
-    NftTemplate result = WalletApi.getNftTemplate(contract);
+    var result = WalletApi.urc721TokenGet(contractAddress, tokenId);
     if (result == null) {
-      System.out.println("getNftTemplate failed !!");
+      System.out.println("urc721TokenGet failed !!");
     } else {
       System.out.println(Utils.formatMessageString(result));
     }
   }
 
-  private void listNftToken(String[] parameters) throws IOException, CipherException, CancelException{
-    if (parameters == null || (parameters.length != 4)) {
-      System.out.println("listNftToken needs 4 parameter like the following: ");
-      System.out.println("listNftToken owner_address contract(- if not set) pageIndex(-1 if not set) pageSize(-1 if not set)");
+  private void urc721ContractGet(String[] parameters) throws IOException, CipherException, CancelException, DecoderException{
+    if (parameters == null || parameters.length != 1) {
+      System.out.println("urc721ContractGet needs 1 parameter like the following: ");
+      System.out.println("urc721ContractGet contractAddress");
+      return;
+    }
+
+    int index = 0;
+
+    byte[] addr = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (addr == null) {
+      System.out.println("Invalid contractAddress.");
+      return;
+    }
+
+    var result = WalletApi.urc721ContractGet(addr);
+    if (result == null) {
+      System.out.println("urc721ContractGet failed !!");
+    } else {
+      System.out.println(Utils.formatMessageString(result));
+    }
+  }
+
+  private void urc721TokenList(String[] parameters) throws IOException, CipherException, CancelException, DecoderException {
+    if (parameters == null || (parameters.length != 5 )) {
+      System.out.println("urc721TokenList needs 5 parameter like the following: ");
+      System.out.println("urc721TokenList ownerAddress contractAddress(- if not set) pageIndex(-1 if not set) pageSize(-1 if not set) ownerType(owner or approved or approved_all)");
       return;
     }
 
@@ -3932,49 +5435,37 @@ public class Client {
       System.out.println("Invalid OwnerAddress.");
       return;
     }
-    String contract = parameters[index++];
-    int pageIndex = new Integer(parameters[index++]);
-    int pageSize = new Integer(parameters[index++]);
-
-    NftTokenQueryResult result = WalletApi.listNftToken(ownerAddress, contract, pageIndex, pageSize);
-    if (result == null) {
-      System.out.println("listNftToken failed !!");
-    } else {
-      System.out.println(Utils.formatMessageString(result));
-    }
-  }
-
-  private void listNftTemplate(String[] parameters) throws IOException, CipherException, CancelException{
-    if (parameters == null || (parameters.length != 4)) {
-      System.out.println("listNftTemplate needs 3 parameter like the following: ");
-      System.out.println("listNftTemplate owner_address pageIndex(-1 if not set) pageSize(-1 if not set) owner_type(MINTER or OWNER)");
-      return;
-    }
-
-    int index = 0;
-    byte[] ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
-    if (ownerAddress == null) {
-      System.out.println("Invalid OwnerAddress.");
-      return;
+    Optional<byte[]> contractAddr;
+    String _contractAddr = parameters[index++];
+    if("-".equalsIgnoreCase(_contractAddr))
+      contractAddr = Optional.empty();
+    else {
+      byte[] addr = WalletApi.decodeFromBase58Check(_contractAddr);
+      if (addr == null) {
+        System.out.println("Invalid ContractAddress.");
+        return;
+      }
+      else
+        contractAddr = Optional.of(addr);
     }
 
     int pageIndex = new Integer(parameters[index++]);
     int pageSize = new Integer(parameters[index++]);
+
     String ownerType = parameters[index++];
 
-
-    NftTemplateQueryResult result = WalletApi.listNftTemplate(ownerAddress, pageIndex, pageSize, ownerType);
+    var result = WalletApi.urc721TokenList(ownerAddress, contractAddr, ownerType, pageIndex, pageSize);
     if (result == null) {
-      System.out.println("listNftTemplate failed !!");
+      System.out.println("urc721TokenList failed !!");
     } else {
       System.out.println(Utils.formatMessageString(result));
     }
   }
 
-  private void listNftTokenApprove(String[] parameters) {
-    if (parameters == null || (parameters.length != 3)) {
-      System.out.println("listNftTokenApprove needs 3 parameter like the following: ");
-      System.out.println("listNftTokenApprove owner_address pageIndex(-1 if not set) pageSize(-1 if not set)");
+  private void urc721ContractList(String[] parameters) throws IOException, CipherException, CancelException{
+    if (parameters == null || (parameters.length != 4)) {
+      System.out.println("urc721ContractList needs 4 parameter like the following: ");
+      System.out.println("urc721ContractList ownerAddress pageIndex(-1 if not set) pageSize(-1 if not set) minterOrOwner(minter|owner)");
       return;
     }
 
@@ -3987,35 +5478,11 @@ public class Client {
 
     int pageIndex = new Integer(parameters[index++]);
     int pageSize = new Integer(parameters[index++]);
+    String ownerOrMinter = parameters[index++];
 
-    NftTokenApproveResult result = WalletApi.listNftTokenApprove(ownerAddress, pageIndex, pageSize);
+    var result = WalletApi.urc721ContractList(ownerAddress, pageIndex, pageSize, ownerOrMinter);
     if (result == null) {
-      System.out.println("listNftTokenApprove failed !!");
-    } else {
-      System.out.println(Utils.formatMessageString(result));
-    }
-  }
-
-  private void listNftTokenApproveAll(String[] parameters) {
-    if (parameters == null || (parameters.length != 3)) {
-      System.out.println("listNftTokenApproveAll needs 3 parameter like the following: ");
-      System.out.println("listNftTokenApproveAll owner_address pageIndex(-1 if not set) pageSize(-1 if not set)");
-      return;
-    }
-
-    int index = 0;
-    byte[] ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
-    if (ownerAddress == null) {
-      System.out.println("Invalid OwnerAddress.");
-      return;
-    }
-
-    int pageIndex = new Integer(parameters[index++]);
-    int pageSize = new Integer(parameters[index++]);
-
-    NftTokenApproveAllResult result = WalletApi.listNftTokenApproveAll(ownerAddress, pageIndex, pageSize);
-    if (result == null) {
-      System.out.println("listNftTokenApproveAll failed !!");
+      System.out.println("urc721ContractList failed !!");
     } else {
       System.out.println(Utils.formatMessageString(result));
     }

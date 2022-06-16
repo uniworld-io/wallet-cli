@@ -15,7 +15,9 @@ import org.unichain.protos.Protocol.*;
 import org.unichain.walletserver.WalletApi;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -157,6 +159,15 @@ public class WalletApiWrapper {
     return wallet.sendFuture(ownerAddress, toAddress, amount, expireTime);
   }
 
+  public boolean sendFutureDeal(byte[] ownerAddress, byte[] toAddress,  Optional<Long> amt, long expireTime) throws CipherException, IOException, CancelException {
+    if (wallet == null || !wallet.isLoginState()) {
+      System.out.println("Warning: SendFutureDeal failed,  Please login first !!");
+      return false;
+    }
+
+    return wallet.sendFutureDeal(ownerAddress, toAddress, amt, expireTime);
+  }
+
   public boolean createToken(byte[] ownerAddress, String tokenName, String abbr, long maxSupply, long totalSupply, long startTime, long endTime,  String description,  String url, long fee, long extra_fee_rate, long feePool, long lot, long exchUnwNum, long exchTokenNum, long createAccFee) throws CipherException, IOException, CancelException {
     if (wallet == null || !wallet.isLoginState()) {
       System.out.println("Warning: CreateToken failed,  Please login first !!");
@@ -166,86 +177,200 @@ public class WalletApiWrapper {
     return wallet.createToken(ownerAddress, tokenName, abbr, maxSupply, totalSupply, startTime, endTime, description, url, fee, extra_fee_rate, feePool, lot, exchUnwNum, exchTokenNum, createAccFee);
   }
 
-  public boolean createNftTemplate(byte[] ownerAddress, String contract, String name, long totalSupply, byte[] minter) throws CipherException, IOException, CancelException {
+  public boolean createUrc20Contract(byte[] owner, String symbol, String name, long decimals, BigInteger maxSupply, BigInteger totalSupply,
+                                     long startTime, long endTime, String url, long fee, long extraFeeRate, long feePool, long lot,
+                                     boolean enableExch, long exchUnwNum, long exchTokenNum, long createAccFee) throws CipherException, IOException, CancelException {
     if (wallet == null || !wallet.isLoginState()) {
-      System.out.println("Warning: createNftTemplate failed,  Please login first !!");
+      System.out.println("Warning: createUrc20Contract failed,  Please login first !!");
       return false;
     }
 
-    return wallet.createNftTemplate(ownerAddress, contract, name, totalSupply, minter);
+    return wallet.createUrc20Contract(owner, symbol, name, decimals, maxSupply, totalSupply, startTime, endTime, url, fee, extraFeeRate, feePool, lot, enableExch, exchUnwNum, exchTokenNum, createAccFee);
   }
 
-  public boolean mintNftToken(byte[] ownerAddress, String contract, byte[] toAddr, String uri, String metaData) throws CipherException, IOException, CancelException {
+  public boolean createUrc721Contract(byte[] ownerAddress, String symbol, String name, long totalSupply, byte[] minter) throws CipherException, IOException, CancelException {
     if (wallet == null || !wallet.isLoginState()) {
-      System.out.println("Warning: mintNftToken failed,  Please login first !!");
+      System.out.println("Warning: createUrc721Contract failed,  Please login first !!");
       return false;
     }
 
-    return wallet.mintNftToken(ownerAddress, contract, toAddr, uri, metaData);
+    return wallet.createUrc721CtxContract(ownerAddress, symbol, name, totalSupply, minter);
   }
 
-  public boolean removeNftMinter(byte[] ownerAddress, String contract) throws CipherException, IOException, CancelException {
+  public boolean urc721Mint(byte[] ownerAddress, byte[] contractAddr, byte[] toAddr, String uri, long tokenId) throws CipherException, IOException, CancelException {
     if (wallet == null || !wallet.isLoginState()) {
-      System.out.println("Warning: removeNftMinter failed,  Please login first !!");
+      System.out.println("Warning: urc721Mint failed,  Please login first !!");
       return false;
     }
 
-    return wallet.removeNftMinter(ownerAddress, contract);
+    return wallet.urc721Mint(ownerAddress, contractAddr, toAddr, uri, tokenId);
   }
 
-  public boolean renounceNftMinter(byte[] ownerAddress, String contract) throws CipherException, IOException, CancelException {
+  public boolean urc721RemoveMinter(byte[] ownerAddress, byte[] contractAddr) throws CipherException, IOException, CancelException {
     if (wallet == null || !wallet.isLoginState()) {
-      System.out.println("Warning: renounceNftMinter failed,  Please login first !!");
+      System.out.println("Warning: urc721RemoveMinter failed,  Please login first !!");
       return false;
     }
 
-    return wallet.renounceNftMinter(ownerAddress, contract);
+    return wallet.urc721RemoveMinter(ownerAddress, contractAddr);
   }
 
-  public boolean burnNftToken(byte[] ownerAddress, String contract, long id) throws CipherException, IOException, CancelException {
+  public boolean urc721RenounceMinter(byte[] ownerAddress, byte[] contractAddr) throws CipherException, IOException, CancelException {
     if (wallet == null || !wallet.isLoginState()) {
-      System.out.println("Warning: burnNftToken failed,  Please login first !!");
+      System.out.println("Warning: urc721RenounceMinter failed,  Please login first !!");
       return false;
     }
 
-    return wallet.burnNftToken(ownerAddress, contract, id);
+    return wallet.urc721RenounceMinter(ownerAddress, contractAddr);
   }
 
-  public boolean approveNftToken(byte[] ownerAddress, byte[] toAddr, boolean approve, String contract, long tokenId) throws CipherException, IOException, CancelException {
+  public boolean urc721Burn(byte[] ownerAddress, byte[] contractAddr, long tokenId) throws CipherException, IOException, CancelException {
     if (wallet == null || !wallet.isLoginState()) {
-      System.out.println("Warning: approveNftToken failed,  Please login first !!");
+      System.out.println("Warning: urc721Burn failed,  Please login first !!");
       return false;
     }
 
-    return wallet.approveNftToken(ownerAddress, toAddr, approve, contract, tokenId);
+    return wallet.urc721Burn(ownerAddress, contractAddr, tokenId);
   }
 
-  public boolean approveForAllNft(byte[] ownerAddress, byte[] toAddr, boolean approve) throws CipherException, IOException, CancelException {
+  public boolean urc721Approve(byte[] ownerAddress, byte[] toAddr, boolean approveOrNot, byte[] contractAddr, long tokenId) throws CipherException, IOException, CancelException {
     if (wallet == null || !wallet.isLoginState()) {
-      System.out.println("Warning: approveForAllNft failed,  Please login first !!");
+      System.out.println("Warning: urc721Approve failed,  Please login first !!");
       return false;
     }
 
-    return wallet.approveForAllNft(ownerAddress, toAddr, approve);
+    return wallet.urc721Approve(ownerAddress, toAddr, approveOrNot, contractAddr, tokenId);
   }
 
-  public boolean addNftMinter(byte[] ownerAddress, String contract, byte[] minterAddr) throws CipherException, IOException, CancelException {
+  public boolean urc721SetApproveForAll(byte[] ownerAddress, byte[] contractAddr, byte[] toAddr, boolean approve) throws CipherException, IOException, CancelException {
     if (wallet == null || !wallet.isLoginState()) {
-      System.out.println("Warning: addNftMinter failed,  Please login first !!");
+      System.out.println("Warning: urc721SetApproveForAll failed,  Please login first !!");
       return false;
     }
 
-    return wallet.addNftMinter(ownerAddress, contract, minterAddr);
+    return wallet.urc721SetApproveForAll(ownerAddress, contractAddr, toAddr, approve);
+  }
+
+  public boolean urc721AddMinter(byte[] ownerAddress, byte[] contractAddr, byte[] minterAddr) throws CipherException, IOException, CancelException {
+    if (wallet == null || !wallet.isLoginState()) {
+      System.out.println("Warning: urc721AddMinter failed,  Please login first !!");
+      return false;
+    }
+
+    return wallet.urc721AddMinter(ownerAddress, contractAddr, minterAddr);
   }
 
 
-  public boolean transferNftToken(byte[] ownerAddress, byte[] toAddr, String contract, long tokenId) throws CipherException, IOException, CancelException {
+  public boolean urc721TransferFrom(byte[] ownerAddress, byte[] toAddr, byte[] contractAddr, long tokenId) throws CipherException, IOException, CancelException {
     if (wallet == null || !wallet.isLoginState()) {
-      System.out.println("Warning: transferNftToken failed,  Please login first !!");
+      System.out.println("Warning: urc721TransferFrom failed,  Please login first !!");
       return false;
     }
 
-    return wallet.transferNftToken(ownerAddress, toAddr, contract, tokenId);
+    return wallet.urc721TransferFrom(ownerAddress, toAddr, contractAddr, tokenId);
+  }
+
+  public boolean urc20Approve(byte[] ownerAddress, byte[] address,  byte[] spender, BigInteger amount) throws CipherException, IOException, CancelException {
+    if (wallet == null || !wallet.isLoginState()) {
+      System.out.println("Warning: urc20Approve failed, Please login first !!");
+      return false;
+    }
+
+    return wallet.urc20Approve(ownerAddress, address, spender, amount);
+  }
+
+  public boolean urc20Exchange(byte[] ownerAddress, byte[] address, long amount)
+      throws CipherException, IOException, CancelException {
+    if (wallet == null || !wallet.isLoginState()) {
+      System.out.println("Warning: urc20Exchange failed, Please login first !!");
+      return false;
+    }
+
+    return wallet.urc20Exchange(ownerAddress, address, amount);
+  }
+
+  public boolean urc20TransferOwner(byte[] ownerAddress, byte[] toAddress, byte[] address)
+      throws CipherException, IOException, CancelException {
+    if (wallet == null || !wallet.isLoginState()) {
+      System.out.println("Warning: urc20Exchange failed, Please login first !!");
+      return false;
+    }
+
+    return wallet.urc20TransferOwner(ownerAddress, toAddress, address);
+  }
+
+  public boolean urc20WithdrawFuture(byte[] ownerAddress, byte[] contractAddr) throws CipherException, IOException, CancelException {
+    if (wallet == null || !wallet.isLoginState()) {
+      System.out.println("Warning: urc20WithdrawFuture failed, Please login first !!");
+      return false;
+    }
+
+    return wallet.urc20WithdrawFuture(ownerAddress, contractAddr);
+  }
+
+  public boolean posBridgeSetup(byte[] ownerAddress, byte[] newOwner, long minValidator, String validators, int consensusRate, String nativePredicate, String tokenPredicate, String nftPredicate) throws CipherException, IOException, CancelException {
+    if (wallet == null || !wallet.isLoginState()) {
+      System.out.println("Warning: posBridgeSetup failed,  Please login first !!");
+      return false;
+    }
+
+    return wallet.posBridgeSetup(ownerAddress, newOwner, minValidator, validators, consensusRate, nativePredicate, tokenPredicate, nftPredicate);
+  }
+
+  public boolean posBridgeMapToken(byte[] ownerAddress, String rootToken, long rootChainId, String childToken, long childChainId, int type) throws CipherException, IOException, CancelException{
+    if (wallet == null || !wallet.isLoginState()) {
+      System.out.println("Warning: posBridgeMapToken failed,  Please login first !!");
+      return false;
+    }
+
+    return wallet.posBridgeMapToken(ownerAddress, rootToken, rootChainId, childToken, childChainId, type);
+  }
+
+
+  public boolean posBridgeCleanMapToken(byte[] ownerAddress, String rootToken, long rootChainId, String childToken, long childChainId) throws CipherException, IOException, CancelException{
+    if (wallet == null || !wallet.isLoginState()) {
+      System.out.println("Warning: posBridgeCleanMapToken failed,  Please login first !!");
+      return false;
+    }
+
+    return wallet.posBridgeCleanMapToken(ownerAddress, rootToken, rootChainId, childToken, childChainId);
+  }
+
+  public boolean posBridgeDeposit(byte[] ownerAddress, String rootToken, String receiveAddr, long childChainId, long data) throws CipherException, IOException, CancelException{
+    if (wallet == null || !wallet.isLoginState()) {
+      System.out.println("Warning: posBridgeDeposit failed,  Please login first !!");
+      return false;
+    }
+
+    return wallet.posBridgeDeposit(ownerAddress, rootToken, receiveAddr, childChainId, data);
+  }
+
+  public boolean posBridgeDepositExec(byte[] ownerAddress, List<String> signatures, String msg) throws CipherException, IOException, CancelException{
+    if (wallet == null || !wallet.isLoginState()) {
+      System.out.println("Warning: posBridgeDepositExec failed,  Please login first !!");
+      return false;
+    }
+
+    return wallet.posBridgeDepositExec(ownerAddress, signatures, msg);
+  }
+
+
+  public boolean posBridgeWithdraw(byte[] ownerAddress, String childToken, String receiveAddress, long data) throws CipherException, IOException, CancelException{
+    if (wallet == null || !wallet.isLoginState()) {
+      System.out.println("Warning: posBridgeWithdraw failed,  Please login first !!");
+      return false;
+    }
+
+    return wallet.posBridgeWithdraw(ownerAddress, childToken, receiveAddress, data);
+  }
+
+  public boolean posBridgeWithdrawExec(byte[] ownerAddress, List<String> signatures, String msg) throws CipherException, IOException, CancelException{
+    if (wallet == null || !wallet.isLoginState()) {
+      System.out.println("Warning: posBridgeWithdrawExec failed,  Please login first !!");
+      return false;
+    }
+
+    return wallet.posBridgeWithdrawExec(ownerAddress, signatures, msg);
   }
 
   public boolean contributeTokenFeePool(byte[] ownerAddress, String tokenName, long amount) throws CipherException, IOException, CancelException {
@@ -257,6 +382,15 @@ public class WalletApiWrapper {
     return wallet.contributeTokenPoolFee(ownerAddress, tokenName, amount);
   }
 
+  public boolean contributeUrc20FeePool(byte[] ownerAddress, byte[] contractAddr, long amount) throws CipherException, IOException, CancelException {
+    if (wallet == null || !wallet.isLoginState()) {
+      System.out.println("Warning: contributeUrc20FeePool failed,  Please login first !!");
+      return false;
+    }
+
+    return wallet.contributeUrc20PoolFee(ownerAddress, contractAddr, amount);
+  }
+
   public boolean updateTokenParams(byte[] ownerAddress, String tokenName, long totalSupply, long feePool, long fee, long extraFeeRate, long lot, String url, String description, long exchUnwNum, long exchTokenNum, long createAccFee) throws CipherException, IOException, CancelException {
     if (wallet == null || !wallet.isLoginState()) {
       System.out.println("Warning: updateTokenParams failed,  Please login first !!");
@@ -266,6 +400,15 @@ public class WalletApiWrapper {
     return wallet.updateTokenParams(ownerAddress, tokenName, totalSupply, feePool, fee, extraFeeRate, lot, url, description, exchUnwNum, exchTokenNum, createAccFee);
   }
 
+  public boolean urc20UpdateTokenParams(byte[] ownerAddress, byte[] address, BigInteger totalSupply, long feePool, long fee, long extraFeeRate, long lot, String url, long exchUnwNum, long exchTokenNum, long createAccFee) throws CipherException, IOException, CancelException {
+    if (wallet == null || !wallet.isLoginState()) {
+      System.out.println("Warning: updateTokenParams failed,  Please login first !!");
+      return false;
+    }
+
+    return wallet.urc20UpdateTokenParams(ownerAddress, address, totalSupply, feePool, fee, extraFeeRate, lot, url, exchUnwNum, exchTokenNum, createAccFee);
+  }
+
   public boolean mineToken(byte[] ownerAddress, String tokenName, long amount) throws CipherException, IOException, CancelException {
     if (wallet == null || !wallet.isLoginState()) {
       System.out.println("Warning: mineToken failed,  Please login first !!");
@@ -273,6 +416,15 @@ public class WalletApiWrapper {
     }
 
     return wallet.mineToken(ownerAddress, tokenName, amount);
+  }
+
+  public boolean urc20Mint(byte[] ownerAddress,  byte[] address, Optional<byte[]> toAddrOpt, BigInteger amount) throws CipherException, IOException, CancelException {
+    if (wallet == null || !wallet.isLoginState()) {
+      System.out.println("Warning: urc20Mint failed,  Please login first !!");
+      return false;
+    }
+
+    return wallet.urc20Mint(ownerAddress, address, toAddrOpt, amount);
   }
 
   public boolean burnToken(byte[] ownerAddress, String tokenName, long amount) throws CipherException, IOException, CancelException {
@@ -285,6 +437,16 @@ public class WalletApiWrapper {
   }
 
 
+  public boolean burnUrc20(byte[] ownerAddress, byte[] contractAddress, BigInteger amount) throws CipherException, IOException, CancelException {
+    if (wallet == null || !wallet.isLoginState()) {
+      System.out.println("Warning: burnUrc20 failed,  Please login first !!");
+      return false;
+    }
+
+    return wallet.burnUrc20(ownerAddress, contractAddress, amount);
+  }
+
+
   public boolean transferToken(byte[] ownerAddress, byte[] toAddress, String tokenName, long amount, long availableTime) throws CipherException, IOException, CancelException {
     if (wallet == null || !wallet.isLoginState()) {
       System.out.println("Warning: transferToken failed,  Please login first !!");
@@ -292,6 +454,24 @@ public class WalletApiWrapper {
     }
 
     return wallet.transferToken(ownerAddress, toAddress, tokenName, amount, availableTime);
+  }
+
+  public boolean urc20TransferFrom(byte[] ownerAddress, byte[] fromAddress, byte[] toAddress,  byte[] contractAddr, BigInteger amount, long availableTime) throws CipherException, IOException, CancelException {
+    if (wallet == null || !wallet.isLoginState()) {
+      System.out.println("Warning: urc20TransferFrom failed,  Please login first !!");
+      return false;
+    }
+
+    return wallet.urc20TransferFrom(ownerAddress, fromAddress, toAddress, contractAddr, amount, availableTime);
+  }
+
+  public boolean urc20Transfer(byte[] ownerAddress, byte[] contractAddr, byte[] toAddress, BigInteger amount, long availableTime) throws CipherException, IOException, CancelException {
+    if (wallet == null || !wallet.isLoginState()) {
+      System.out.println("Warning: urc20Transfer failed,  Please login first !!");
+      return false;
+    }
+
+    return wallet.urc20Transfer(ownerAddress, contractAddr, toAddress, amount, availableTime);
   }
 
   public boolean transferTokenOwner(byte[] ownerAddress, byte[] toAddress, String tokenName) throws CipherException, IOException, CancelException {
@@ -748,7 +928,6 @@ public class WalletApiWrapper {
     }
   }
 
-
   public boolean approveProposal(byte[] ownerAddress, long id, boolean is_add_approval)
       throws CipherException, IOException, CancelException {
     if (wallet == null || !wallet.isLoginState()) {
@@ -908,5 +1087,4 @@ public class WalletApiWrapper {
   public GrpcAPI.NumberMessage getBrokerage(byte[] ownerAddress) {
     return WalletApi.getBrokerage(ownerAddress);
   }
-
 }

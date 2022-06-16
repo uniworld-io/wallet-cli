@@ -209,7 +209,7 @@
      `owner_address`: the address for contract owner – e.g. “_0xu82h…7237_”.  
      `name`: the name for this contract – e.g. “Billscontract”.  
      `total_supply`: the maximum supply of this asset – e.g. _1000000000_.  
-     `unw_num`: the number of UNW – e.g._232241_.  
+     `unx_num`: the number of UNW – e.g._232241_.  
      `num`: number of corresponding asset.  
      `start_time`: the starting date of this contract – e.g._20170312_.  
      `end_time`: the expiring date of this contract – e.g. _20170512_.  
@@ -692,6 +692,8 @@ Input, transaction and head block all require signature.
     Check out the total transaction.
    __`Createfuturetransaction`__:  
    Create future transfer.
+   __`Createfuturelockedtransaction`__:  
+   Create future locked transfer.
    __`WithdrawFutureTransaction`__:  
    Withdraw future deals.
    __`GetFutureTransfer`__:  
@@ -792,7 +794,6 @@ Input, transaction and head block all require signature.
         rpc TotalTransaction (EmptyMessage) returns (NumberMessage) {
       
         }
-
         rpc CreateToken (CreateTokenContract) returns (Transaction){
         
         }

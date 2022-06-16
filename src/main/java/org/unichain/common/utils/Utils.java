@@ -23,6 +23,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.protobuf.Any;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.Message;
+import lombok.var;
 import org.unichain.api.GrpcAPI.*;
 import org.unichain.common.crypto.Hash;
 import org.unichain.common.crypto.Sha256Hash;
@@ -420,6 +421,10 @@ public class Utils {
             FutureTransferContract futureTransferContract = contract.getParameter().unpack(FutureTransferContract.class);
             contractJson = JSONObject.parseObject(JsonFormat.printToString(futureTransferContract, selfType));
             break;
+          case FutureDealTransferContract:
+            FutureDealTransferContract futureDealTransferContract = contract.getParameter().unpack(FutureDealTransferContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(futureDealTransferContract, selfType));
+            break;
           case FutureWithdrawContract:
             FutureWithdrawContract futureWithdrawContract = contract.getParameter().unpack(FutureWithdrawContract.class);
             contractJson = JSONObject.parseObject(JsonFormat.printToString(futureWithdrawContract, selfType));
@@ -460,42 +465,172 @@ public class Utils {
             WithdrawFutureTokenContract withdrawFutureTokenContract = contract.getParameter().unpack(WithdrawFutureTokenContract.class);
             contractJson = JSONObject.parseObject(JsonFormat.printToString(withdrawFutureTokenContract, selfType));
             break;
-          case CreateNftTemplateContract:
-            CreateNftTemplateContract createNftTemplateContract = contract.getParameter().unpack(CreateNftTemplateContract.class);
-            contractJson = JSONObject.parseObject(JsonFormat.printToString(createNftTemplateContract, selfType));
+
+          /**
+           * Urc20
+          */
+          case Urc20CreateContract:
+          {
+            var ctx = contract.getParameter().unpack(Urc20CreateContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(ctx, selfType));
             break;
-          case MintNftTokenContract:
-            MintNftTokenContract mintNftTokenContract = contract.getParameter().unpack(MintNftTokenContract.class);
-            contractJson = JSONObject.parseObject(JsonFormat.printToString(mintNftTokenContract, selfType));
+          }
+          case Urc20ContributePoolFeeContract:
+          {
+            var ctx = contract.getParameter().unpack(Urc20ContributePoolFeeContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(ctx, selfType));
             break;
-          case RemoveNftMinterContract:
-            RemoveNftMinterContract removeNftMinterContract = contract.getParameter().unpack(RemoveNftMinterContract.class);
-            contractJson = JSONObject.parseObject(JsonFormat.printToString(removeNftMinterContract, selfType));
+          }
+          case Urc20UpdateParamsContract:
+          {
+            var ctx = contract.getParameter().unpack(Urc20UpdateParamsContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(ctx, selfType));
             break;
-          case AddNftMinterContract:
-            AddNftMinterContract addNftMinterContract = contract.getParameter().unpack(AddNftMinterContract.class);
-            contractJson = JSONObject.parseObject(JsonFormat.printToString(addNftMinterContract, selfType));
+          }
+          case Urc20MintContract:
+          {
+            var ctx = contract.getParameter().unpack(Urc20MintContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(ctx, selfType));
             break;
-          case RenounceNftMinterContract:
-            RenounceNftMinterContract renounceNftMinterContract = contract.getParameter().unpack(RenounceNftMinterContract.class);
-            contractJson = JSONObject.parseObject(JsonFormat.printToString(renounceNftMinterContract, selfType));
+          }
+          case Urc20BurnContract:
+          {
+            var ctx = contract.getParameter().unpack(Urc20BurnContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(ctx, selfType));
             break;
-          case BurnNftTokenContract:
-            BurnNftTokenContract burnNftTokenContract = contract.getParameter().unpack(BurnNftTokenContract.class);
-            contractJson = JSONObject.parseObject(JsonFormat.printToString(burnNftTokenContract, selfType));
+          }
+          case Urc20TransferFromContract:
+          {
+            var ctx = contract.getParameter().unpack(Urc20TransferFromContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(ctx, selfType));
             break;
-          case ApproveNftTokenContract:
-            ApproveNftTokenContract approveNftTokenContract = contract.getParameter().unpack(ApproveNftTokenContract.class);
-            contractJson = JSONObject.parseObject(JsonFormat.printToString(approveNftTokenContract, selfType));
+          }
+          case Urc20WithdrawFutureContract:
+          {
+            var ctx = contract.getParameter().unpack(Urc20WithdrawFutureContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(ctx, selfType));
             break;
-          case ApproveForAllNftTokenContract:
-            ApproveForAllNftTokenContract approveForAllNftTokenContract = contract.getParameter().unpack(ApproveForAllNftTokenContract.class);
-            contractJson = JSONObject.parseObject(JsonFormat.printToString(approveForAllNftTokenContract, selfType));
+          }
+          case Urc20TransferOwnerContract:
+          {
+            var ctx = contract.getParameter().unpack(Urc20TransferOwnerContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(ctx, selfType));
             break;
-          case TransferNftTokenContract:
-            TransferNftTokenContract transferNftTokenContract = contract.getParameter().unpack(TransferNftTokenContract.class);
-            contractJson = JSONObject.parseObject(JsonFormat.printToString(transferNftTokenContract, selfType));
+          }
+          case Urc20ExchangeContract:
+          {
+            var ctx = contract.getParameter().unpack(Urc20ExchangeContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(ctx, selfType));
             break;
+          }
+          case Urc20ApproveContract:
+          {
+            var ctx = contract.getParameter().unpack(Urc20ApproveContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(ctx, selfType));
+            break;
+          }
+          case Urc20TransferContract:
+          {
+            var ctx = contract.getParameter().unpack(Urc20TransferContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(ctx, selfType));
+            break;
+          }
+
+          /**
+           * Urc721
+           */
+          case Urc721CreateContract:
+          {
+            var ctx = contract.getParameter().unpack(Urc721CreateContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(ctx, selfType));
+            break;
+          }
+          case Urc721MintContract:
+          {
+            var ctx = contract.getParameter().unpack(Urc721MintContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(ctx, selfType));
+            break;
+          }
+          case Urc721RemoveMinterContract:
+          {
+            var ctx = contract.getParameter().unpack(Urc721RemoveMinterContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(ctx, selfType));
+            break;
+          }
+          case Urc721AddMinterContract:
+          {
+            var ctx = contract.getParameter().unpack(Urc721AddMinterContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(ctx, selfType));
+            break;
+          }
+          case Urc721RenounceMinterContract:
+          {
+            var ctx = contract.getParameter().unpack(Urc721RenounceMinterContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(ctx, selfType));
+            break;
+          }
+          case Urc721BurnContract:
+          {
+            var ctx = contract.getParameter().unpack(Urc721BurnContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(ctx, selfType));
+            break;
+          }
+          case Urc721ApproveContract:
+          {
+            var ctx = contract.getParameter().unpack(Urc721ApproveContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(ctx, selfType));
+            break;
+          }
+          case Urc721SetApprovalForAllContract:
+          {
+            var ctx = contract.getParameter().unpack(Urc721SetApprovalForAllContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(ctx, selfType));
+            break;
+          }
+          case Urc721TransferFromContract:
+          {
+            var ctx = contract.getParameter().unpack(Urc721TransferFromContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(ctx, selfType));
+            break;
+          }
+          /**
+           * PosBridge
+           */
+          case PosBridgeSetupContract:{
+            var parsedContract = contract.getParameter().unpack(PosBridgeSetupContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(parsedContract, selfType));
+            break;
+          }
+          case PosBridgeMapTokenContract:{
+            var parsedContract = contract.getParameter().unpack(PosBridgeMapTokenContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(parsedContract, selfType));
+            break;
+          }
+          case PosBridgeCleanMapTokenContract:{
+            var parsedContract = contract.getParameter().unpack(PosBridgeCleanMapTokenContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(parsedContract, selfType));
+            break;
+          }
+          case PosBridgeDepositContract:{
+            var parsedContract = contract.getParameter().unpack(PosBridgeDepositContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(parsedContract, selfType));
+            break;
+          }
+          case PosBridgeDepositExecContract:{
+            var parsedContract = contract.getParameter().unpack(PosBridgeDepositExecContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(parsedContract, selfType));
+            break;
+          }
+          case PosBridgeWithdrawContract:{
+            var parsedContract = contract.getParameter().unpack(PosBridgeWithdrawContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(parsedContract, selfType));
+            break;
+          }
+          case PosBridgeWithdrawExecContract:{
+            var parsedContract = contract.getParameter().unpack(PosBridgeWithdrawExecContract.class);
+            contractJson = JSONObject.parseObject(JsonFormat.printToString(parsedContract, selfType));
+            break;
+          }
           default:
         }
         JSONObject parameter = new JSONObject();

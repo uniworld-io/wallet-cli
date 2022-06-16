@@ -38,6 +38,7 @@ import org.unichain.protos.Protocol.Transaction.Result;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -309,37 +310,53 @@ public class WalletApi {
     return rpcCli.queryTokenPool(tokenName, pageIndex, pageSize);//call rpc
   }
 
-  public static NftTemplateQueryResult listNftTemplate(byte[] ownerAddress, int pageIndex, int pageSize, String ownerType) {
-    return rpcCli.listNftTemplate(ownerAddress, pageIndex, pageSize, ownerType);//call rpc
+  public static Urc721ContractPage urc721ContractList(byte[] ownerAddress, int pageIndex, int pageSize, String ownerOrMinter) {
+    return rpcCli.urc721ContractList(ownerAddress, pageIndex, pageSize, ownerOrMinter);
   }
 
-  public static NftTokenQueryResult listNftToken(byte[] ownerAddress, String contract, int pageIndex, int pageSize) {
-    return rpcCli.listNftToken(ownerAddress, contract, pageIndex, pageSize);//call rpc
+  public static Urc721TokenPage urc721TokenList(byte[] ownerAddress, Optional<byte[]> contractAddr, String ownerType, int pageIndex, int pageSize) {
+    return rpcCli.urc721TokenList(ownerAddress, contractAddr, ownerType, pageIndex, pageSize);//call rpc
   }
 
-  public static NftTokenApproveResult listNftTokenApprove(byte[] ownerAddress, int pageIndex, int pageSize) {
-    return rpcCli.listNftTokenApprove(ownerAddress, pageIndex, pageSize);//call rpc
-  }
-
-  public static NftTokenApproveAllResult listNftTokenApproveAll(byte[] ownerAddress, int pageIndex, int pageSize) {
-    return rpcCli.listNftTokenApproveAll(ownerAddress, pageIndex, pageSize);//call rpc
-  }
-
-  public static NftTemplate getNftTemplate(String contract) {
-    return rpcCli.getNftTemplate(contract);//call rpc
+  public static Urc721Contract urc721ContractGet(byte[] addr) {
+    return rpcCli.urc721ContractGet(addr);
   }
 
 
-  public static NftTokenGetResult getNftToken(String contract, long tokenId) {
-    return rpcCli.getNftToken(contract, tokenId);//call rpc
+  public static Urc721Token urc721TokenGet(byte[] contractAddr, long tokenId) {
+    return rpcCli.urc721TokenGet(contractAddr, tokenId);
   }
 
-  public static NftBalanceOf getNftBalanceOf(byte[] ownerAddress) {
-    return rpcCli.getNftBalanceOf(ownerAddress);//call rpc
+  public static NumberMessage urc721BalanceOf(byte[] ownerAddress, byte[] address) {
+    return rpcCli.urc721BalanceOf(ownerAddress, address);
   }
 
-  public static IsApprovedForAll getNftApprovedForAll(byte[] ownerAddress, byte[] operator) {
-    return rpcCli.getNftApprovedForAll(ownerAddress, operator);//call rpc
+  public static StringMessage urc721GetName(byte[] address) {
+    return rpcCli.urc721GetName(address);
+  }
+
+  public static StringMessage urc721GetSymbol(byte[] address) {
+    return rpcCli.urc721GetSymbol(address);
+  }
+
+  public static NumberMessage urc721GetTotalSupply(byte[] address) {
+    return rpcCli.urc721GetTotalSupply(address);
+  }
+
+  public static StringMessage urc721TokenUri(byte[] address, long id) {
+    return rpcCli.urc721TokenUri(address, id);
+  }
+
+  public static AddressMessage urc721GetOwnerOf(byte[] contractAddr, long tokenId) {
+    return rpcCli.urc721GetOwnerOf(contractAddr, tokenId);
+  }
+
+  public static AddressMessage urc721GetApproved(byte[] contractAddr, long tokenId) {
+    return rpcCli.urc721GetApproved(contractAddr, tokenId);
+  }
+
+  public static BoolMessage urc721IsApprovedForAll(byte[] ownerAddress, byte[] operatorAddr, byte[] contractAddr) {
+    return rpcCli.urc721IsApprovedForAll(ownerAddress, operatorAddr, contractAddr);//call rpc
   }
 
   public static FutureTokenPack queryToken(byte[] address, String name, int pageSize, int pageIndex) {
@@ -588,86 +605,168 @@ public class WalletApi {
     return processTransaction(transaction);
   }
 
-  public boolean createNftTemplate(byte[] owner, String contract, String name, long totalSupply, byte[] minter) throws CipherException, IOException, CancelException {
+  public boolean createUrc20Contract(byte[] owner, String symbol, String name, long decimals, BigInteger maxSupply, BigInteger totalSupply,
+                                     long startTime, long endTime, String url, long fee, long extraFeeRate, long feePool, long lot,
+                                     boolean enableExch, long exchUnwNum, long exchTokenNum, long createAccFee) throws CipherException, IOException, CancelException {
     if (owner == null) {
       owner = getAddress();
     }
-    Contract.CreateNftTemplateContract createNftTemplateContract = createNftTemplateContract(owner, contract, name, totalSupply, minter);
-    Transaction transaction = rpcCli.createTransaction(createNftTemplateContract);
-    return processTransaction(transaction);
-  }
-
-  public boolean mintNftToken(byte[] ownerAddress, String contract, byte[] toAddr, String uri, String metaData)  throws CipherException, IOException, CancelException {
-    if (ownerAddress == null) {
-      ownerAddress = getAddress();
-    }
-    Contract.MintNftTokenContract mintNftTokenContract = createMintNftTokenContract(ownerAddress, contract, toAddr, uri, metaData);
-    Transaction transaction = rpcCli.createTransaction(mintNftTokenContract);
-    return processTransaction(transaction);
-  }
-
-
-  public boolean removeNftMinter(byte[] ownerAddress, String contract) throws CipherException, IOException, CancelException{
-    if (ownerAddress == null) {
-      ownerAddress = getAddress();
-    }
-    Contract.RemoveNftMinterContract removeNftMinterContract = createRemoveNftMinterContract(ownerAddress, contract);
-    Transaction transaction = rpcCli.createTransaction(removeNftMinterContract);
-    return processTransaction(transaction);
-  }
-
-  public boolean renounceNftMinter(byte[] ownerAddress, String contract) throws CipherException, IOException, CancelException{
-    if (ownerAddress == null) {
-      ownerAddress = getAddress();
-    }
-    Contract.RenounceNftMinterContract renounceNftMinterContract = createRenounceNftMinterContract(ownerAddress, contract);
-    Transaction transaction = rpcCli.createTransaction(renounceNftMinterContract);
-    return processTransaction(transaction);
-  }
-
-
-  public boolean addNftMinter(byte[] ownerAddress, String contract, byte[] minterAddr) throws CipherException, IOException, CancelException{
-    if (ownerAddress == null) {
-      ownerAddress = getAddress();
-    }
-    Contract.AddNftMinterContract addNftMinterContract = createAddNftMinterContract(ownerAddress, contract, minterAddr);
-    Transaction transaction = rpcCli.createTransaction(addNftMinterContract);
-    return processTransaction(transaction);
-  }
-
-  public boolean burnNftToken(byte[] ownerAddress, String contract, long tokenId) throws CipherException, IOException, CancelException{
-    if (ownerAddress == null) {
-      ownerAddress = getAddress();
-    }
-    Contract.BurnNftTokenContract burnNftMinterContract = createBurnNftMinterContract(ownerAddress, contract, tokenId);
-    Transaction transaction = rpcCli.createTransaction(burnNftMinterContract);
-    return processTransaction(transaction);
-  }
-
-  public boolean approveNftToken(byte[] ownerAddress, byte[] toAddr, boolean approve, String contract, long tokenId)  throws CipherException, IOException, CancelException{
-    if (ownerAddress == null) {
-      ownerAddress = getAddress();
-    }
-    Contract.ApproveNftTokenContract approveNftTokenContract = createApproveNftTokenContract(ownerAddress, toAddr, approve, contract, tokenId);
-    Transaction transaction = rpcCli.createTransaction(approveNftTokenContract);
-    return processTransaction(transaction);
-  }
-
-  public boolean approveForAllNft(byte[] ownerAddress, byte[] toAddr, boolean approve) throws CipherException, IOException, CancelException{
-    if (ownerAddress == null) {
-      ownerAddress = getAddress();
-    }
-    Contract.ApproveForAllNftTokenContract contract = createApproveForAllNftContract(ownerAddress, toAddr, approve);
+    var contract = createCreateUrc20Contract(owner, symbol, name, decimals, maxSupply, totalSupply, startTime, endTime, url, fee, extraFeeRate, feePool, lot, enableExch, exchUnwNum, exchTokenNum, createAccFee);
     Transaction transaction = rpcCli.createTransaction(contract);
     return processTransaction(transaction);
   }
 
-  public boolean transferNftToken(byte[] ownerAddress, byte[] toAddr, String contract, long tokenId) throws CipherException, IOException, CancelException{
+  public boolean createUrc721CtxContract(byte[] owner, String symbol, String name, long totalSupply, byte[] minter) throws CipherException, IOException, CancelException {
+    if (owner == null) {
+      owner = getAddress();
+    }
+    var ctx = createUrc721Contract(owner, symbol, name, totalSupply, minter);
+    Transaction transaction = rpcCli.createTransaction(ctx);
+    return processTransaction(transaction);
+  }
+
+  public boolean urc721Mint(byte[] ownerAddress, byte[] contractAddr, byte[] toAddr, String uri, long tokenId)  throws CipherException, IOException, CancelException {
     if (ownerAddress == null) {
       ownerAddress = getAddress();
     }
-    Contract.TransferNftTokenContract tokenContract = createTransferNftTokenContract(ownerAddress, toAddr, contract, tokenId);
-    Transaction transaction = rpcCli.createTransaction(tokenContract);
+    var ctx = createUrc721MintContract(ownerAddress, contractAddr, toAddr, uri, tokenId);
+    Transaction transaction = rpcCli.createTransaction(ctx);
+    return processTransaction(transaction);
+  }
+
+  public boolean urc721RemoveMinter(byte[] ownerAddress, byte[] contractAddr) throws CipherException, IOException, CancelException{
+    if (ownerAddress == null) {
+      ownerAddress = getAddress();
+    }
+    var ctx = createUrc721RemoveMinterContract(ownerAddress, contractAddr);
+    Transaction transaction = rpcCli.createTransaction(ctx);
+    return processTransaction(transaction);
+  }
+
+  public boolean urc721RenounceMinter(byte[] ownerAddress, byte[] contractAddr) throws CipherException, IOException, CancelException{
+    if (ownerAddress == null) {
+      ownerAddress = getAddress();
+    }
+    var ctx = createUrc721RenounceMinterContract(ownerAddress, contractAddr);
+    Transaction transaction = rpcCli.createTransaction(ctx);
+    return processTransaction(transaction);
+  }
+
+
+  public boolean urc721AddMinter(byte[] ownerAddress, byte[] contractAddr, byte[] minterAddr) throws CipherException, IOException, CancelException{
+    if (ownerAddress == null) {
+      ownerAddress = getAddress();
+    }
+    var ctx = createUrc721AddMinterContract(ownerAddress, contractAddr, minterAddr);
+    Transaction transaction = rpcCli.createTransaction(ctx);
+    return processTransaction(transaction);
+  }
+
+  public boolean urc721Burn(byte[] ownerAddress, byte[] contractAddr, long tokenId) throws CipherException, IOException, CancelException{
+    if (ownerAddress == null) {
+      ownerAddress = getAddress();
+    }
+    var ctx = createUrc721BurnContract(ownerAddress, contractAddr, tokenId);
+    Transaction transaction = rpcCli.createTransaction(ctx);
+    return processTransaction(transaction);
+  }
+
+  public boolean urc721Approve(byte[] ownerAddress, byte[] toAddr, boolean approveOrNot, byte[] contractAddr, long tokenId)  throws CipherException, IOException, CancelException{
+    if (ownerAddress == null) {
+      ownerAddress = getAddress();
+    }
+    var ctx = createUrc721ApproveContract(ownerAddress, toAddr, approveOrNot, contractAddr, tokenId);
+    Transaction transaction = rpcCli.createTransaction(ctx);
+    return processTransaction(transaction);
+  }
+
+  public boolean urc721SetApproveForAll(byte[] ownerAddress, byte[] contractAddr, byte[] toAddr, boolean approve) throws CipherException, IOException, CancelException{
+    if (ownerAddress == null) {
+      ownerAddress = getAddress();
+    }
+    var ctx  = createUrc721SetApproveForAllContract(ownerAddress, contractAddr, toAddr, approve);
+    Transaction transaction = rpcCli.createTransaction(ctx);
+    return processTransaction(transaction);
+  }
+
+  //@todo later
+  public boolean posBridgeSetup(byte[] ownerAddress, byte[] newOwner, long minValidator, String validators, int consensusRate, String nativePredicate, String tokenPredicate, String nftPredicate) throws CipherException, IOException, CancelException{
+    if (ownerAddress == null) {
+      ownerAddress = getAddress();
+    }
+    Contract.PosBridgeSetupContract contract = createPosBridgeSetupContract(ownerAddress, newOwner, minValidator, validators, consensusRate, nativePredicate, tokenPredicate, nftPredicate);
+    Transaction transaction = rpcCli.createTransaction(contract);
+    return processTransaction(transaction);
+  }
+
+  public boolean posBridgeMapToken(byte[] ownerAddress, String rootToken, long rootChainId, String childToken, long childChainId, int type) throws CipherException, IOException, CancelException{
+    if (ownerAddress == null) {
+      ownerAddress = getAddress();
+    }
+    Contract.PosBridgeMapTokenContract contract = createPosBridgeMapToken(ownerAddress, rootToken, rootChainId, childToken, childChainId, type);
+    Transaction transaction = rpcCli.createTransaction(contract);
+    return processTransaction(transaction);
+  }
+
+  public boolean posBridgeCleanMapToken(byte[] ownerAddress, String rootToken, long rootChainId, String childToken, long childChainId) throws CipherException, IOException, CancelException{
+    if (ownerAddress == null) {
+      ownerAddress = getAddress();
+    }
+    Contract.PosBridgeCleanMapTokenContract contract = createPosBridgeCleanMapToken(ownerAddress, rootToken, rootChainId, childToken, childChainId);
+    Transaction transaction = rpcCli.createTransaction(contract);
+    return processTransaction(transaction);
+  }
+
+  public boolean posBridgeDeposit(byte[] ownerAddress, String rootToken, String receiveAddr, long childChainId, long data) throws CipherException, IOException, CancelException{
+    if (ownerAddress == null) {
+      ownerAddress = getAddress();
+    }
+    Contract.PosBridgeDepositContract contract = createPosBridgeDeposit(ownerAddress, rootToken, receiveAddr, childChainId, data);
+    Transaction transaction = rpcCli.createTransaction(contract);
+    return processTransaction(transaction);
+  }
+
+  public boolean posBridgeDepositExec(byte[] ownerAddress, List<String> signatures, String msg) throws CipherException, IOException, CancelException{
+    if (ownerAddress == null) {
+      ownerAddress = getAddress();
+    }
+    Contract.PosBridgeDepositExecContract contract = createPosBridgeDepositExec(ownerAddress, signatures, msg);
+    Transaction transaction = rpcCli.createTransaction(contract);
+    return processTransaction(transaction);
+  }
+
+  public boolean posBridgeWithdraw(byte[] ownerAddress, String childToken, String receiveAddress, long data) throws CipherException, IOException, CancelException{
+    if (ownerAddress == null) {
+      ownerAddress = getAddress();
+    }
+    Contract.PosBridgeWithdrawContract contract = createPosBridgeWithdraw(ownerAddress, childToken, receiveAddress, data);
+    Transaction transaction = rpcCli.createTransaction(contract);
+    return processTransaction(transaction);
+  }
+
+  public boolean posBridgeWithdrawExec(byte[] ownerAddress,  List<String> signatures, String msg) throws CipherException, IOException, CancelException{
+    if (ownerAddress == null) {
+      ownerAddress = getAddress();
+    }
+    Contract.PosBridgeWithdrawExecContract contract = createPosBridgeWithdrawExec(ownerAddress, signatures, msg);
+    Transaction transaction = rpcCli.createTransaction(contract);
+    return processTransaction(transaction);
+  }
+
+  public static PosBridgeConfig getPosBridgeConfig() throws CipherException, IOException, CancelException{
+    return rpcCli.getPosBridgeConfig();
+  }
+
+  public static PosBridgeTokenMappingPage getPosBridgeTokenMap() throws CipherException, IOException, CancelException{
+    return rpcCli.getPosBridgeTokenMap();
+  }
+
+  public boolean urc721TransferFrom(byte[] ownerAddress, byte[] toAddr, byte[] contractAddr, long tokenId) throws CipherException, IOException, CancelException{
+    if (ownerAddress == null) {
+      ownerAddress = getAddress();
+    }
+    var ctx  = createUrc721TransferFromContract(ownerAddress, toAddr, contractAddr, tokenId);
+    Transaction transaction = rpcCli.createTransaction(ctx);
     return processTransaction(transaction);
   }
 
@@ -676,6 +775,15 @@ public class WalletApi {
       owner = getAddress();
     }
     Contract.ContributeTokenPoolFeeContract contract = createContributeTokenPoolFee(owner, tokenName, amount);
+    Transaction transaction = rpcCli.createTransaction(contract);
+    return processTransaction(transaction);
+  }
+
+  public boolean contributeUrc20PoolFee(byte[] owner, byte[] address, long amount) throws CipherException, IOException, CancelException {
+    if (owner == null) {
+      owner = getAddress();
+    }
+    var contract = createContributeUrc20PoolFee(owner, address, amount);
     Transaction transaction = rpcCli.createTransaction(contract);
     return processTransaction(transaction);
   }
@@ -689,12 +797,33 @@ public class WalletApi {
     Transaction transaction = rpcCli.createTransaction(contract);
     return processTransaction(transaction);
   }
+
+  public boolean urc20UpdateTokenParams(byte[] owner, byte[] address, BigInteger totalSupply, long feePool,
+                                        long fee, long extraFeeRate, long lot, String url, long exchUnwNum,
+                                        long exchTokenNum, long createAccFee) throws CipherException, IOException, CancelException {
+    if(owner == null) {
+      owner = getAddress();
+    }
+
+    var contract = createUrc20UpdateTokenParams(owner, address, totalSupply, feePool, fee, extraFeeRate, lot, url, exchUnwNum, exchTokenNum, createAccFee);
+    var transaction = rpcCli.createTransaction(contract);
+    return processTransaction(transaction);
+  }
   
   public boolean mineToken(byte[] owner, String tokenName, long amount) throws CipherException, IOException, CancelException {
     if (owner == null) {
       owner = getAddress();
     }
     Contract.MineTokenContract contract = createMineToken(owner, tokenName, amount);
+    Transaction transaction = rpcCli.createTransaction(contract);
+    return processTransaction(transaction);
+  }
+
+  public boolean urc20Mint(byte[] owner, byte[] address, Optional<byte[]> toAddrOpt, BigInteger amount) throws CipherException, IOException, CancelException {
+    if (owner == null) {
+      owner = getAddress();
+    }
+    var contract = createUrc20Mint(owner, address, toAddrOpt, amount);
     Transaction transaction = rpcCli.createTransaction(contract);
     return processTransaction(transaction);
   }
@@ -709,6 +838,16 @@ public class WalletApi {
   }
 
 
+  public boolean burnUrc20(byte[] owner, byte[] address, BigInteger amount) throws CipherException, IOException, CancelException {
+    if (owner == null) {
+      owner = getAddress();
+    }
+    var contract = createBurnUrc20(owner, address, amount);
+    Transaction transaction = rpcCli.createTransaction(contract);
+    return processTransaction(transaction);
+  }
+
+
   public boolean transferToken(byte[] owner, byte[] toAddress, String tokenName, long amount, long availableTime) throws CipherException, IOException, CancelException {
     if (owner == null) {
       owner = getAddress();
@@ -716,6 +855,102 @@ public class WalletApi {
     Contract.TransferTokenContract contract = createTransferToken(owner, toAddress, tokenName, amount, availableTime);
     Transaction transaction = rpcCli.createTransaction(contract);
     return processTransaction(transaction);
+  }
+
+  public boolean urc20TransferFrom(byte[] owner, byte[] fromAddress, byte[] toAddress,  byte[] contractAddr, BigInteger amount, long availableTime) throws CipherException, IOException, CancelException {
+    if (owner == null) {
+      owner = getAddress();
+    }
+    var contract = createUrc20TransferFrom(owner, fromAddress, toAddress, contractAddr, amount, availableTime);
+    Transaction transaction = rpcCli.createTransaction(contract);
+    return processTransaction(transaction);
+  }
+
+  public boolean urc20Transfer(byte[] owner, byte[] contractAddr, byte[] toAddress, BigInteger amount, long availableTime) throws CipherException, IOException, CancelException {
+    if (owner == null) {
+      owner = getAddress();
+    }
+    var contract = createUrc20Transfer(owner, contractAddr, toAddress, amount, availableTime);
+    Transaction transaction = rpcCli.createTransaction(contract);
+    return processTransaction(transaction);
+  }
+
+  public boolean urc20Approve(byte[] ownerAddress, byte[] address, byte[] spender, BigInteger amount) throws CipherException, IOException, CancelException {
+    if (ownerAddress == null) {
+      ownerAddress = getAddress();
+    }
+
+    var contract = createUrc20ApproveContract(ownerAddress, address, spender, amount);
+    Transaction transaction = rpcCli.createTransaction(contract);
+    return processTransaction(transaction);
+  }
+
+  public boolean urc20Exchange(byte[] ownerAddress, byte[] address, long amount)
+      throws CipherException, IOException, CancelException {
+    if (ownerAddress == null) {
+      ownerAddress = getAddress();
+    }
+
+    var contract = createUrc20Exchange(ownerAddress, address, amount);
+    Transaction transaction = rpcCli.createTransaction(contract);
+    return processTransaction(transaction);
+  }
+
+  public boolean urc20TransferOwner(byte[] ownerAddress, byte[] toAddress, byte[] address)
+      throws CipherException, IOException, CancelException {
+    if (ownerAddress == null) {
+      ownerAddress = getAddress();
+    }
+
+    var contract = createUrc20TransferOwner(ownerAddress, toAddress, address);
+    Transaction transaction = rpcCli.createTransaction(contract);
+    return processTransaction(transaction);
+  }
+
+  public boolean urc20WithdrawFuture(byte[] ownerAddress, byte[] contractAddr) throws CipherException, IOException, CancelException {
+    if (ownerAddress == null) {
+      ownerAddress = getAddress();
+    }
+
+    var contract = createUrc20TransferOwner(ownerAddress, contractAddr);
+    Transaction transaction = rpcCli.createTransaction(contract);
+    return processTransaction(transaction);
+  }
+
+  public static Urc20FutureTokenPack urc20FutureGet(byte[] ownerAddress, byte[] address, int pageSize, int pageIndex) throws CipherException, IOException, CancelException {
+    return rpcCli.urc20FutureGet(ownerAddress, address, pageSize, pageIndex);
+  }
+
+  public static Urc20ContractPage urc20ContractList(Optional<byte[]> address, Optional<String> symbol, int pageIndex, int pageSize) {
+    return rpcCli.urc20ContractList(address, symbol, pageIndex, pageSize);
+  }
+
+  public static StringMessage urc20Name(byte[] contractAddr) {
+    return rpcCli.urc20Name(contractAddr);
+  }
+
+  public static StringMessage urc20Symbol(byte[] address) {
+    return rpcCli.urc20Symbol(address);
+  }
+
+  public static NumberMessage urc20Decimals(byte[] address) {
+    return rpcCli.urc20Decimals(address);
+  }
+
+  public static StringMessage urc20TotalSupply(byte[] address) {
+    return rpcCli.urc20TotalSupply(address);
+  }
+
+  public static StringMessage urc20BalanceOf(byte[] ownerAddr, byte[] contractAddr) {
+    return rpcCli.urc20BalanceOf(ownerAddr, contractAddr);
+  }
+
+  public static AddressMessage urc20GetOwner(byte[] contractAddr) {
+    return rpcCli.urc20GetOwner(contractAddr);
+  }
+
+  public static StringMessage urc20Allowance(byte[] owner, byte[] address, byte[] spender) {
+    return rpcCli.urc20Allowance(owner, address, spender);
   }
 
   public boolean transferTokenOwner(byte[] owner, byte[] toAddress, String tokenName) throws CipherException, IOException, CancelException {
@@ -758,12 +993,20 @@ public class WalletApi {
     return processTransaction(transaction);
   }
 
-
   public boolean sendFuture(byte[] owner, byte[] to, long amount, long expireTime) throws CipherException, IOException, CancelException {
     if (owner == null) {
       owner = getAddress();
     }
     Contract.FutureTransferContract contract = createFutureTransferContract(to, owner, amount, expireTime);
+    Transaction transaction = rpcCli.createTransaction(contract);
+    return processTransaction(transaction);
+  }
+
+  public boolean sendFutureDeal(byte[] owner, byte[] to,  Optional<Long> amt, long expireTime) throws CipherException, IOException, CancelException {
+    if (owner == null) {
+      owner = getAddress();
+    }
+    var contract = createFutureDealTransferTransaction(owner, to, amt, expireTime);
     Transaction transaction = rpcCli.createTransaction(contract);
     return processTransaction(transaction);
   }
@@ -999,11 +1242,37 @@ public class WalletApi {
     return builder.build();
   }
 
-
-  public static Contract.CreateNftTemplateContract createNftTemplateContract(byte[] owner, String contract, String name,long totalSupply, byte[] minter) {
-    Contract.CreateNftTemplateContract.Builder builder = Contract.CreateNftTemplateContract.newBuilder()
+  public static Contract.Urc20CreateContract createCreateUrc20Contract(byte[] owner, String symbol, String name, long decimals, BigInteger maxSupply, BigInteger totalSupply,
+                                                                       long startTime, long endTime, String url, long fee, long extraFeeRate, long feePool, long lot,
+                                                                       boolean enableExch, long exchUnwNum, long exchTokenNum, long createAccFee) {
+    var builder = Contract.Urc20CreateContract.newBuilder()
             .setOwnerAddress(ByteString.copyFrom(owner))
-            .setContract(contract)
+            .setSymbol(symbol)
+            .setName(name)
+            .setDecimals(decimals)
+            .setMaxSupply(maxSupply.toString())
+            .setTotalSupply(totalSupply.toString())
+            .setUrl(url)
+            .setFee(fee)
+            .setExtraFeeRate(extraFeeRate)
+            .setFeePool(feePool)
+            .setLot(lot)
+            .setExchEnable(enableExch)
+            .setExchUnxNum(exchUnwNum)
+            .setExchNum(exchTokenNum)
+            .setCreateAccFee(createAccFee);
+    if(startTime != -1L)
+      builder.setStartTime(startTime);
+    if(endTime != -1L)
+      builder.setEndTime(endTime);
+
+    return builder.build();
+  }
+
+  public static Contract.Urc721CreateContract createUrc721Contract(byte[] owner, String symbol, String name, long totalSupply, byte[] minter) {
+    Contract.Urc721CreateContract.Builder builder = Contract.Urc721CreateContract.newBuilder()
+            .setOwnerAddress(ByteString.copyFrom(owner))
+            .setSymbol(symbol)
             .setName(name)
             .setTotalSupply(totalSupply);
 
@@ -1012,82 +1281,202 @@ public class WalletApi {
     return builder.build();
   }
 
-  public static Contract.MintNftTokenContract createMintNftTokenContract(byte[] ownerAddress, String contract, byte[] toAddr, String uri, String metaData) {
-    Contract.MintNftTokenContract.Builder builder = Contract.MintNftTokenContract.newBuilder()
+  public static Contract.Urc721MintContract createUrc721MintContract(byte[] ownerAddress, byte[] contractAddr, byte[] toAddr, String uri, long tokenId) {
+    var builder = Contract.Urc721MintContract.newBuilder()
             .setOwnerAddress(ByteString.copyFrom(ownerAddress))
-            .setContract(contract)
+            .setAddress(ByteString.copyFrom(contractAddr))
             .setToAddress(ByteString.copyFrom(toAddr))
             .setUri(uri);
 
-    if(metaData != null)
-      builder.setMetadata(metaData);
+    if(tokenId > 0)
+      builder.setTokenId(tokenId);
     else
-      builder.clearMetadata();
+      builder.clearTokenId();
 
     return builder.build();
   }
 
-  private RemoveNftMinterContract createRemoveNftMinterContract(byte[] ownerAddress, String contract) {
-    return  Contract.RemoveNftMinterContract.newBuilder()
+  private Urc721RemoveMinterContract createUrc721RemoveMinterContract(byte[] ownerAddress, byte[] contractAddr) {
+    return  Contract.Urc721RemoveMinterContract.newBuilder()
             .setOwnerAddress(ByteString.copyFrom(ownerAddress))
-            .setContract(contract)
+            .setAddress(ByteString.copyFrom(contractAddr))
             .build();
   }
 
-  private RenounceNftMinterContract createRenounceNftMinterContract(byte[] ownerAddress, String contract) {
-    return  Contract.RenounceNftMinterContract.newBuilder()
+  private Urc721RenounceMinterContract createUrc721RenounceMinterContract(byte[] ownerAddress, byte[] contractAddr) {
+    return  Contract.Urc721RenounceMinterContract.newBuilder()
             .setOwnerAddress(ByteString.copyFrom(ownerAddress))
-            .setContract(contract)
+            .setAddress(ByteString.copyFrom(contractAddr))
             .build();
   }
 
-  private AddNftMinterContract createAddNftMinterContract(byte[] ownerAddress, String contract, byte[] minterAddr) {
-    return  Contract.AddNftMinterContract.newBuilder()
+  private Urc721AddMinterContract createUrc721AddMinterContract(byte[] ownerAddress, byte[] contractAddr, byte[] minterAddr) {
+    return  Contract.Urc721AddMinterContract.newBuilder()
             .setOwnerAddress(ByteString.copyFrom(ownerAddress))
-            .setContract(contract)
+            .setAddress(ByteString.copyFrom(contractAddr))
             .setMinter(ByteString.copyFrom(minterAddr))
             .build();
   }
 
-  private BurnNftTokenContract createBurnNftMinterContract(byte[] ownerAddress, String contract, long tokenId) {
-    return  Contract.BurnNftTokenContract.newBuilder()
+  private Urc721BurnContract createUrc721BurnContract(byte[] ownerAddress, byte[] contractAddr, long tokenId) {
+    return  Contract.Urc721BurnContract.newBuilder()
             .setOwnerAddress(ByteString.copyFrom(ownerAddress))
-            .setContract(contract)
+            .setAddress(ByteString.copyFrom(contractAddr))
             .setTokenId(tokenId)
             .build();
   }
 
-  private ApproveNftTokenContract createApproveNftTokenContract(byte[] ownerAddress, byte[] toAddr, boolean approve, String contract, long tokenId) {
-    return  Contract.ApproveNftTokenContract.newBuilder()
+  private Urc721ApproveContract createUrc721ApproveContract(byte[] ownerAddress, byte[] toAddr, boolean approveOrNot, byte[] contractAddr, long tokenId) {
+    return  Contract.Urc721ApproveContract.newBuilder()
             .setOwnerAddress(ByteString.copyFrom(ownerAddress))
-            .setToAddress(ByteString.copyFrom(toAddr))
-            .setApprove(approve)
-            .setContract(contract)
+            .setTo(ByteString.copyFrom(toAddr))
+            .setApprove(approveOrNot)
+            .setAddress(ByteString.copyFrom(contractAddr))
             .setTokenId(tokenId)
             .build();
   }
 
-  private ApproveForAllNftTokenContract createApproveForAllNftContract(byte[] ownerAddress, byte[] toAddr, boolean approve) {
-    return  Contract.ApproveForAllNftTokenContract.newBuilder()
+  private Urc721SetApprovalForAllContract createUrc721SetApproveForAllContract(byte[] ownerAddress, byte[] contractAddr, byte[] toAddr, boolean approve) {
+    return  Contract.Urc721SetApprovalForAllContract.newBuilder()
             .setOwnerAddress(ByteString.copyFrom(ownerAddress))
+            .setAddress(ByteString.copyFrom(contractAddr))
             .setToAddress(ByteString.copyFrom(toAddr))
             .setApprove(approve)
             .build();
   }
 
-  private TransferNftTokenContract createTransferNftTokenContract(byte[] ownerAddress, byte[] toAddr, String contract, long tokenId) {
-    return  Contract.TransferNftTokenContract.newBuilder()
+  private PosBridgeSetupContract createPosBridgeSetupContract(byte[] ownerAddress, byte[] newOwner, long minValidator, String validators,  int consensusRate, String nativePredicate, String tokenPredicate, String nftPredicate) {
+    var builder =  Contract.PosBridgeSetupContract.newBuilder()
+            .setOwnerAddress(ByteString.copyFrom(ownerAddress));
+    if(newOwner != null)
+      builder.setNewOwner(ByteString.copyFrom(newOwner));
+    else
+      builder.clearNewOwner();
+
+    if(minValidator > 0)
+      builder.setMinValidator(minValidator);
+    else
+      builder.clearMinValidator();
+
+    if(validators != null){
+      builder.addAllValidators(Arrays.asList(validators.split("|")));
+    }
+    else
+      builder.clearValidators();
+
+    if(consensusRate > 0)
+      builder.setConsensusRate(consensusRate);
+    else
+      builder.clearConsensusRate();
+
+    if(nativePredicate != null)
+      builder.setPredicateNative(nativePredicate);
+    else
+      builder.clearPredicateNative();
+
+    if(tokenPredicate != null)
+      builder.setPredicateToken(tokenPredicate);
+    else
+      builder.clearPredicateToken();
+
+    if(nftPredicate != null)
+      builder.setPredicateNft(nftPredicate);
+    else
+      builder.clearPredicateNft();
+
+    return builder.build();
+  }
+
+  /**
+   bytes owner_address = 1;
+   int64 root_chainid = 2;
+   string root_token= 3; //hex address if token, symbol if native
+   int64 child_chainid = 4;
+   string child_token= 5; //hex address
+   uint32 type = 6; //1:native, 2:erc20, 3:erc721
+   * @return
+   */
+  private PosBridgeMapTokenContract createPosBridgeMapToken(byte[] ownerAddress, String rootToken, long rootChainId, String childToken, long childChainId, int type) {
+    var builder =  Contract.PosBridgeMapTokenContract.newBuilder()
             .setOwnerAddress(ByteString.copyFrom(ownerAddress))
-            .setToAddress(ByteString.copyFrom(toAddr))
-            .setContract(contract)
+            .setRootChainid(rootChainId)
+            .setRootToken(rootToken)
+            .setChildChainid(childChainId)
+            .setChildToken(childToken)
+            .setType(type);
+
+    return builder.build();
+  }
+
+  private PosBridgeCleanMapTokenContract createPosBridgeCleanMapToken(byte[] ownerAddress, String rootToken, long rootChainId, String childToken, long childChainId) {
+    var builder =  Contract.PosBridgeCleanMapTokenContract.newBuilder()
+            .setOwnerAddress(ByteString.copyFrom(ownerAddress))
+            .setRootChainid(rootChainId)
+            .setRootToken(rootToken)
+            .setChildChainid(childChainId)
+            .setChildToken(childToken);
+
+    return builder.build();
+  }
+
+  private PosBridgeDepositContract createPosBridgeDeposit(byte[] ownerAddress, String rootToken, String receiveAddr, long childChainId, long data) {
+    var builder =  Contract.PosBridgeDepositContract.newBuilder()
+            .setOwnerAddress(ByteString.copyFrom(ownerAddress))
+            .setRootToken(rootToken)
+            .setChildChainid(childChainId)
+            .setReceiveAddress(receiveAddr)
+            .setData(Long.toHexString(data));
+
+    return builder.build();
+  }
+
+  private PosBridgeDepositExecContract createPosBridgeDepositExec(byte[] ownerAddress, List<String> signatures, String msg) {
+    var builder =  Contract.PosBridgeDepositExecContract.newBuilder()
+            .setOwnerAddress(ByteString.copyFrom(ownerAddress))
+            .addAllSignatures(signatures)
+            .setMessage(msg);
+
+    return builder.build();
+  }
+
+  private PosBridgeWithdrawContract createPosBridgeWithdraw(byte[] ownerAddress, String childToken, String receiveAddress, long data) {
+    var builder =  Contract.PosBridgeWithdrawContract.newBuilder()
+            .setOwnerAddress(ByteString.copyFrom(ownerAddress))
+            .setChildToken(childToken)
+            .setReceiveAddress(receiveAddress)
+            .setData(Long.toHexString(data));
+    return builder.build();
+  }
+
+  private PosBridgeWithdrawExecContract createPosBridgeWithdrawExec(byte[] ownerAddress, List<String> signatures, String msg) {
+    var builder =  Contract.PosBridgeWithdrawExecContract.newBuilder()
+            .setOwnerAddress(ByteString.copyFrom(ownerAddress))
+            .addAllSignatures(signatures)
+            .setMessage(msg);
+    return builder.build();
+  }
+
+  private Urc721TransferFromContract createUrc721TransferFromContract(byte[] ownerAddress, byte[] toAddr, byte[] contractAddr, long tokenId) {
+    return  Contract.Urc721TransferFromContract.newBuilder()
+            .setOwnerAddress(ByteString.copyFrom(ownerAddress))
+            .setTo(ByteString.copyFrom(toAddr))
+            .setAddress(ByteString.copyFrom(contractAddr))
             .setTokenId(tokenId)
             .build();
   }
 
   public static Contract.ContributeTokenPoolFeeContract createContributeTokenPoolFee(byte[] owner, String tokenName, long amount) {
-   return Contract.ContributeTokenPoolFeeContract.newBuilder()
+     return Contract.ContributeTokenPoolFeeContract.newBuilder()
+              .setOwnerAddress(ByteString.copyFrom(owner))
+              .setTokenName(tokenName)
+              .setAmount(amount)
+              .build();
+  }
+
+  public static Contract.Urc20ContributePoolFeeContract createContributeUrc20PoolFee(byte[] owner, byte[] address , long amount) {
+    return Contract.Urc20ContributePoolFeeContract.newBuilder()
             .setOwnerAddress(ByteString.copyFrom(owner))
-            .setTokenName(tokenName)
+            .setAddress(ByteString.copyFrom(address))
             .setAmount(amount)
             .build();
   }
@@ -1120,12 +1509,52 @@ public class WalletApi {
     return builder.build();
   }
 
+  public static Contract.Urc20UpdateParamsContract createUrc20UpdateTokenParams(byte[] owner, byte[] address, BigInteger totalSupply, long feePool,
+                                                                                long fee, long extraFeeRate, long lot, String url, long exchUnwNum,
+                                                                                long exchTokenNum, long createAccFee) {
+    var builder =  Contract.Urc20UpdateParamsContract.newBuilder()
+            .setOwnerAddress(ByteString.copyFrom(owner))
+            .setAddress(ByteString.copyFrom(address));
+    if(totalSupply.compareTo(BigInteger.valueOf(-1)) != 0)
+      builder.setTotalSupply(totalSupply.toString());
+    if(feePool != -1)
+      builder.setFeePool(feePool);
+    if(fee != -1)
+      builder.setFee(fee);
+    if(extraFeeRate != -1)
+      builder.setExtraFeeRate(extraFeeRate);
+    if(lot != -1)
+      builder.setLot(lot);
+    if(!"-".equals(url))
+      builder.setUrl(url);
+    if(exchUnwNum != -1)
+      builder.setExchUnxNum(exchUnwNum);
+    if(exchTokenNum != -1)
+      builder.setExchNum(exchTokenNum);
+    if(createAccFee != -1)
+      builder.setCreateAccFee(createAccFee);
+
+    return builder.build();
+  }
+
   public static Contract.MineTokenContract createMineToken(byte[] owner, String tokenName, long amount) {
     return Contract.MineTokenContract.newBuilder()
             .setOwnerAddress(ByteString.copyFrom(owner))
             .setTokenName(tokenName)
             .setAmount(amount)
             .build();
+  }
+
+  public static Contract.Urc20MintContract createUrc20Mint(byte[] owner, byte[] address, Optional<byte[]> toAddrOpt,  BigInteger amount) {
+    var builder =  Contract.Urc20MintContract.newBuilder()
+            .setOwnerAddress(ByteString.copyFrom(owner))
+            .setAddress(ByteString.copyFrom(address))
+            .setAmount(amount.toString());
+
+    if(toAddrOpt.isPresent())
+      builder.setToAddress(ByteString.copyFrom(toAddrOpt.get()));
+
+    return builder.build();
   }
 
   public static Contract.TransferTokenContract createTransferToken(byte[] owner, byte[] toAddress, String tokenName, long amount, long availableTime) {
@@ -1136,6 +1565,65 @@ public class WalletApi {
             .setAmount(amount)
             .setAvailableTime(availableTime)
             .build();
+  }
+
+  public static Contract.Urc20TransferFromContract createUrc20TransferFrom(byte[] owner, byte[] fromAddress, byte[] toAddress, byte[] contractAddr, BigInteger amount, long availableTime) {
+    return Contract.Urc20TransferFromContract.newBuilder()
+            .setOwnerAddress(ByteString.copyFrom(owner))
+            .setFrom(ByteString.copyFrom(fromAddress))
+            .setTo(ByteString.copyFrom(toAddress))
+            .setAddress(ByteString.copyFrom(contractAddr))
+            .setAmount(amount.toString())
+            .setAvailableTime(availableTime)
+            .build();
+  }
+
+  public static Contract.Urc20TransferContract createUrc20Transfer(byte[] owner, byte[] contractAddr, byte[] toAddress, BigInteger amount, long availableTime) {
+    return Contract.Urc20TransferContract.newBuilder()
+            .setOwnerAddress(ByteString.copyFrom(owner))
+            .setAddress(ByteString.copyFrom(contractAddr))
+            .setTo(ByteString.copyFrom(toAddress))
+            .setAmount(amount.toString())
+            .setAvailableTime(availableTime)
+            .build();
+  }
+
+  public static Contract.Urc20ApproveContract createUrc20ApproveContract(byte[] ownerAddress, byte[] address, byte[] spender, BigInteger amount) {
+    return Contract.Urc20ApproveContract
+        .newBuilder()
+        .setOwnerAddress(ByteString.copyFrom(ownerAddress))
+        .setAddress(ByteString.copyFrom(address))
+        .setSpender(ByteString.copyFrom(spender))
+        .setAmount(amount.toString())
+        .build();
+  }
+
+  public static Contract.Urc20ExchangeContract createUrc20Exchange(byte[] ownerAddress,
+      byte[] address, long amount) {
+    return Contract.Urc20ExchangeContract
+        .newBuilder()
+        .setOwnerAddress(ByteString.copyFrom(ownerAddress))
+        .setAddress(ByteString.copyFrom(address))
+        .setAmount(amount)
+        .build();
+  }
+
+  public static Contract.Urc20TransferOwnerContract createUrc20TransferOwner(byte[] ownerAddress,
+      byte[] toAddress, byte[] address) {
+    return Contract.Urc20TransferOwnerContract
+        .newBuilder()
+        .setOwnerAddress(ByteString.copyFrom(ownerAddress))
+        .setToAddress(ByteString.copyFrom(toAddress))
+        .setAddress(ByteString.copyFrom(address))
+        .build();
+  }
+
+  public static Contract.Urc20WithdrawFutureContract createUrc20TransferOwner(byte[] ownerAddress, byte[] contractAddr) {
+    return Contract.Urc20WithdrawFutureContract
+        .newBuilder()
+        .setOwnerAddress(ByteString.copyFrom(ownerAddress))
+        .setAddress(ByteString.copyFrom(contractAddr))
+        .build();
   }
 
   public static Contract.TransferTokenOwnerContract createTransferTokenOwner(byte[] owner, byte[] toAddress, String tokenName) {
@@ -1163,6 +1651,15 @@ public class WalletApi {
             .build();
   }
 
+
+  public static Contract.Urc20BurnContract createBurnUrc20(byte[] owner, byte[] address, BigInteger amount) {
+    return Contract.Urc20BurnContract.newBuilder()
+            .setOwnerAddress(ByteString.copyFrom(owner))
+            .setAddress(ByteString.copyFrom(address))
+            .setAmount(amount.toString())
+            .build();
+  }
+
   public static Contract.FutureTransferContract createFutureTransferContract(byte[] to, byte[] owner, long amount, long expireTime) {
     var builder = Contract.FutureTransferContract.newBuilder()
             .setOwnerAddress(ByteString.copyFrom(owner))
@@ -1171,6 +1668,18 @@ public class WalletApi {
 
     if(Objects.nonNull(to))
       builder.setToAddress(ByteString.copyFrom(to));
+
+    return builder.build();
+  }
+
+  public static Contract.FutureDealTransferContract createFutureDealTransferTransaction(byte[] owner, byte[] to, Optional<Long> amt, long expireTime) {
+    var builder =  Contract.FutureDealTransferContract.newBuilder()
+            .setOwnerAddress(ByteString.copyFrom(owner))
+            .setToAddress(ByteString.copyFrom(to))
+            .setDealId(expireTime);
+
+    if(amt.isPresent())
+      builder.setAmount(amt.get());
 
     return builder.build();
   }

@@ -77,30 +77,27 @@ public class GrpcClient {
     }
   }
 
-  public NftTemplateQueryResult listNftTemplate(byte[] ownerAddress, int pageIndex, int pageSize, String ownerType) {
-    var request = NftTemplateQuery.newBuilder();
+  public Urc721ContractPage urc721ContractList(byte[] ownerAddress, int pageIndex, int pageSize, String ownerOrMinter) {
+    var request = Urc721ContractQuery.newBuilder();
+    request.setOwnerAddress(ByteString.copyFrom(ownerAddress));
+    request.setOwnerType(ownerOrMinter);
+    if(pageIndex != -1)
+      request.setPageIndex(pageIndex);
+    if(pageSize != -1)
+      request.setPageSize(pageSize);
+
+    if (blockingStubSolidity != null) {
+      return blockingStubSolidity.urc721ListContract(request.build());
+    } else {
+      return blockingStubFull.urc721ListContract(request.build());
+    }
+  }
+
+  public Urc721TokenPage urc721TokenList(byte[] ownerAddress, Optional<byte[]> contractAddr, String ownerType, int pageIndex, int pageSize) {
+    var request = Urc721TokenListQuery.newBuilder();
     request.setOwnerAddress(ByteString.copyFrom(ownerAddress));
     request.setOwnerType(ownerType);
-    if(pageIndex != -1)
-      request.setPageIndex(pageIndex);
-    if(pageSize != -1)
-      request.setPageSize(pageSize);
-
-
-    if (blockingStubSolidity != null) {
-      return blockingStubSolidity.listNftTemplate(request.build());
-    } else {
-      return blockingStubFull.listNftTemplate(request.build());
-    }
-  }
-
-  public NftTokenQueryResult listNftToken(byte[] ownerAddress, String contract, int pageIndex, int pageSize) {
-    var request = NftTokenQuery.newBuilder();
-    request.setOwnerAddress(ByteString.copyFrom(ownerAddress));
-    if(Objects.isNull(contract) || "-".equals(contract))
-      request.clearContract();
-    else
-      request.setContract(contract);
+    contractAddr.ifPresent(v -> request.setAddress(ByteString.copyFrom(v)));
 
     if(pageIndex != -1)
       request.setPageIndex(pageIndex);
@@ -108,87 +105,126 @@ public class GrpcClient {
       request.setPageSize(pageSize);
 
     if (blockingStubSolidity != null) {
-      return blockingStubSolidity.listNftToken(request.build());
+      return blockingStubSolidity.urc721ListToken(request.build());
     } else {
-      return blockingStubFull.listNftToken(request.build());
+      return blockingStubFull.urc721ListToken(request.build());
     }
   }
 
-  public NftTokenApproveResult listNftTokenApprove(byte[] ownerAddress, int pageIndex, int pageSize) {
-    var request = NftTokenApproveQuery.newBuilder();
+  public Urc721Contract urc721ContractGet(byte[] addr) {
+    var request = AddressMessage.newBuilder();
+    request.setAddress(ByteString.copyFrom(addr));
+    if (blockingStubSolidity != null) {
+      return blockingStubSolidity.urc721GetContract(request.build());
+    } else {
+      return blockingStubFull.urc721GetContract(request.build());
+    }
+  }
+
+  public Urc721Token urc721TokenGet(byte[] contractAddr, long tokenId) {
+    var request = Urc721TokenQuery.newBuilder();
+    request.setAddress(ByteString.copyFrom(contractAddr));
+    request.setId(tokenId);
+
+    if (blockingStubSolidity != null) {
+      return blockingStubSolidity.urc721GetToken(request.build());
+    } else {
+      return blockingStubFull.urc721GetToken(request.build());
+    }
+  }
+
+  public NumberMessage urc721BalanceOf(byte[] ownerAddress,  byte[] address) {
+    var request = Urc721BalanceOfQuery.newBuilder();
     request.setOwnerAddress(ByteString.copyFrom(ownerAddress));
-
-    if(pageIndex != -1)
-      request.setPageIndex(pageIndex);
-    if(pageSize != -1)
-      request.setPageSize(pageSize);
+    request.setAddress(ByteString.copyFrom(address));
 
     if (blockingStubSolidity != null) {
-      return blockingStubSolidity.listNftTokenApprove(request.build());
+      return blockingStubSolidity.urc721GetBalanceOf(request.build());
     } else {
-      return blockingStubFull.listNftTokenApprove(request.build());
+      return blockingStubFull.urc721GetBalanceOf(request.build());
     }
   }
 
-  public NftTokenApproveAllResult listNftTokenApproveAll(byte[] ownerAddress, int pageIndex, int pageSize) {
-    var request = NftTokenApproveAllQuery.newBuilder();
+  public StringMessage urc721TokenUri(byte[] address, long id) {
+    var request = Urc721TokenQuery.newBuilder();
+    request.setAddress(ByteString.copyFrom(address));
+    request.setId(id);
+
+    if (blockingStubSolidity != null) {
+      return blockingStubSolidity.urc721GetTokenUri(request.build());
+    } else {
+      return blockingStubFull.urc721GetTokenUri(request.build());
+    }
+  }
+
+  public StringMessage urc721GetName(byte[] contractAddr) {
+    var request = AddressMessage.newBuilder();
+    request.setAddress(ByteString.copyFrom(contractAddr));
+
+    if (blockingStubSolidity != null) {
+      return blockingStubSolidity.urc721GetName(request.build());
+    } else {
+      return blockingStubFull.urc721GetName(request.build());
+    }
+  }
+
+  public StringMessage urc721GetSymbol(byte[] contractAddr) {
+    var request = AddressMessage.newBuilder();
+    request.setAddress(ByteString.copyFrom(contractAddr));
+
+    if (blockingStubSolidity != null) {
+      return blockingStubSolidity.urc721GetSymbol(request.build());
+    } else {
+      return blockingStubFull.urc721GetSymbol(request.build());
+    }
+  }
+
+  public NumberMessage urc721GetTotalSupply(byte[] contractAddr) {
+    var request = AddressMessage.newBuilder();
+    request.setAddress(ByteString.copyFrom(contractAddr));
+
+    if (blockingStubSolidity != null) {
+      return blockingStubSolidity.urc721GetTotalSupply(request.build());
+    } else {
+      return blockingStubFull.urc721GetTotalSupply(request.build());
+    }
+  }
+
+  public AddressMessage urc721GetOwnerOf(byte[] contractAddr, long tokenId) {
+    var request = Urc721TokenQuery.newBuilder();
+    request.setAddress(ByteString.copyFrom(contractAddr));
+    request.setId(tokenId);
+
+    if (blockingStubSolidity != null) {
+      return blockingStubSolidity.urc721GetOwnerOf(request.build());
+    } else {
+      return blockingStubFull.urc721GetOwnerOf(request.build());
+    }
+  }
+
+  public AddressMessage urc721GetApproved(byte[] contractAddr, long tokenId) {
+    var request = Urc721TokenQuery.newBuilder();
+    request.setAddress(ByteString.copyFrom(contractAddr));
+    request.setId(tokenId);
+
+    if (blockingStubSolidity != null) {
+      return blockingStubSolidity.urc721GetApproved(request.build());
+    } else {
+      return blockingStubFull.urc721GetApproved(request.build());
+    }
+  }
+
+
+  public BoolMessage urc721IsApprovedForAll(byte[] ownerAddress, byte[] operatorAddr, byte[] contractAddr) {
+    var request = Urc721IsApprovedForAllQuery.newBuilder();
     request.setOwnerAddress(ByteString.copyFrom(ownerAddress));
-
-    if(pageIndex != -1)
-      request.setPageIndex(pageIndex);
-    if(pageSize != -1)
-      request.setPageSize(pageSize);
+    request.setAddress(ByteString.copyFrom(contractAddr));
+    request.setOperator(ByteString.copyFrom(operatorAddr));
 
     if (blockingStubSolidity != null) {
-      return blockingStubSolidity.listNftTokenApproveAll(request.build());
+      return blockingStubSolidity.urc721IsApprovedForAll(request.build());
     } else {
-      return blockingStubFull.listNftTokenApproveAll(request.build());
-    }
-  }
-
-  public NftTemplate getNftTemplate(String contract) {
-    var request = NftTemplate.newBuilder();
-    request.setContract(contract);
-
-    if (blockingStubSolidity != null) {
-      return blockingStubSolidity.getNftTemplate(request.build());
-    } else {
-      return blockingStubFull.getNftTemplate(request.build());
-    }
-  }
-
-  public NftTokenGetResult getNftToken(String contract, long Id) {
-    var request = NftTokenGet.newBuilder();
-    request.setContract(contract.toUpperCase());
-    request.setId(Id);
-
-    if (blockingStubSolidity != null) {
-      return blockingStubSolidity.getNftToken(request.build());
-    } else {
-      return blockingStubFull.getNftToken(request.build());
-    }
-  }
-
-  public NftBalanceOf getNftBalanceOf(byte[] ownerAddress) {
-    var request = NftBalanceOf.newBuilder();
-    request.setOwnerAddress(ByteString.copyFrom(ownerAddress));
-
-    if (blockingStubSolidity != null) {
-      return blockingStubSolidity.getNftBalanceOf(request.build());
-    } else {
-      return blockingStubFull.getNftBalanceOf(request.build());
-    }
-  }
-
-  public IsApprovedForAll getNftApprovedForAll(byte[] ownerAddress, byte[] operator) {
-    var request = IsApprovedForAll.newBuilder();
-    request.setOwnerAddress(ByteString.copyFrom(ownerAddress));
-    request.setOperator(ByteString.copyFrom(operator));
-
-    if (blockingStubSolidity != null) {
-      return blockingStubSolidity.getNftApprovedForAll(request.build());
-    } else {
-      return blockingStubFull.getNftApprovedForAll(request.build());
+      return blockingStubFull.urc721IsApprovedForAll(request.build());
     }
   }
 
@@ -226,9 +262,9 @@ public class GrpcClient {
   }
 
   public Account queryAccount(byte[] address) {
-    ByteString addressBS = ByteString.copyFrom(address);
-    System.out.println("GetAccount [" + ByteArray.toHexString(addressBS.toByteArray()) + " --> " + WalletApi.encode58Check(addressBS.toByteArray()));
-    Account request = Account.newBuilder().setAddress(addressBS).build();
+    System.out.println("GetAccount: 0x" + ByteArray.toHexString(address) + "|" + WalletApi.encode58Check(address));
+    var addressBs = ByteString.copyFrom(address);
+    Account request = Account.newBuilder().setAddress(addressBs).build();
     if (blockingStubSolidity != null) {
       return blockingStubSolidity.getAccount(request);
     } else {
@@ -324,40 +360,74 @@ public class GrpcClient {
     return blockingStubFull.easyTransferAssetByPrivate(builder.build());
   }
 
-  public Transaction createTransaction(Contract.CreateNftTemplateContract contract) {
-    return blockingStubFull.createNftTemplate(contract);
+  /**
+   * POSBridge
+   */
+  public Transaction createTransaction(Contract.PosBridgeSetupContract contract) {
+    return blockingStubFull.posBridgeSetup(contract);
   }
 
-  public Transaction createTransaction(Contract.MintNftTokenContract contract) {
-    return blockingStubFull.mintNftToken(contract);
+  public Transaction createTransaction(Contract.PosBridgeMapTokenContract contract) {
+    return blockingStubFull.posBridgeMapToken(contract);
   }
 
-  public Transaction createTransaction(Contract.RemoveNftMinterContract contract) {
-    return blockingStubFull.removeNftMinter(contract);
+  public Transaction createTransaction(Contract.PosBridgeCleanMapTokenContract contract) {
+    return blockingStubFull.posBridgeCleanMapToken(contract);
   }
 
-  public Transaction createTransaction(Contract.AddNftMinterContract contract) {
-    return blockingStubFull.addNftMinter(contract);
+  public Transaction createTransaction(Contract.PosBridgeDepositContract contract) {
+    return blockingStubFull.posBridgeDeposit(contract);
   }
 
-  public Transaction createTransaction(Contract.RenounceNftMinterContract contract) {
-    return blockingStubFull.renounceNftMinter(contract);
+  public Transaction createTransaction(Contract.PosBridgeDepositExecContract contract) {
+    return blockingStubFull.posBridgeDepositExec(contract);
   }
 
-  public Transaction createTransaction(Contract.BurnNftTokenContract contract) {
-    return blockingStubFull.burnNftToken(contract);
+  public Transaction createTransaction(Contract.PosBridgeWithdrawContract contract) {
+    return blockingStubFull.posBridgeWithdraw(contract);
   }
 
-  public Transaction createTransaction(Contract.ApproveNftTokenContract contract) {
-    return blockingStubFull.approveNftToken(contract);
+  public Transaction createTransaction(Contract.PosBridgeWithdrawExecContract contract) {
+    return blockingStubFull.posBridgeWithdrawExec(contract);
   }
 
-  public Transaction createTransaction(Contract.ApproveForAllNftTokenContract contract) {
-    return blockingStubFull.approveForAllNftToken(contract);
+  /**
+   * NFT
+   */
+  public Transaction createTransaction(Contract.Urc721CreateContract contract) {
+    return blockingStubFull.createUrc721Contract(contract);
   }
 
-  public Transaction createTransaction(Contract.TransferNftTokenContract contract) {
-    return blockingStubFull.transferNftToken(contract);
+  public Transaction createTransaction(Contract.Urc721MintContract contract) {
+    return blockingStubFull.urc721Mint(contract);
+  }
+
+  public Transaction createTransaction(Contract.Urc721RemoveMinterContract contract) {
+    return blockingStubFull.urc721RemoveMinter(contract);
+  }
+
+  public Transaction createTransaction(Contract.Urc721AddMinterContract contract) {
+    return blockingStubFull.urc721AddMinter(contract);
+  }
+
+  public Transaction createTransaction(Contract.Urc721RenounceMinterContract contract) {
+    return blockingStubFull.urc721RenounceMinter(contract);
+  }
+
+  public Transaction createTransaction(Contract.Urc721BurnContract contract) {
+    return blockingStubFull.urc721Burn(contract);
+  }
+
+  public Transaction createTransaction(Contract.Urc721ApproveContract contract) {
+    return blockingStubFull.urc721Approve(contract);
+  }
+
+  public Transaction createTransaction(Contract.Urc721SetApprovalForAllContract contract) {
+    return blockingStubFull.urc721SetApprovalForAll(contract);
+  }
+
+  public Transaction createTransaction(Contract.Urc721TransferFromContract contract) {
+    return blockingStubFull.urc721TransferFrom(contract);
   }
 
   public Transaction createTransaction(Contract.ExchangeTokenContract contract) {
@@ -372,24 +442,70 @@ public class GrpcClient {
     return blockingStubFull.createToken(contract);
   }
 
+  public Transaction createTransaction(Contract.Urc20CreateContract contract) {
+    return blockingStubFull.urc20ContractCreate(contract);
+  }
+
   public Transaction createTransaction(Contract.ContributeTokenPoolFeeContract contract) {
     return blockingStubFull.contributeTokenFee(contract);
+  }
+
+  public Transaction createTransaction(Contract.Urc20ContributePoolFeeContract contract) {
+    return blockingStubFull.urc20ContributePoolFee(contract);
   }
 
   public Transaction createTransaction(Contract.UpdateTokenParamsContract contract) {
     return blockingStubFull.updateTokenParams(contract);
   }
 
+  public Transaction createTransaction(Contract.Urc20UpdateParamsContract contract) {
+    return blockingStubFull.urc20UpdateParams(contract);
+  }
+
   public Transaction createTransaction(Contract.MineTokenContract contract) {
     return blockingStubFull.mineToken(contract);
   }
+
+  public Transaction createTransaction(Contract.Urc20MintContract contract) {
+    return blockingStubFull.urc20Mint(contract);
+  }
+
 
   public Transaction createTransaction(Contract.BurnTokenContract contract) {
     return blockingStubFull.burnToken(contract);
   }
 
+  public Transaction createTransaction(Contract.Urc20BurnContract contract) {
+    return blockingStubFull.urc20Burn(contract);
+  }
+
+
   public Transaction createTransaction(Contract.TransferTokenContract contract) {
     return blockingStubFull.transferToken(contract);
+  }
+
+  public Transaction createTransaction(Contract.Urc20TransferFromContract contract) {
+    return blockingStubFull.urc20TransferFrom(contract);
+  }
+
+  public Transaction createTransaction(Contract.Urc20TransferContract contract) {
+    return blockingStubFull.urc20Transfer(contract);
+  }
+
+  public Transaction createTransaction(Contract.Urc20ApproveContract contract) {
+    return blockingStubFull.urc20Approve(contract);
+  }
+
+  public Transaction createTransaction(Contract.Urc20ExchangeContract contract) {
+    return blockingStubFull.urc20Exchange(contract);
+  }
+
+  public Transaction createTransaction(Contract.Urc20TransferOwnerContract contract) {
+    return blockingStubFull.urc20TransferOwner(contract);
+  }
+
+  public Transaction createTransaction(Contract.Urc20WithdrawFutureContract contract) {
+    return blockingStubFull.urc20WithdrawFuture(contract);
   }
 
   public Transaction createTransaction(Contract.WithdrawFutureTokenContract contract) {
@@ -422,6 +538,10 @@ public class GrpcClient {
 
   public Transaction createTransaction(Contract.FutureTransferContract contract) {
     return blockingStubFull.createFutureTransferTransaction(contract);
+  }
+
+  public Transaction createTransaction(Contract.FutureDealTransferContract contract) {
+    return blockingStubFull.createFutureDealTransferTransaction(contract);
   }
 
   public Transaction createTransaction(Contract.FutureWithdrawContract contract) {
@@ -681,6 +801,21 @@ public class GrpcClient {
       return blockingStubSolidity.getBlockByNum(builder.build());
     } else {
       return blockingStubFull.getBlockByNum(builder.build());
+    }
+  }
+  public PosBridgeConfig getPosBridgeConfig() {
+    if (blockingStubSolidity != null) {
+      return blockingStubSolidity.getPosBridgeConfig(EmptyMessage.newBuilder().build());
+    } else {
+      return blockingStubFull.getPosBridgeConfig(EmptyMessage.newBuilder().build());
+    }
+  }
+
+  public PosBridgeTokenMappingPage getPosBridgeTokenMap() {
+    if (blockingStubSolidity != null) {
+      return blockingStubSolidity.getPosBridgeTokenMap(EmptyMessage.newBuilder().build());
+    } else {
+      return blockingStubFull.getPosBridgeTokenMap(EmptyMessage.newBuilder().build());
     }
   }
 
@@ -982,6 +1117,138 @@ public class GrpcClient {
     NumberMessage numberMessage = NumberMessage.newBuilder().setNum(num).build();
     BlockListExtention blockList = blockingStubFull.getBlockByLatestNum2(numberMessage);
     return Optional.ofNullable(blockList);
+  }
+
+  public Urc20FutureTokenPack urc20FutureGet(byte[] ownerAddr, byte[] address, int pageSize, int pageIndex) {
+    var builder = Urc20FutureTokenQuery.newBuilder()
+            .setOwnerAddress(ByteString.copyFrom(ownerAddr))
+            .setAddress(ByteString.copyFrom(address));
+    if (pageSize != -1)
+      builder.setPageSize(pageSize);
+    if (pageIndex != -1)
+      builder.setPageIndex(pageIndex);
+
+    if (blockingStubSolidity != null) {
+      return blockingStubSolidity.urc20FutureGet(builder.build());
+    } else {
+      return blockingStubFull.urc20FutureGet(builder.build());
+    }
+  }
+
+  public StringMessage urc20Name(byte[] contractAddr) {
+    var request = AddressMessage
+            .newBuilder()
+            .setAddress(ByteString.copyFrom(contractAddr))
+            .build();
+
+    if (blockingStubSolidity != null) {
+      return blockingStubSolidity.urc20Name(request);
+    } else {
+      return blockingStubFull.urc20Name(request);
+    }
+  }
+
+  public StringMessage urc20Symbol(byte[] address) {
+    var request = AddressMessage
+            .newBuilder()
+            .setAddress(ByteString.copyFrom(address))
+            .build();
+
+    if (blockingStubSolidity != null) {
+      return blockingStubSolidity.urc20Symbol(request);
+    } else {
+      return blockingStubFull.urc20Symbol(request);
+    }
+  }
+
+  public NumberMessage urc20Decimals(byte[] address) {
+    var request = AddressMessage
+            .newBuilder()
+            .setAddress(ByteString.copyFrom(address))
+            .build();
+
+    if (blockingStubSolidity != null) {
+      return blockingStubSolidity.urc20Decimals(request);
+    } else {
+      return blockingStubFull.urc20Decimals(request);
+    }
+  }
+
+  public StringMessage urc20TotalSupply(byte[] address) {
+    var request = AddressMessage
+            .newBuilder()
+            .setAddress(ByteString.copyFrom(address))
+            .build();
+
+    if (blockingStubSolidity != null) {
+      return blockingStubSolidity.urc20TotalSupply(request);
+    } else {
+      return blockingStubFull.urc20TotalSupply(request);
+    }
+  }
+
+  public StringMessage urc20BalanceOf(byte[] ownerAddr, byte[] contractAddr) {
+    var request = Urc20BalanceOfQuery
+            .newBuilder()
+            .setOwnerAddress(ByteString.copyFrom(ownerAddr))
+            .setAddress(ByteString.copyFrom(contractAddr))
+            .build();
+
+    if (blockingStubSolidity != null) {
+      return blockingStubSolidity.urc20BalanceOf(request);
+    } else {
+      return blockingStubFull.urc20BalanceOf(request);
+    }
+  }
+
+  public AddressMessage urc20GetOwner(byte[] contractAddr) {
+    var request = AddressMessage
+            .newBuilder()
+            .setAddress(ByteString.copyFrom(contractAddr))
+            .build();
+
+    if (blockingStubSolidity != null) {
+      return blockingStubSolidity.urc20GetOwner(request);
+    } else {
+      return blockingStubFull.urc20GetOwner(request);
+    }
+  }
+
+  public StringMessage urc20Allowance(byte[] owner, byte[] address, byte[] spender) {
+    var request = Urc20AllowanceQuery
+        .newBuilder()
+        .setOwner(ByteString.copyFrom(owner))
+        .setAddress(ByteString.copyFrom(address))
+        .setSpender(ByteString.copyFrom(spender))
+        .build();
+
+    if (blockingStubSolidity != null) {
+      return blockingStubSolidity.urc20Allowance(request);
+    } else {
+      return blockingStubFull.urc20Allowance(request);
+    }
+  }
+
+  public Contract.Urc20ContractPage urc20ContractList(Optional<byte[]> address, Optional<String> symbol, int pageIndex, int pageSize) {
+    var builder = Urc20ContractQuery.newBuilder();
+    if(address.isPresent())
+      builder.setAddress(ByteString.copyFrom(address.get()));
+    else
+      builder.clearAddress();
+
+    if(symbol.isPresent())
+      builder.setSymbol(symbol.get());
+    else
+      builder.clearSymbol();
+
+    if (pageIndex != -1) builder.setPageIndex(pageIndex);
+    if (pageSize != -1) builder.setPageSize(pageSize);
+
+    if (blockingStubSolidity != null) {
+      return blockingStubSolidity.urc20ContractList(builder.build());
+    } else {
+      return blockingStubFull.urc20ContractList(builder.build());
+    }
   }
 
   public TransactionExtention updateSetting(Contract.UpdateSettingContract request) {
