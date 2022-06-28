@@ -214,6 +214,18 @@ public class GrpcClient {
     }
   }
 
+  public AddressMessage urc721GetApprovedForAll(byte[] ownerAddr, byte[] contractAddr) {
+    var request = Urc721ApprovedForAllQuery.newBuilder();
+    request.setOwnerAddress(ByteString.copyFrom(ownerAddr));
+    request.setAddress(ByteString.copyFrom(contractAddr));
+
+    if (blockingStubSolidity != null) {
+      return blockingStubSolidity.urc721GetApprovedForAll(request.build());
+    } else {
+      return blockingStubFull.urc721GetApprovedForAll(request.build());
+    }
+  }
+
 
   public BoolMessage urc721IsApprovedForAll(byte[] ownerAddress, byte[] operatorAddr, byte[] contractAddr) {
     var request = Urc721IsApprovedForAllQuery.newBuilder();

@@ -203,6 +203,7 @@ public class Client {
           "Urc721GetTokenUri",
           "Urc721GetOwnerOf",
           "Urc721GetApproved",
+          "Urc721GetApprovedForAll",
 
            //posbridge
           "GetPosBridgeConfig",
@@ -371,6 +372,7 @@ public class Client {
           "Urc721GetTokenUri",
           "Urc721GetOwnerOf",
           "Urc721GetApproved",
+          "Urc721GetApprovedForAll",
 
           //posbridge
           "PosBridgeSetup",
@@ -3372,8 +3374,13 @@ public class Client {
               break;
             }
 
+            case "urc721getapprovedforall": {
+              urc721GetApproved(parameters);
+              break;
+            }
+
             case "urc721isapprovedforall": {
-              urc721IsApprovedForAll(parameters);
+              urc721GetApprovedForAll(parameters);
               break;
             }
 
@@ -5308,6 +5315,34 @@ public class Client {
     var result = WalletApi.urc721GetApproved(address, id);
     if (result == null) {
       System.out.println("urc721GetApproved failed !!");
+    } else {
+      System.out.println(Utils.formatMessageString(result));
+    }
+  }
+
+  private void urc721GetApprovedForAll(String[] parameters) throws IOException, CipherException, CancelException{
+    if (parameters == null || (parameters.length != 2)) {
+      System.out.println("urc721GetApprovedForAll needs 2 parameter like the following: ");
+      System.out.println("urc721GetApprovedForAll ownerAddress contractAddress");
+      return;
+    }
+
+    int index = 0;
+    byte[] ownerAddress = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (ownerAddress == null) {
+      System.out.println("Invalid ownerAddress.");
+      return;
+    }
+
+    byte[] address = WalletApi.decodeFromBase58Check(parameters[index++]);
+    if (address == null) {
+      System.out.println("Invalid address.");
+      return;
+    }
+
+    var result = WalletApi.urc721GetApprovedForAll(ownerAddress, address);
+    if (result == null) {
+      System.out.println("urc721GetApprovedForAll failed !!");
     } else {
       System.out.println(Utils.formatMessageString(result));
     }

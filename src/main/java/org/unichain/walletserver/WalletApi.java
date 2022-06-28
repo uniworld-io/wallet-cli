@@ -355,6 +355,10 @@ public class WalletApi {
     return rpcCli.urc721GetApproved(contractAddr, tokenId);
   }
 
+  public static AddressMessage urc721GetApprovedForAll(byte[] ownerAddr, byte[] contractAddr) {
+    return rpcCli.urc721GetApprovedForAll(ownerAddr, contractAddr);
+  }
+
   public static BoolMessage urc721IsApprovedForAll(byte[] ownerAddress, byte[] operatorAddr, byte[] contractAddr) {
     return rpcCli.urc721IsApprovedForAll(ownerAddress, operatorAddr, contractAddr);//call rpc
   }
